@@ -24,8 +24,6 @@ public:
 private: // プライベート関数
     // データ読み込み
     void LoadData();
-    // ロケットの移動処理
-    void UpdateRocket();
     // タイトル終了時処理
     void OnSceneEnd();
 
@@ -41,14 +39,6 @@ private: // シーン全体の管理変数
 private: // シーン装飾の管理変数
     // 画像ハンドル
     int m_hTitleLogoImg;
-    int m_hTitleRocketImg;
-
-private: // ロケット動く処理の変数達
-    // タイトル画面のロケット位置
-    VECTOR m_rocketPos;
-    VECTOR m_rocketDir;
-    double m_rocketRotation;
-    float m_rocketAngle;
 
 private:
     // セレクトメニューの管理変数
