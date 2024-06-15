@@ -1,15 +1,6 @@
 #pragma once
 #include "Game.h"
 
-// オブジェクトの種類
-enum class ObjectType
-{
-	PLAYER,
-	ENEMY,
-	SHOT,
-	ITEM,
-};
-
 class ObjectBase
 {
 	struct ObjectStatus
@@ -32,6 +23,8 @@ class ObjectBase
 		float scale = 1.0f;
 		// データハンドル
 		int hModel = 0;
+		// 画像データハンドル
+		int hImg = 0;
 		// 体力
 		int hp = 0;
 		// 無敵時間
@@ -40,7 +33,7 @@ class ObjectBase
 
 public:
 	// コンストラクタ
-	ObjectBase() {};
+	ObjectBase(){};
 	// デストラクタ
 	virtual ~ObjectBase() {};
 

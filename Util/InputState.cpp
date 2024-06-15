@@ -202,7 +202,9 @@ bool InputState::IsTriggered(InputType type)const
 		return !lastKeyState[KEY_INPUT_RSHIFT] &&
 			keyState[KEY_INPUT_RSHIFT] ||
 			!(lastPadState & PAD_INPUT_2) &&
-			(padState & PAD_INPUT_2);
+			(padState & PAD_INPUT_2) ||
+			!(mouseState.lastKeyMouseState & MOUSE_INPUT_LEFT) &&
+			(mouseState.keyMouseState & MOUSE_INPUT_LEFT);
 	}
 
 	return false;

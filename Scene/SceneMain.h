@@ -21,6 +21,8 @@ public:
     void End();
 
 private:
+	// ステージライン描画
+	void DrawStageLine();
 
     // メンバ関数ポインタ(更新)
     using m_tUpdateFunc = void (SceneMain::*) (const InputState& input);
@@ -29,15 +31,9 @@ private:
     void StartUpdate(const InputState& input);      // ゲームスタート時の更新処理
     void EndUpdate(const InputState& input);        // ゲームオーバー時の更新処理
 
-    // メンバ関数ポインタ(描画)
-    using m_tDrawFunc = void (SceneMain::*) ();
-    m_tDrawFunc m_drawFunc = nullptr;
-    void NormalDraw();      // 通常の描画処理
-    void StartDraw();       // シーン開始時の描画処理
-    void EndDraw();         // シーン終了時の描画処理
-
 private:
-    std::shared_ptr<class CameraController> m_pCamera;     // カメラ
-	std::shared_ptr<class Player> m_pPlayer;               // プレイヤー
+    std::shared_ptr<class CameraManager> m_pCamera;     // カメラ
+	std::shared_ptr<class Player> m_pPlayer;               // プレイヤー 
+	std::shared_ptr<class EnemyManager> m_pEnemyManager;   // 敵管理
 };
 

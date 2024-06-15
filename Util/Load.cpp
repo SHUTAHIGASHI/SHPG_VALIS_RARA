@@ -8,20 +8,19 @@ Load::~Load()
 void Load::AllLoadData()
 {
 	// データをロードする
-	m_data["skydome"] = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
-	m_data["ship"] = MV1LoadModel("Data/ModelData/SHIP.mv1");
-	m_data["ufo"] = MV1LoadModel("Data/ModelData/UFO.mv1");
-	m_data["rock"] = MV1LoadModel("Data/ModelData/ASTROIDS.mv1");
-	m_data["item"] = MV1LoadModel("Data/ModelData/CRYSTAL.mv1");
-	m_data["satellite"] = MV1LoadModel("Data/ModelData/SATELLITE.mv1");
+	m_graphData["player"] = LoadGraph("Data/ImageData/RaraTest.png");
+	m_graphData["enemy"] = LoadGraph("Data/ImageData/NeffyTest.png");
+	m_graphData["cursor"] = LoadGraph("Data/ImageData/Cursor.png");
+	m_graphData["lockCursor"] = LoadGraph("Data/ImageData/LockCursor.png");
+	m_graphData["shot"] = LoadGraph("Data/ImageData/Ringo.png");
 }
 
 void Load::DeleteAllData()
 {
 	// データを削除する
-	for (auto& data : m_data)
+	for (auto& data : m_graphData)
 	{
-		MV1DeleteModel(data.second);
+		DeleteGraph(data.second);
 	}
-	m_data.clear();
+	m_graphData.clear();
 }

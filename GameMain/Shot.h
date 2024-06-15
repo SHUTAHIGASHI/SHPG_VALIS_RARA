@@ -6,6 +6,7 @@ class Shot : public ObjectBase
 {
 public:
 	Shot(VECTOR pos, VECTOR target);
+	Shot(VECTOR pos, ObjectBase* targetObj);
 	~Shot();
 
 	// 更新
@@ -21,7 +22,15 @@ public:
 	// 弾の大きさ設定
 	void SetScale(float scale);
 private:
+	// 生成時の初期処理
+	void Init(VECTOR pos);
+	// ショットの更新
+	void UpdateShotAndTarget();
+
+private:
 	// 弾の有効時間
 	int m_shotTime = 60;
+	// ターゲットオブジェクト
+	ObjectBase* m_targetObject;
 };
 

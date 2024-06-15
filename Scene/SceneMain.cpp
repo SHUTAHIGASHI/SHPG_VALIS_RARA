@@ -10,17 +10,18 @@
 // ゲーム関係
 #include "Game.h"
 #include "Player.h"
+#include "EnemyManager.h"
 // 全般
-#include "CameraController.h"
+#include "CameraManager.h"
 #include "EffekseerManager.h"
 #include "SoundManager.h"
 
 SceneMain::SceneMain(SceneManager& manager) :
 	Scene(manager),
 	m_updateFunc(&SceneMain::StartUpdate),
-	m_drawFunc(&SceneMain::StartDraw),
-	m_pCamera(std::make_shared<CameraController>()),
-	m_pPlayer(std::make_shared<Player>())
+	m_pCamera(std::make_shared<CameraManager>()),
+	m_pPlayer(std::make_shared<Player>()),
+	m_pEnemyManager(std::make_shared<EnemyManager>())
 {
 }
 
@@ -33,9 +34,13 @@ SceneMain::~SceneMain()
 void SceneMain::Init()
 {
 	// カメラ初期化
+	m_pCamera->SetPlayer(m_pPlayer.get());
 	m_pCamera->Init();
 	// プレイヤー初期化
-	m_pPlayer = std::make_shared<Player>();
+	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
+	m_pPlayer->Init();
+	// 敵管理初期化
+	m_pEnemyManager->Init();
 }
 
 void SceneMain::Update(const InputState& input)
@@ -43,41 +48,53 @@ void SceneMain::Update(const InputState& input)
 	// Update処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
 
+	// カメラ更新
+	m_pCamera->Update();
+	// プレイヤー更新
+	m_pPlayer->Update(input);
+	// 敵管理更新
+	m_pEnemyManager->Update();
+
 	// エフェクトの更新処理
 	EffekseerManager::GetInstance().Update();
 }
 
 void SceneMain::Draw()
 {
-	// Draw処理のメンバ関数ポインタ
-	//(this->*m_drawFunc)();
-
-	// プレイヤーの描画
+	// 敵管理描画
+	m_pEnemyManager->Draw();
+	// プレイヤー描画
 	m_pPlayer->Draw();
 
 	// エフェクト描画
 	EffekseerManager::GetInstance().Draw();
 
-	// グリッドを表示
-	for (float z = -1000.0f; z <= 1000.0f; z += 100.0f)
-	{
-		VECTOR start = VGet(-1000.0f, 0.0f, z);
-		VECTOR end = VGet(1000.0f, 0.0f, z);
-		DrawLine3D(start, end, 0x00ff00);
-	}
-
-	for (float x = -1000.0f; x <= 1000.0f; x += 100.0f)
-	{
-		VECTOR start = VGet(x, 0.0f, -1000.0f);
-		VECTOR end = VGet(x, 0.0f, 1000.0f);
-		DrawLine3D(start, end, 0xff0000);
-	}
+	// ステージライン描画
+	DrawStageLine();
 }
 
 void SceneMain::End()
 {
 	// 再生中のエフェクト停止
 	EffekseerManager::GetInstance().StopAllEffect();
+}
+
+void SceneMain::DrawStageLine()
+{
+	// グリッドを表示
+	for (float z = -Game::kStageSizeZ; z <= Game::kStageSizeZ; z += 100.0f)
+	{
+		VECTOR start = VGet(-Game::kStageSizeX, -100.0f, z);
+		VECTOR end = VGet(Game::kStageSizeX, -100.0f, z);
+		DrawLine3D(start, end, 0x00ff00);
+	}
+
+	for (float x = -Game::kStageSizeX; x <= Game::kStageSizeX; x += 100.0f)
+	{
+		VECTOR start = VGet(x, -100.0f, -Game::kStageSizeZ);
+		VECTOR end = VGet(x, -100.0f, Game::kStageSizeZ);
+		DrawLine3D(start, end, 0xff0000);
+	}
 }
 
 void SceneMain::NormalUpdate(const InputState& input)
@@ -105,18 +122,4 @@ void SceneMain::StartUpdate(const InputState& input)
 
 void SceneMain::EndUpdate(const InputState& input)
 {
-}
-
-void SceneMain::NormalDraw()
-{
-}
-
-void SceneMain::StartDraw()
-{
-	// 処理なし
-}
-
-void SceneMain::EndDraw()
-{
-	// 処理なし
 }

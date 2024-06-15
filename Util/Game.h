@@ -13,10 +13,10 @@ namespace Game
 	constexpr bool kWindowMode = false;
 #endif
 	// ウィンドウ名
-	const char* const kTitleText = "ラ王様のりんごおぶりんご";
+	const char* const kTitleText = "りんごおぶラ王様 ～ララ様誕生日おめでとう～";
 	// ウィンドウサイズ
-	constexpr int kScreenWidth = 1600;
-	constexpr int kScreenHeight = 900;
+	constexpr int kScreenWidth = 1920;
+	constexpr int kScreenHeight = 1080;
 	constexpr int kScreenWidthHalf = kScreenWidth / 2;
 	constexpr int kScreenHeightHalf = kScreenHeight / 2;
 	constexpr int kScreenWidthTriple = kScreenWidth * 3;
@@ -25,9 +25,10 @@ namespace Game
 	// ゲームで使う色コード
 	constexpr int kColorOrange = 0xff7800;
 	constexpr int kColorRed = 0xdc143c;
-	constexpr int kColorGreen = 0xadff2f;
-	constexpr int kColorBlue = 0x4f7fee;
+	constexpr int kColorGreen = 0x6cc569;
+	constexpr int kColorBlue = 0x5c6398;
 	constexpr int kColorBlack = 0x0a192c;
+	constexpr int kColorBlown = 0x231815;
 	constexpr int kColorWhite = 0xffffff;
 	constexpr int kColorGray = 0xa9a9a9;
 
@@ -39,7 +40,9 @@ namespace Game
 
 	/* フォント */
 	// フォントファイル
-	const char* const kFontFileName = "Data/fontData/851Gkktt_005.ttf";
+	const char* const kFontFileName = "Data/fontData/FK-Kaisei-DecolStd-W7.otf";
+	// フォント名
+	const char* const kFontName = "FK-解星デコール W7";
 	// フォントサイズ
 	constexpr int kFontSize = 40;
 
@@ -47,17 +50,12 @@ namespace Game
 	constexpr int kColorDepth = 32;
 	
 	// ゲームの基本設定 //
-	constexpr int kBoostLevelMax = 3;
 	// プレイヤーの基本設定
-	constexpr float kChipSize = 32.0f;
-
-	// 基本移動速度
-	constexpr float kMoveSpeed = 12.0f;
-
-	// ゲームのステージサイズ
-	constexpr int kStageWidth = 1400;
-	constexpr int kStageHeight = 700;
-
+	constexpr float kBaseScale = 100.0f;
+	// ステージ基本サイズ
+	constexpr float kStageSizeX = 1000.0f;
+	constexpr float kStageSizeY = 500.0f;
+	constexpr float kStageSizeZ = 5000.0f;
 	// パーティクル用
 	constexpr int kParticleNum = 8000;
 }
