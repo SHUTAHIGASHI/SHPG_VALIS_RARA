@@ -12,7 +12,7 @@ bool ObjectBase::CheckCollision(ObjectBase* obj)
 	}
 
 #ifdef _DEBUG
-	//DrawSphere3D(m_status.pos, m_status.radius, 16.0f, 0xffffff, 0xffffff, false);
+	DrawSphere3D(m_status.pos, m_status.radius, 16.0f, 0xffffff, 0xffffff, false);
 #endif // _DEBUG
 
 	return result;

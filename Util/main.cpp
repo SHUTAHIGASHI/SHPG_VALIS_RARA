@@ -38,9 +38,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 
+	// ゲーム中のマウスポインタ描画設定
+	SetMouseDispFlag(false);
+	// マウスカーソル位置設定
+	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
+
 	// マテリアル設定
 	MATERIALPARAM Material;
-
 	Material.Diffuse = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
 	Material.Specular = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
 	Material.Ambient = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
@@ -60,9 +64,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeFont(Game::kFontName);
 	SetFontSize(Game::kFontSize);
 
-	// ゲーム中のマウスポインタ描画設定
-	SetMouseDispFlag(false);
-
 	// サウンドマネージャー宣言
 	auto& soundManager = SoundManager::GetInstance();
 	// エフェクシアマネージャー宣言
@@ -74,6 +75,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//ロード
 	Load::GetInstance().AllLoadData();
+	// カーソル画像読み込み
+	int hCursorImg = Load::GetInstance().GetHandle("cursor");
 
 #ifdef _DEBUG
 	scene.ChangeScene(new SceneDebug(scene));
@@ -98,6 +101,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 現在のシーンの描画
 		scene.Draw();
 
+		// マウスカーソル描画
+		DrawRotaGraph(input.GetMousePosX(), input.GetMousePosY(), 1.0, 0.0, hCursorImg, true, false, true);
+
 		// 裏画面を表画面と入れ替える
 		ScreenFlip();
 
@@ -112,10 +118,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		}
 	}
-
-	// マウスポインタの表示
+	// マウスカーソル描画
 	SetMouseDispFlag(true);
 
+	// カーソル画像削除
+	hCursorImg = -1;
 	//データ削除
 	Load::GetInstance().DeleteAllData();
 	// Effekseerの終了処理

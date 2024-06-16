@@ -40,7 +40,7 @@ SceneTitleMenu::~SceneTitleMenu()
 void SceneTitleMenu::Init()
 {
 	// 選択メニューの初期化
-	m_pSelectMenu->Init(false);
+	m_pSelectMenu->Init(true);
 	// 選択項目追加
 	for (const auto& item : kMenuTexts)
 	{

@@ -2,15 +2,7 @@
 #include "EffekseerManager.h"
 #include "Load.h"
 
-namespace
-{
-	// 弾の速度
-	constexpr float kShotSpeed = 32.0f;
-	// 弾の半径
-	constexpr float kShotRadius = 24.0f;
-	// 弾の有効時間
-	constexpr int kShotTime = 60 * 10;
-}
+using namespace ShotParam;
 
 Shot::Shot(VECTOR pos, VECTOR target):
 	ObjectBase(),
@@ -19,8 +11,7 @@ Shot::Shot(VECTOR pos, VECTOR target):
 {
 	// ショットの初期化
 	Init(pos);
-	// ショット追尾先更新
-	m_status.dir = VSub(target, pos);
+	m_status.dir = VSub(target, m_status.pos);
 	if (VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
 	m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
 }
@@ -60,7 +51,6 @@ void Shot::Update()
 
 void Shot::Draw()
 {
-	//DrawSphere3D(m_status.pos, m_status.radius, 16, 0xe3e3e3, 0xe3e3e3, false);
 	// 画像描画
 	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
 }
@@ -69,6 +59,7 @@ void Shot::OnHit()
 {
 	// 当たった時の処理
 	m_status.isEnabled = false;
+	printfDx("Shot Hit!\n");
 }
 
 void Shot::SetScale(float scale)

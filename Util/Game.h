@@ -53,7 +53,7 @@ namespace Game
 	// プレイヤーの基本設定
 	constexpr float kBaseScale = 100.0f;
 	// ステージ基本サイズ
-	constexpr float kStageSizeX = 1000.0f;
+	constexpr float kStageSizeX = 2000.0f;
 	constexpr float kStageSizeY = 500.0f;
 	constexpr float kStageSizeZ = 5000.0f;
 	// パーティクル用

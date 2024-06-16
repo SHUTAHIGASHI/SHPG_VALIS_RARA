@@ -13,19 +13,17 @@ class SceneOption :
     public Scene
 {
 public:
-    // コンストラクタ
     SceneOption(SceneManager& manager);
-    // デストラクタ
     virtual ~SceneOption();
 
     // 初期化
-    void Init();
+    void Init() override;
     // 更新
-    void Update(const InputState& input);
+    void Update(const InputState& input) override;
     // 描画
-    void Draw();
+    void Draw() override;
     // 終了
-    void End() {}
+    void End() override {}
 
 private: // プライベート関数
     // 音量の設定
@@ -37,9 +35,11 @@ private: // プライベート関数
     // 変更前の音量情報を反映させる
     void ResetVolumeInfo();
     // テキスト描画位置
-    void DrawSoundBar(float drawX, float drawY, int& volume);
+    void DrawSoundBar(float drawX, float drawY, int volume);
     // テキスト情報の描画
     void DrawMenuText();
+    // 項目選択時
+    void CursorUpdate(const InputState& input);
     // 選択時の処理
     void OnSelect();
 
@@ -56,13 +56,15 @@ private:
     int m_volumeSE;
     // 選択位置
     int m_selectedPos;
-    // 選択中の文字列
+	// 選択項目
     std::string m_selectedItemName;
     // 画像
-	int m_hBgImg;
+    int m_hBgImg;
     int m_hMusicVolImg;
+    // カーソルが枠内にあるかどうか
+    bool m_isCursorRanged;
     // 音量調整モード
     bool m_isVolumeChangeMode;
-    // ウィンドウモード変更したかどうか
+	// 保存したウィンドウモード
     bool m_isSavedWindowMode;
 };

@@ -24,6 +24,8 @@ public:
     // 選択中の項目値取得
     int GetSelectedNum() { return m_selectedPos; }
 
+    // メニュー項目を描画するかの指定
+	void SetDrawItem(int index, bool isDraw) { m_selectItems[index].isDraw = isDraw; }
     // メニュー項目描画位置設定
     void SetDrawPos(float x, float y) { m_drawPos.x = x; m_drawPos.y = y; }
     void SetTitleDrawPos(float x, float y) { m_titleDrawPos.x = x; m_titleDrawPos.y = y; }
@@ -52,6 +54,7 @@ private:
     struct SelectItemState
     {
         std::string itemName = "EMPTY";
+		bool isDraw = true;
     };
 
 private: // シーン装飾の管理変数

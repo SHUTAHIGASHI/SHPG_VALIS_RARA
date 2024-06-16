@@ -15,13 +15,15 @@
 #include "CameraManager.h"
 #include "EffekseerManager.h"
 #include "SoundManager.h"
+#include "SkyDome.h"
 
 SceneMain::SceneMain(SceneManager& manager) :
 	Scene(manager),
 	m_updateFunc(&SceneMain::StartUpdate),
 	m_pCamera(std::make_shared<CameraManager>()),
 	m_pPlayer(std::make_shared<Player>()),
-	m_pEnemyManager(std::make_shared<EnemyManager>())
+	m_pEnemyManager(std::make_shared<EnemyManager>()),
+	m_pSkyDome(std::make_shared<SkyDome>())
 {
 }
 
@@ -38,9 +40,12 @@ void SceneMain::Init()
 	m_pCamera->Init();
 	// プレイヤー初期化
 	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
+	m_pPlayer->SetCamera(m_pCamera.get());
 	m_pPlayer->Init();
 	// 敵管理初期化
 	m_pEnemyManager->Init();
+	// スカイドームの初期化処理
+	m_pSkyDome->Init(m_pPlayer->GetPos());
 }
 
 void SceneMain::Update(const InputState& input)
@@ -54,6 +59,8 @@ void SceneMain::Update(const InputState& input)
 	m_pPlayer->Update(input);
 	// 敵管理更新
 	m_pEnemyManager->Update();
+	// スカイドームの更新処理
+	m_pSkyDome->Update(m_pPlayer->GetPos());
 
 	// エフェクトの更新処理
 	EffekseerManager::GetInstance().Update();
@@ -65,6 +72,8 @@ void SceneMain::Draw()
 	m_pEnemyManager->Draw();
 	// プレイヤー描画
 	m_pPlayer->Draw();
+	//スカイドーム描画
+	//m_pSkyDome->Draw();
 
 	// エフェクト描画
 	EffekseerManager::GetInstance().Draw();

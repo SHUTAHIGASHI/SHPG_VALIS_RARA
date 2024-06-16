@@ -1,30 +1,33 @@
 #include "SceneOption.h"
 #include "SceneManager.h"
 #include "SoundManager.h"
+#include "Load.h"
 
 namespace
 {
 	// タイトルテキスト描画位置
 	constexpr float kTitleDrawPosX = Game::kScreenWidthHalf;
-	constexpr float kTitleDrawPosY = Game::kScreenHeightHalf - 180.0f;
+	constexpr float kTitleDrawPosY = Game::kScreenHeightHalf - 175.0f;
 	// テキスト描画位置
-	constexpr float kTextDrawPosY = Game::kScreenHeightHalf - 85.0f;
+	constexpr float kTextDrawPosY = Game::kScreenHeightHalf - 80.0f;
 	// テキスト描画間隔
-	constexpr float kTextDistance = 60.0f;
+	constexpr float kTextDistance = 70.0f;
 	// サウンドテキストの間隔
 	constexpr float kSoundTextDistance = 230.0f;
+
+	// テキスト描画色
+	constexpr int kTextColor = Game::kColorBlue;
+
 	// 音量変化量
 	constexpr int kVolumeChangeNum = 10;
 
-	// シーン名
-	const char* const kTextScene = "オプション";
 	// テキスト
 	const char* const kMenuTexts[] = {
-		"閉じる", 
-		"音楽", 
-		"効果音", 
-		"ウィンドウモード", 
-		"保存して閉じる" 
+		"閉じる",
+		"音楽",
+		"効果音",
+		"ウィンドウモード",
+		"保存して閉じる"
 	};
 	// 選択可能項目の数
 	constexpr int kMenuTextSize = sizeof(kMenuTexts) / sizeof(char*);
@@ -41,19 +44,20 @@ SceneOption::SceneOption(SceneManager& manager) :
 	m_selectedItemName(),
 	m_hBgImg(-1),
 	m_hMusicVolImg(-1),
+	m_isCursorRanged(false),
 	m_isVolumeChangeMode(false),
 	m_isSavedWindowMode(false)
 {
 	// 画像読み込み
-	m_hBgImg = LoadGraph("Data/ImageData/OptionBg.png");
-	m_hMusicVolImg = LoadGraph("Data/ImageData/soundVol.png");
+	m_hBgImg = LoadGraph("Data/ImageData/BoardBg.png");
+	m_hMusicVolImg = Load::GetInstance().GetHandle("shot");
 }
 
 SceneOption::~SceneOption()
 {
-	// 画像削除
+	// 画像ハンドル解放
 	DeleteGraph(m_hBgImg);
-	DeleteGraph(m_hMusicVolImg);
+	m_hMusicVolImg = -1;
 }
 
 void SceneOption::Init()
@@ -72,43 +76,11 @@ void SceneOption::Update(const InputState& input)
 {
 	// フレームカウント
 	m_countFrame++;
-	if (m_countFrame > 60)
+	if (m_countFrame > 600)
 	{
 		m_countFrame = 0;
 	}
-	// ポーズシーン終了
-	if (input.IsTriggered(InputType::pause))
-	{
-		m_Manager.PopScene();
-		return;
-	}
-	// 音量調整
-	if (m_isVolumeChangeMode)
-	{
-		ChangeVolume(input);
-	}
-	// 音量変更モードでない場合
-	else
-	{
-		// 選択項目変更
-		if (input.IsTriggered(InputType::down))
-		{
-			m_selectedPos++;
-			if (m_selectedPos > kMenuTextSize - 1) m_selectedPos = 0;
-			m_countFrame = 6;
-		}
-		else if (input.IsTriggered(InputType::up))
-		{
-			m_selectedPos--;
-			if (m_selectedPos < 0) m_selectedPos = kMenuTextSize - 1;
-			m_countFrame = 6;
-		}
-	}
-	// 決定
-	if (input.IsTriggered(InputType::select))
-	{
-		OnSelect();
-	}
+
 	// 音量変更モード解除
 	if (input.IsTriggered(InputType::pause))
 	{
@@ -119,19 +91,41 @@ void SceneOption::Update(const InputState& input)
 		// シーンを閉じる
 		m_Manager.PopScene();
 	}
+
+	// 音量変更モード
+	if (m_isVolumeChangeMode)
+	{
+		// 音量変更
+		ChangeVolume(input);
+	}
+	else
+	{
+		// カーソル更新
+		CursorUpdate(input);
+	}
+
+	// 選択
+	if (input.IsTriggered(InputType::select) && m_isCursorRanged)
+	{
+		// 選択時の処理
+		OnSelect();
+	}
 }
 
 void SceneOption::Draw()
 {
 	// 背景描画
-	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.0, 0.0, m_hBgImg, true);
-	// テキスト描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	// 背景描画
+	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.2, 0.0, m_hBgImg, true);
+	// 項目描画
 	DrawMenuText();
 }
 
 void SceneOption::ChangeVolume(const InputState& input)
 {
-	// 音量変更
 	if (m_selectedPos == 1)
 	{
 		// BGM
@@ -149,16 +143,16 @@ void SceneOption::ControllVolume(const InputState& input, int& volume)
 	// 音量変更
 	if (input.IsTriggered(InputType::right))
 	{
+		// 音量上
 		volume += kVolumeChangeNum;
 		if (volume > 100) volume = 100;
-		// 音量情報をセット
 		SetVolumeInfo();
 	}
 	if (input.IsTriggered(InputType::left))
 	{
+		// 音量下
 		volume -= kVolumeChangeNum;
 		if (volume < 0) volume = 0;
-		// 音量情報をセット
 		SetVolumeInfo();
 	}
 }
@@ -177,37 +171,33 @@ void SceneOption::ResetVolumeInfo()
 	SoundManager::GetInstance().SetBGMVolume(m_exVolumeBGM);
 }
 
-void SceneOption::DrawSoundBar(float drawX, float drawY, int& volume)
+void SceneOption::DrawSoundBar(float drawX, float drawY, int volume)
 {
-	// 音量バーの色
+	// 音量バー描画色設定
 	int barColorBGM = 0xffffff, barColorSE = 0xffffff;
-	if (m_selectedPos == 1) barColorBGM = Game::kColorOrange;
-	if (m_selectedPos == 2) barColorSE = Game::kColorOrange;
+	if (m_selectedPos == 1) barColorBGM = Game::kColorBlue;
+	if (m_selectedPos == 2) barColorSE = Game::kColorBlue;
+
 	// 音量バー描画
 	for (int i = 0; i < 10; i++)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 75);
-		DrawRotaGraphF(drawX + (i * 40), drawY + 20.0f, 0.5, 0.0, m_hMusicVolImg, true);
+		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 0.2, 0.0, m_hMusicVolImg, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-	// 現在の音量分描画
+
 	int n = 0;
 	n = volume / kVolumeChangeNum;
 	for (int i = 0; i < n; i++)
 	{
-		DrawRotaGraphF(drawX + (i * 40), drawY + 20.0f, 0.5, 0.0, m_hMusicVolImg, true);
+		// 音量バー描画
+		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 0.2, 0.0, m_hMusicVolImg, true);
 	}
 }
 
 void SceneOption::DrawMenuText()
 {
-	// タイトル描画
-	SetFontSize(static_cast<int>(Game::kFontSize * 1.5));
 	float drawX = 0.0f, drawY = 0.0f;
-	drawX = static_cast<float>(kTitleDrawPosX - (GetDrawFormatStringWidth(kTextScene) / 2));
-	drawY = kTitleDrawPosY;
-	DrawStringF(drawX, drawY, kTextScene, 0xffffff);
-	SetFontSize(Game::kFontSize);
 	// メニューテキスト描画
 	for (int i = 0; i < kMenuTextSize; i++)
 	{
@@ -239,11 +229,32 @@ void SceneOption::DrawMenuText()
 		DrawSoundBar(Game::kScreenWidthHalf - 180.0f, drawY, *volume);
 	}
 	else
-	{ 
+	{
 		// 選択中の項目描画
 		if ((m_countFrame / 10) % 6 != 0)
 		{
-			DrawFormatStringF(drawX, drawY - 2, Game::kColorOrange, "%s", m_selectedItemName.c_str());
+			DrawFormatStringF(drawX, drawY - 2, kTextColor, "%s", m_selectedItemName.c_str());
+		}
+	}
+}
+
+void SceneOption::CursorUpdate(const InputState& input)
+{
+	m_isCursorRanged = false;
+	int buttonPosX = 0, buttonPosY = Game::kScreenHeightHalf;
+	std::string tText;
+	for (int i = 0; i < kMenuTextSize; i++)
+	{
+		tText = GetCurrentText(i);
+		int textLength = GetDrawFormatStringWidth(tText.c_str());
+		buttonPosX = static_cast<int>(Game::kScreenWidthHalf - (textLength / 2));
+		buttonPosY = static_cast<int>(kTextDrawPosY + (kTextDistance * i));
+
+		if (input.GetMousePosX() > buttonPosX && input.GetMousePosX() < buttonPosX + textLength
+			&& input.GetMousePosY() > buttonPosY && input.GetMousePosY() < buttonPosY + Game::kFontSize)
+		{
+			m_isCursorRanged = true;
+			m_selectedPos = i;
 		}
 	}
 }
@@ -252,7 +263,7 @@ void SceneOption::OnSelect()
 {
 	// 選択音再生
 	SoundManager::GetInstance().PlaySE(SoundType::select);
-	// 選択項目
+	// 選択項目による処理
 	if (m_selectedPos == 0)
 	{
 		// 音量情報をリセットして閉じる
@@ -275,15 +286,13 @@ void SceneOption::OnSelect()
 	}
 	else if (m_selectedPos == 4)
 	{
-		// そのまま閉じる
+		// 音量情報を保存して閉じる
 		m_Manager.PopScene();
 	}
 }
 
 std::string SceneOption::GetCurrentText(int textNum)
 {
-	std::string text;
-	// テキスト取得
-	text = kMenuTexts[textNum];
-	return text;
+	// 選択中の文字列を返す
+	return kMenuTexts[textNum];
 }

@@ -2,6 +2,16 @@
 #include "ObjectBase.h"
 #include <DxLib.h>
 
+namespace ShotParam
+{
+	// ’e‚Ì‘¬“x
+	constexpr float kShotSpeed = 324.0f;
+	// ’e‚Ì”¼Œa
+	constexpr float kShotRadius = 32.0f;
+	// ’e‚Ì—LŒøŽžŠÔ
+	constexpr int kShotTime = 60 * 2;
+}
+
 class Shot : public ObjectBase
 {
 public:

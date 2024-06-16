@@ -15,17 +15,21 @@ namespace
 SkyDome::SkyDome() :
 	m_pModel(nullptr),
 	m_scale(kSkyDomeRadius),
-	m_angle(0.0f),
+	m_angle(DX_PI_F),
 	m_dir(Game::kVecZero)
 {
+	// モデルの読み込み
+	m_handle = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
 	// モデルクラス初期化
-	m_pModel = std::make_shared<Model>(MV1DuplicateModel(Load::GetInstance().GetHandle("skydome")));
+	m_pModel = std::make_shared<Model>(m_handle);
 	// スカイドームのスケールを設定
 	m_pModel->SetScale(m_scale);
 }
 
 SkyDome::~SkyDome()
 {
+	// モデルの削除
+	MV1DeleteModel(m_handle);
 }
 
 void SkyDome::Init(VECTOR playerPos)

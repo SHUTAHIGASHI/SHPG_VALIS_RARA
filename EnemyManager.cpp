@@ -6,7 +6,7 @@
 namespace
 {
 	// ìGÇÃê∂ê¨êî
-	constexpr int kEnemyNum = 2;
+	constexpr int kEnemyNum = 10;
 }
 
 EnemyManager::EnemyManager():
@@ -67,8 +67,8 @@ VECTOR EnemyManager::GetRandomPos()
 	VECTOR result;
 
 	result.x = GetRand(Game::kStageSizeX) - 500;
-	result.y = GetRand(Game::kStageSizeY);
-	result.z = GetRand(Game::kStageSizeZ) - 500;
+	result.y = 0.0f;
+	result.z = GetRand(Game::kStageSizeZ) + Game::kStageSizeZ;
 
 	return result;
 }

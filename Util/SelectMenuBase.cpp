@@ -69,8 +69,10 @@ void SelectMenuBase::DrawMenuText()
 		int textLength = GetDrawFormatStringWidth(items.itemName.c_str());
 		drawX = static_cast<int>(m_drawPos.x - (textLength / 2));
 		drawY = static_cast<int>(m_drawPos.y + (kTextDistance * itemCount));
-		DrawFormatString(drawX, drawY, m_itemColor, "%s", items.itemName.c_str());
-
+		if (items.isDraw)
+		{
+			DrawFormatString(drawX, drawY, m_itemColor, "%s", items.itemName.c_str());
+		}
 		itemCount++;
 	}
 
@@ -79,9 +81,12 @@ void SelectMenuBase::DrawMenuText()
 	drawX = static_cast<int>(m_drawPos.x - (textLength / 2));
 	drawY = static_cast<int>(m_drawPos.y + (kTextDistance * m_selectedPos));
 
-	if ((m_countFrame / 10) % 6 != 0)
+	if (m_selectItems[m_selectedPos].isDraw)
 	{
-		DrawFormatString(drawX, drawY - 2, m_selectedItemColor, "%s", drawText.c_str());
+		if ((m_countFrame / 10) % 6 != 0)
+		{
+			DrawFormatString(drawX, drawY - 2, m_selectedItemColor, "%s", drawText.c_str());
+		}
 	}
 }
 
@@ -119,7 +124,6 @@ void SelectMenuBase::CursorUpdate(const InputState& input)
 		{
 			m_isCursorRanged = true;
 			m_selectedPos = itemCount;
-			m_countFrame = 6;
 		}
 		itemCount++;
 	}

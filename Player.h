@@ -13,6 +13,8 @@ public:
 
 	// エネミーマネージャーの設定
 	void SetEnemyManager(class EnemyManager* pEnemyManager) { m_pEnemyManager = pEnemyManager; }
+	// カメラの設定
+	void SetCamera(class CameraManager* pCamera) { m_pCamera = pCamera; }
 
 	// 初期化
 	void Init() override;
@@ -22,8 +24,12 @@ public:
 	void Draw() override;
 
 private:
+	// ショット管理
+	void ControllShot(const InputState& input);
 	// ショット生成
 	void CreateShot();
+	// スペシャルショット生成
+	void CreateSprShot();
 	// ショット更新
 	void UpdateShot();
 	// カーソル更新
@@ -33,8 +39,9 @@ private:
 
 private:
 	// 画像ハンドル
-	int m_hCursorImg;
 	int m_hLockCursorImg;
+	// ショット連射速度
+	int m_shotDelay;
 	// カーソルロック判定
 	bool m_isLockOn;
 	// カーソル座標
@@ -50,5 +57,7 @@ private:// 各種ポインタ
 	ObjectBase* m_pTargetObj;
 	// エネミーマネージャーのポインタ
 	class EnemyManager* m_pEnemyManager;
+	// カメラのポインタ
+	class CameraManager* m_pCamera;
 };
 

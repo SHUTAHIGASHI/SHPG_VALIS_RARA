@@ -23,6 +23,9 @@ public:
 	// 画面揺れ
 	void OnScreenQuake();
 
+	// カメラ座標取得
+	VECTOR GetPos() { return m_pos; }
+
 private:// メンバ関数
 	// 座標更新
 	void UpdatePos();

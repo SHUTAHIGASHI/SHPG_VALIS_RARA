@@ -18,6 +18,8 @@ public:
 private:
 	std::shared_ptr<Model> m_pModel;
 
+	int m_handle;
+
 	float m_scale;
 	float m_angle = 0.0f;
 

@@ -70,7 +70,7 @@ void CameraManager::UpdatePos()
 	m_targetPos = VAdd(m_pPlayer->GetPos(), kTargetPos);
 	// ƒJƒƒ‰‚ÌÀ•W‚ðÝ’è
 	m_pos = VGet(m_pPlayer->GetPos().x,
-		m_pPlayer->GetPos().y + 100.0f,
+		m_pPlayer->GetPos().y + 50.0f,
 		m_pPlayer->GetPos().z - 200.0f);
 }
 
