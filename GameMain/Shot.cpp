@@ -97,7 +97,7 @@ void Shot::UpdateShotAndTarget()
 		if (m_targetObject->IsEnabled())
 		{
 			m_status.dir = VSub(m_targetObject->GetPos(), m_status.pos);
-			if (VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
+			if(VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
 			m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
 		}
 	}

@@ -48,6 +48,8 @@ private:
 	VECTOR m_cursorPos;
 	// ロックオンカーソル座標
 	VECTOR m_lockObjPos;
+	// 着弾地点
+	VECTOR m_targetPos;
 	// ショット配列
 	std::list<class Shot*> m_pShots;
 	

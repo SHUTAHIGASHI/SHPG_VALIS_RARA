@@ -10,6 +10,7 @@ class ObjectBase
 		// €–S”»’è
 		bool isDead = false;
 		// À•W
+		VECTOR exPos = Game::kVecZero;
 		VECTOR pos = Game::kVecZero;
 		VECTOR dir = Game::kVecZero;
 		// ‰ñ“]

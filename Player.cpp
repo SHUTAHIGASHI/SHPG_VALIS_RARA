@@ -23,9 +23,11 @@ Player::Player():
 	m_isLockOn(false),
 	m_cursorPos(Game::kVecZero),
 	m_lockObjPos(Game::kVecZero),
+	m_targetPos(Game::kVecZero),
 	m_pShots(),
 	m_pTargetObj(nullptr),
-	m_pEnemyManager(nullptr)
+	m_pEnemyManager(nullptr),
+	m_pCamera(nullptr)
 {
 	// 画像読み込み
 	m_status.hImg = Load::GetInstance().GetHandle("player");
@@ -49,7 +51,6 @@ void Player::Update(const InputState& input)
 {
 	// カーソル更新
 	UpdateCursor(input);
-
 	// ショット管理
 	ControllShot(input);
 	// ショット更新
@@ -64,12 +65,23 @@ void Player::Draw()
 		shot->Draw();
 	}
 
+	// レーザー描画
+	DrawLine3D(m_status.pos, m_targetPos, 0xff0000);
+
 	// 2D描画
 	Draw2D();
 }
 
 void Player::ControllShot(const InputState& input)
 {
+	// ターゲット位置
+	VECTOR targetPos = ConvScreenPosToWorldPos(VGet(m_cursorPos.x, m_cursorPos.y, 0.0f));
+	// 着弾地点の座標
+	VECTOR targetDir = VSub(targetPos, m_pCamera->GetPos());
+	if (VSize(targetDir) > 0) targetDir = VNorm(targetDir);
+	targetDir = VScale(targetDir, ShotParam::kShotSpeed);
+	m_targetPos = VAdd(m_pCamera->GetPos(), VScale(targetDir, ShotParam::kShotTime));
+
 	// ショット連射速度
 	m_shotDelay--;
 	if (m_shotDelay < 0)
@@ -97,15 +109,8 @@ void Player::ControllShot(const InputState& input)
 
 void Player::CreateShot()
 {
-	// ターゲット位置
-	VECTOR targetPos = ConvScreenPosToWorldPos(VGet(m_cursorPos.x, m_cursorPos.y, 0.0f));
-	// 着弾地点の座標
-	VECTOR targetDir = VSub(targetPos, m_pCamera->GetPos());
-	if (VSize(targetDir) > 0) targetDir = VNorm(targetDir);
-	targetDir = VScale(targetDir, ShotParam::kShotSpeed);
-	targetPos = VAdd(m_pCamera->GetPos(), VScale(targetDir, ShotParam::kShotTime));
 	// ショット生成
-	m_pShots.push_back(new Shot(m_status.pos, targetPos));
+	m_pShots.push_back(new Shot(m_status.pos, m_targetPos));
 
 	// ショット連射速度初期化
 	if (m_shotDelay <= 0)
@@ -117,7 +122,7 @@ void Player::CreateShot()
 void Player::CreateSprShot()
 {
 	// ショット生成
-	m_pShots.push_back(new Shot(m_status.pos, m_pTargetObj->GetPos()));
+	m_pShots.push_back(new Shot(m_status.pos, m_pTargetObj));
 
 	// ショット連射速度初期化
 	if (m_shotDelay <= 0)
