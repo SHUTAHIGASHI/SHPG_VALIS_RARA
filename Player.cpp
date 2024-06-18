@@ -102,8 +102,11 @@ void Player::ControllShot(const InputState& input)
 	// スペシャルショットボタンが押されたら
 	if (input.IsTriggered(InputType::sprShot))
 	{
-		// スペシャルショット生成
-		CreateSprShot();
+		if (m_isLockOn)
+		{
+			// スペシャルショット生成
+			CreateSprShot();
+		}
 	}
 }
 
