@@ -6,7 +6,7 @@
 namespace
 {
 	// “G‚Ì¶¬”
-	constexpr int kEnemyNum = 10;
+	constexpr int kEnemyNum = 5;
 }
 
 EnemyManager::EnemyManager():
