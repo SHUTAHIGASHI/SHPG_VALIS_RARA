@@ -11,7 +11,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ログ無効化
 	SetOutApplicationLogValidFlag(false);
 	// 他ウィンドウを選択していても動作
-	SetAlwaysRunFlag(false);
+	SetAlwaysRunFlag(true);
 	// ウィンドウモード設定
 	ChangeWindowMode(Game::kWindowMode);
 	// ウィンドウモードのサイズ変更
