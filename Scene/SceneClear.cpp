@@ -64,20 +64,12 @@ SceneClear::SceneClear(SceneManager& manager) :
 
 SceneClear::~SceneClear()
 {
-	// 音楽停止
-	SoundManager::GetInstance().StopBGM();
 	// 背景画像削除
 	DeleteGraph(m_hBgImg);
 }
 
 void SceneClear::Update(const InputState& input)
 {
-	// 音楽再生開始
-	if (SoundManager::GetInstance().IsPlayingMusic() != 1)
-	{
-		SoundManager::GetInstance().PlayMusic(MusicType::over);
-	}
-
 	// Update処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
 }

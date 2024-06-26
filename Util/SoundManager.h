@@ -1,23 +1,11 @@
 #pragma once
 #include <unordered_map>
 #include <string>
+#include <vector>
 
 enum class SoundType
 {
-	transition,
 	select,
-	itemGet,
-	boost,
-	damage,
-	shot,
-	dead
-};
-
-enum class MusicType
-{
-	title,
-	main,
-	over
 };
 
 /// <summary>
@@ -40,14 +28,14 @@ public:
 		return instance;
 	}
 
+	// BGMの更新
+	void UpdateBGM();
+
 	/// <summary>
 	/// 指定のサウンドを鳴らす
 	/// </summary>
 	/// <param name="name">サウンド名</param>
 	void PlaySE(SoundType sound);
-	void PlayMusic(MusicType music);
-	void RestartCurrentBGM();
-	int IsPlayingMusic();
 
 	/// <summary>
 	/// SEのボリュームを設定する
@@ -69,12 +57,21 @@ public:
 	/// <param name="rate">音量の割合(一時的なもの0.0～1.0)</param>
 	void SetBGMRate(float rate);
 
-	// サウンドを全部一時停止する
-	void StopBGM();
-
 	// サウンド情報をセーブ
 	void SaveSoundConfig();
 private:
+	// サウンドデータ
+	struct SoundData
+	{
+		SoundData(int h, SoundType t) :
+			soundHandle(h),
+			soundType(t)
+		{}
+
+		int soundHandle = -1;
+		SoundType soundType;
+	};
+
 	// 変更したサウンド情報をファイルに書き込む
 	struct SoundConfigInfo
 	{
@@ -86,7 +83,7 @@ private:
 
 	// 効果音と音楽の音量
 	int m_volumeSE = 100;
-	int m_volumeBGM = 100;
+	int m_volumeBGM = 40;
 
 	// シングルトンパターンなのでコンストラクタはprivateに置く
 	SoundManager();
@@ -96,7 +93,6 @@ private:
 
 	// 選択したサウンドタイプのハンドルを返す
 	int GetCurrentSoundHandle(SoundType sound);
-	void SetCurrentMusic(MusicType music);
 
 	// 音データ読込
 	void LoadData();
@@ -105,19 +101,9 @@ private:
 	void LoadSoundConfig();
 
 private:
-	// 現在再生中の音楽
-	int m_hCurrentMusic;
-
-	// サウンドデータハンドル
-	int m_hTransition;
-	int m_hSelectSound;
-	int m_hItemGetSound;
-	int m_hBoostSound;
-	int m_hDamageSound;
-	int m_hShotSound;
-	int m_hDeadSound;
+	// 音データ
+	std::vector<SoundData> m_soundData;
 
 	// ミュージックデータハンドル
-	int m_hNormalMusic;
-	int m_hMainMusic;
+	int m_hMusic;
 };

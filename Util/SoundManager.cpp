@@ -43,23 +43,27 @@ void SoundManager::SaveSoundConfig()
 
 SoundManager::~SoundManager()
 {
-	if (CheckSoundMem(m_hCurrentMusic) == 1)
-	{
-		StopSoundMem(m_hCurrentMusic);
-	}
-
 	SaveSoundConfig();
 
-	DeleteSoundMem(m_hCurrentMusic);
-	DeleteSoundMem(m_hTransition);
-	DeleteSoundMem(m_hSelectSound);
-	DeleteSoundMem(m_hItemGetSound);
-	DeleteSoundMem(m_hBoostSound);
-	DeleteSoundMem(m_hDamageSound);
-	DeleteSoundMem(m_hShotSound);
-	DeleteSoundMem(m_hDeadSound);
-	DeleteSoundMem(m_hMainMusic);
-	DeleteSoundMem(m_hNormalMusic);
+	// 効果音データ
+	for (auto& soundData : m_soundData)
+	{
+		DeleteSoundMem(soundData.soundHandle);
+	}
+	m_soundData.clear();
+
+	// 曲データ
+	DeleteSoundMem(m_hMusic);
+}
+
+void SoundManager::UpdateBGM()
+{
+	if (CheckSoundMem(m_hMusic) == 0)
+	{
+		int volumePal = (255 / 100) * m_volumeBGM;
+		ChangeVolumeSoundMem(volumePal, m_hMusic);
+		PlaySoundMem(m_hMusic, DX_PLAYTYPE_BACK);
+	}
 }
 
 void SoundManager::PlaySE(SoundType sound)
@@ -67,24 +71,6 @@ void SoundManager::PlaySE(SoundType sound)
 	int volumePal = (255 / 100) * m_volumeSE;
 	ChangeVolumeSoundMem(m_volumeSE, GetCurrentSoundHandle(sound));
 	PlaySoundMem(GetCurrentSoundHandle(sound), DX_PLAYTYPE_BACK);
-}
-
-void SoundManager::PlayMusic(MusicType music)
-{
-	SetCurrentMusic(music);
-	int volumePal = (255 / 100) * m_volumeBGM;
-	ChangeVolumeSoundMem(volumePal, m_hCurrentMusic);
-	PlaySoundMem(m_hCurrentMusic, DX_PLAYTYPE_BACK);
-}
-
-void SoundManager::RestartCurrentBGM()
-{
-	PlaySoundMem(m_hCurrentMusic, DX_PLAYTYPE_BACK, false);
-}
-
-int SoundManager::IsPlayingMusic()
-{
-	return CheckSoundMem(m_hCurrentMusic);
 }
 
 void SoundManager::SetSEVolume(int volume)
@@ -101,7 +87,7 @@ void SoundManager::SetBGMVolume(int volume)
 {
 	m_volumeBGM = volume;
 	int volumePal = (255 / 100) * m_volumeBGM;
-	ChangeVolumeSoundMem(volumePal, m_hCurrentMusic);
+	ChangeVolumeSoundMem(volumePal, m_hMusic);
 }
 
 int SoundManager::GetBGMVolume() const
@@ -112,20 +98,12 @@ int SoundManager::GetBGMVolume() const
 void SoundManager::SetBGMRate(float rate)
 {
 	assert(0.0f <= rate && rate <= 1.0f);
-	ChangeVolumeSoundMem(static_cast<int>(static_cast<float>(m_volumeBGM) * rate), m_hCurrentMusic);
-}
-
-void SoundManager::StopBGM()
-{
-	StopSoundMem(m_hCurrentMusic);
+	ChangeVolumeSoundMem(static_cast<int>(static_cast<float>(m_volumeBGM) * rate), m_hMusic);
 }
 
 SoundManager::SoundManager() :
-	m_hCurrentMusic(NULL),
-	m_hSelectSound(-1),
-	m_hItemGetSound(-1),
-	m_hDamageSound(-1),
-	m_hMainMusic(-1)
+	m_soundData(),
+	m_hMusic(-1)
 {
 	LoadSoundConfig();
 	LoadData();
@@ -135,65 +113,23 @@ int SoundManager::GetCurrentSoundHandle(SoundType sound)
 {
 	int currentSound = -1;
 
-	if (sound == SoundType::transition)
+	for (auto& soundData : m_soundData)
 	{
-		currentSound = m_hTransition;
-	}
-	else if (sound == SoundType::select)
-	{
-		currentSound = m_hSelectSound;
-	}
-	else if (sound == SoundType::itemGet)
-	{
-		currentSound = m_hItemGetSound;
-	}
-	else if (sound == SoundType::boost)
-	{
-		currentSound = m_hBoostSound;
-	}
-	else if (sound == SoundType::damage)
-	{
-		currentSound = m_hDamageSound;
-	}
-	else if (sound == SoundType::shot)
-	{
-		currentSound = m_hShotSound;
-	}
-	else if (sound == SoundType::dead)
-	{
-		currentSound = m_hDeadSound;
+		if (soundData.soundType == sound)
+		{
+			currentSound = soundData.soundHandle;
+			break;
+		}
 	}
 
 	return currentSound;
 }
 
-void SoundManager::SetCurrentMusic(MusicType music)
-{
-	if (music == MusicType::title)
-	{
-		m_hCurrentMusic = m_hNormalMusic;
-	}
-	else if (music == MusicType::main)
-	{
-		m_hCurrentMusic = m_hMainMusic;
-	}
-	else if (music == MusicType::over)
-	{
-		m_hCurrentMusic = m_hNormalMusic;
-	}
-}
-
 void SoundManager::LoadData()
 {
 	// サウンド
-	m_hTransition = LoadSoundMem("Data/SoundData/Transition.mp3");
-	m_hSelectSound = LoadSoundMem("Data/SoundData/Select.wav");
-	m_hItemGetSound = LoadSoundMem("Data/SoundData/ItemGet.wav");
-	m_hBoostSound = LoadSoundMem("Data/SoundData/Boost.wav");
-	m_hDamageSound = LoadSoundMem("Data/SoundData/Damage.wav");
-	m_hShotSound = LoadSoundMem("Data/SoundData/Shoot.wav");
-	m_hDeadSound = LoadSoundMem("Data/SoundData/Dead.wav");
+	m_soundData.push_back(SoundData(LoadSoundMem("Data/SoundData/Select.wav"), SoundType::select));
+
 	// ミュージック
-	m_hMainMusic = LoadSoundMem("Data/SoundData/MainMusic_Ret.mp3");
-	m_hNormalMusic = LoadSoundMem("Data/SoundData/rankMusic.mp3");
+	m_hMusic = LoadSoundMem("Data/MusicData/Getsurin_Meikyuu.mp3");
 }

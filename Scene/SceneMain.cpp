@@ -29,8 +29,6 @@ SceneMain::SceneMain(SceneManager& manager) :
 
 SceneMain::~SceneMain()
 {
-	// 再生中の音楽を停止
-	SoundManager::GetInstance().StopBGM();
 }
 
 void SceneMain::Init()
@@ -73,7 +71,7 @@ void SceneMain::Draw()
 	// プレイヤー描画
 	m_pPlayer->Draw();
 	//スカイドーム描画
-	//m_pSkyDome->Draw();
+	m_pSkyDome->Draw();
 
 	// エフェクト描画
 	EffekseerManager::GetInstance().Draw();
@@ -111,17 +109,9 @@ void SceneMain::NormalUpdate(const InputState& input)
 	// ポーズメニューへ移行
 	if (input.IsTriggered(InputType::pause))
 	{
-		// BGM停止
-		SoundManager::GetInstance().StopBGM();
 		// ポーズメニューシーンへ移行
 		m_Manager.PushScene(new ScenePauseMenu(m_Manager));
 		return;
-	}
-
-	// 音楽再生開始
-	if (SoundManager::GetInstance().IsPlayingMusic() != 1)
-	{
-		SoundManager::GetInstance().PlayMusic(MusicType::main);
 	}
 }
 

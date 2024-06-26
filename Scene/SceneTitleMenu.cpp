@@ -31,8 +31,6 @@ m_pSelectMenu(std::make_shared<SelectMenuBase>())
 
 SceneTitleMenu::~SceneTitleMenu()
 {
-	// BGM停止
-	SoundManager::GetInstance().StopBGM();
 	// 画像ハンドル解放
 	DeleteGraph(m_hTitleLogoImg);
 }
@@ -52,12 +50,6 @@ void SceneTitleMenu::Init()
 
 void SceneTitleMenu::Update(const InputState& input)
 {
-	// 音楽再生開始
-	if (SoundManager::GetInstance().IsPlayingMusic() != 1)
-	{
-		SoundManager::GetInstance().PlayMusic(MusicType::title);
-	}
-
 	// 毎フレームカウント
 	m_countFrame++;
 	// 更新処理のメンバ関数ポインタ

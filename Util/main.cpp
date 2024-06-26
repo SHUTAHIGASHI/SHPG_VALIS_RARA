@@ -87,10 +87,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	while (ProcessMessage() == 0)
 	{
 		LONGLONG time = GetNowHiPerformanceCount();
-		//SetMousePoint(static_cast<int>(Game::kScreenWidthHalf), static_cast<int>(Game::kScreenHeightHalf));
 
 		// 画面のクリア
 		ClearDrawScreen();
+
+		// サウンドマネージャーの更新
+		soundManager.GetInstance().UpdateBGM();
 
 		// 入力状態の更新
 		input.Update();
