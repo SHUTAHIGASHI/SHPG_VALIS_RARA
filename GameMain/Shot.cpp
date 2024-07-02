@@ -59,7 +59,6 @@ void Shot::OnHit()
 {
 	// “–‚½‚Á‚½‚Ìˆ—
 	m_status.isEnabled = false;
-	printfDx("Shot Hit!\n");
 }
 
 void Shot::SetScale(float scale)

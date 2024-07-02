@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="Effect\EffectBase.cpp" />
     <ClCompile Include="Effect\EffekseerManager.cpp" />
-    <ClCompile Include="EnemyBase.cpp" />
-    <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemyChino.cpp" />
+    <ClCompile Include="EnemyNeffy.cpp" />
     <ClCompile Include="GameMain\CameraManager.cpp" />
+    <ClCompile Include="GameMain\EnemyBase.cpp" />
+    <ClCompile Include="GameMain\EnemyManager.cpp" />
+    <ClCompile Include="GameMain\Player.cpp" />
     <ClCompile Include="GameMain\Shot.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneClear.cpp" />
     <ClCompile Include="Scene\SceneDebug.cpp" />
@@ -50,11 +52,13 @@
   <ItemGroup>
     <ClInclude Include="Effect\EffectBase.h" />
     <ClInclude Include="Effect\EffekseerManager.h" />
-    <ClInclude Include="EnemyBase.h" />
-    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyChino.h" />
+    <ClInclude Include="EnemyNeffy.h" />
     <ClInclude Include="GameMain\CameraManager.h" />
+    <ClInclude Include="GameMain\EnemyBase.h" />
+    <ClInclude Include="GameMain\EnemyManager.h" />
+    <ClInclude Include="GameMain\Player.h" />
     <ClInclude Include="GameMain\Shot.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneClear.h" />

@@ -1,6 +1,8 @@
 #include "EnemyManager.h"
 #include "ObjectBase.h"
 #include "EnemyBase.h"
+#include "EnemyNeffy.h"
+#include "EnemyChino.h"
 #include "Game.h"
 
 namespace
@@ -58,7 +60,7 @@ void EnemyManager::Draw()
 
 void EnemyManager::CreateEnemy()
 {
-	m_pEnemies.push_back(new EnemyBase(GetRandomPos()));
+	m_pEnemies.push_back(new EnemyChino(GetRandomPos()));
 	m_pEnemies.back()->Init();
 }
 

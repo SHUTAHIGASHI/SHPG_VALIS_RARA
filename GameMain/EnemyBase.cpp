@@ -2,17 +2,7 @@
 #include "Load.h"
 #include "Game.h"
 
-namespace
-{
-	// 当たり判定
-	constexpr float kRadius = 48.0f;
-	// 移動速度
-	constexpr float kSpeed = 6.0f;
-	// ステージ外範囲
-	constexpr float kStageLimitZ = 0.0f;
-}
-
-EnemyBase::EnemyBase(VECTOR pos):
+EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	ObjectBase()
 {
 	// 半径設定
@@ -24,7 +14,7 @@ EnemyBase::EnemyBase(VECTOR pos):
 	// 座標設定
 	m_status.pos = pos;
 	// 画像設定
-	m_status.hImg = Load::GetInstance().GetHandle("enemy");
+	m_status.hImg = Load::GetInstance().GetHandle(typeName);
 }
 
 EnemyBase::~EnemyBase()
@@ -54,5 +44,4 @@ void EnemyBase::OnHit()
 {
 	// 当たった時の処理
 	m_status.isEnabled = false;
-	printfDx("Enemy Hit!\n");
 }
