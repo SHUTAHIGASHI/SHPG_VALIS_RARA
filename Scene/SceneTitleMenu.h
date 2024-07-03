@@ -43,5 +43,7 @@ private: // シーン装飾の管理変数
 private:
     // セレクトメニューの管理変数
     std::shared_ptr<class SelectMenuBase> m_pSelectMenu;
+    // スカイドーム
+    std::shared_ptr<class SkyDome> m_pSkyDome;
 };
 

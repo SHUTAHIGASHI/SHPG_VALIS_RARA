@@ -60,7 +60,7 @@ void EnemyManager::Draw()
 
 void EnemyManager::CreateEnemy()
 {
-	m_pEnemies.push_back(new EnemyChino(GetRandomPos()));
+	m_pEnemies.push_back(GetRandomEnemy());
 	m_pEnemies.back()->Init();
 }
 
@@ -73,4 +73,20 @@ VECTOR EnemyManager::GetRandomPos()
 	result.z = GetRand(Game::kStageSizeZ) + Game::kStageSizeZ;
 
 	return result;
+}
+
+EnemyBase* EnemyManager::GetRandomEnemy()
+{
+	int index = GetRand(static_cast<int>(2));
+
+	if(index == 0)
+	{
+		return new EnemyChino(GetRandomPos());
+	}
+	else
+	{
+		return new EnemyNeffy(GetRandomPos());
+	}
+
+	return nullptr;
 }

@@ -36,11 +36,11 @@ public:
 	/// <returns>ハンドル</returns>
 	int GetHandle(std::string key)
 	{
-		return m_graphData[key];
+		return m_data[key];
 	}
 private:
 	//ロードデータをunordered_mapで管理
-	std::unordered_map<std::string, int> m_graphData;
+	std::unordered_map<std::string, int> m_data;
 
 	// シングルトンパターンなのでコンストラクタはprivateに置く
 	Load() {};

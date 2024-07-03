@@ -28,6 +28,8 @@ private:
 	void CreateEnemy();
 	// 生成座標ランダム取得
 	VECTOR GetRandomPos();
+	// ランダムで敵種取得
+	class EnemyBase* GetRandomEnemy();
 
 private:
 	// 敵配列

@@ -5,6 +5,7 @@
 #include "SceneHowTo.h"
 #include "SceneOption.h"
 #include "SelectMenuBase.h"
+#include "SkyDome.h"
 #include "Load.h"
 
 namespace
@@ -23,7 +24,8 @@ SceneTitleMenu::SceneTitleMenu(SceneManager& manager) : Scene(manager),
 m_updateFunc(&SceneTitleMenu::NormalUpdate),
 m_countFrame(0),
 m_hTitleLogoImg(-1),
-m_pSelectMenu(std::make_shared<SelectMenuBase>())
+m_pSelectMenu(std::make_shared<SelectMenuBase>()),
+m_pSkyDome(std::make_shared<SkyDome>())
 {
 	// データ読み込み
 	LoadData();
@@ -46,6 +48,9 @@ void SceneTitleMenu::Init()
 	}
 	// 選択項目描画位置設定
 	m_pSelectMenu->SetDrawPos(Game::kScreenWidthHalf, kTextDrawPosY);
+
+	// スカイドーム初期化
+	m_pSkyDome->Init(Game::kVecZero);
 }
 
 void SceneTitleMenu::Update(const InputState& input)
@@ -54,10 +59,14 @@ void SceneTitleMenu::Update(const InputState& input)
 	m_countFrame++;
 	// 更新処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
+	// スカイドーム更新
+	m_pSkyDome->Update(Game::kVecZero);
 }
 
 void SceneTitleMenu::Draw()
 {
+	// スカイドーム描画
+	m_pSkyDome->Draw();
 	// タイトルロゴ描画
 	DrawRotaGraphF(kLogoDrawPosX, kLogoDrawPosY, 1.0, 0, m_hTitleLogoImg, true);
 	// 選択項目描画

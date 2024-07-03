@@ -19,7 +19,7 @@ SkyDome::SkyDome() :
 	m_dir(Game::kVecZero)
 {
 	// モデルの読み込み
-	m_handle = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
+	m_handle = MV1DuplicateModel(Load::GetInstance().GetHandle("skydome"));
 	// モデルクラス初期化
 	m_pModel = std::make_shared<Model>(m_handle);
 	// スカイドームのスケールを設定
