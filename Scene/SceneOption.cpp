@@ -182,7 +182,7 @@ void SceneOption::DrawSoundBar(float drawX, float drawY, int volume)
 	for (int i = 0; i < 10; i++)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 75);
-		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 0.2, 0.0, m_hMusicVolImg, true);
+		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 0.1, 0.0, m_hMusicVolImg, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
@@ -191,7 +191,7 @@ void SceneOption::DrawSoundBar(float drawX, float drawY, int volume)
 	for (int i = 0; i < n; i++)
 	{
 		// ‰¹—Êƒo[•`‰æ
-		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 0.2, 0.0, m_hMusicVolImg, true);
+		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 0.1, 0.0, m_hMusicVolImg, true);
 	}
 }
 

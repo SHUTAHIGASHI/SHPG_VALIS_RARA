@@ -1,11 +1,13 @@
 #pragma once
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <vector>
 
 enum class SoundType
 {
 	select,
+	shot,
 };
 
 /// <summary>
@@ -60,18 +62,6 @@ public:
 	// サウンド情報をセーブ
 	void SaveSoundConfig();
 private:
-	// サウンドデータ
-	struct SoundData
-	{
-		SoundData(int h, SoundType t) :
-			soundHandle(h),
-			soundType(t)
-		{}
-
-		int soundHandle = -1;
-		SoundType soundType;
-	};
-
 	// 変更したサウンド情報をファイルに書き込む
 	struct SoundConfigInfo
 	{
@@ -91,18 +81,14 @@ private:
 	SoundManager(const SoundManager&) = delete;			// コピーコンストラクタ
 	void operator = (const SoundManager&) = delete;		// 代入も禁止
 
-	// 選択したサウンドタイプのハンドルを返す
-	int GetCurrentSoundHandle(SoundType sound);
-
 	// 音データ読込
 	void LoadData();
-
 	// 音の設定を読込
 	void LoadSoundConfig();
 
 private:
 	// 音データ
-	std::vector<SoundData> m_soundData;
+	std::map<SoundType, int> m_soundData;
 
 	// ミュージックデータハンドル
 	int m_hMusic;

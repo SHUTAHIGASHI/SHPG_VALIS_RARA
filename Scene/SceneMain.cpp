@@ -19,7 +19,7 @@
 
 SceneMain::SceneMain(SceneManager& manager) :
 	Scene(manager),
-	m_updateFunc(&SceneMain::StartUpdate),
+	m_updateFunc(&SceneMain::NormalUpdate),
 	m_pCamera(std::make_shared<CameraManager>()),
 	m_pPlayer(std::make_shared<Player>()),
 	m_pEnemyManager(std::make_shared<EnemyManager>()),
@@ -57,7 +57,7 @@ void SceneMain::Update(const InputState& input)
 	m_pPlayer->Update(input);
 	// 敵管理更新
 	m_pEnemyManager->Update();
-	// スカイドームの更新処理
+	// スカイドームの更新
 	m_pSkyDome->Update(m_pPlayer->GetPos());
 
 	// エフェクトの更新処理

@@ -5,6 +5,7 @@
 #include "EnemyBase.h"
 #include "Load.h"
 #include "CameraManager.h"
+#include "SoundManager.h"
 
 namespace
 {
@@ -108,6 +109,9 @@ void Player::ControllShot(const InputState& input)
 			CreateSprShot();
 		}
 	}
+
+	// ショットサウンド再生
+	SoundManager::GetInstance().PlaySE(SoundType::shot);
 }
 
 void Player::CreateShot()

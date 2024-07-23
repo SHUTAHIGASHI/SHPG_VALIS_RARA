@@ -34,7 +34,6 @@ SkyDome::~SkyDome()
 
 void SkyDome::Init(VECTOR playerPos)
 {
-	m_dir = playerPos;
 	//XŽ²
 	m_dir.x += 1.0f * cosf(m_angle);
 	//ZŽ²
@@ -46,14 +45,8 @@ void SkyDome::Init(VECTOR playerPos)
 
 void SkyDome::Update(VECTOR playerPos)
 {
-	m_dir = playerPos;
-	//XŽ²
-	m_dir.x += 1.0f * cosf(m_angle);
-	//ZŽ²
-	m_dir.z += 1.0f * sinf(m_angle);
 	// ƒ‚ƒfƒ‹î•ñXV
 	m_pModel->SetPosition(playerPos);
-	m_pModel->SetDirectionAxisZ(m_dir, 0.0f);
 }
 
 void SkyDome::Draw()

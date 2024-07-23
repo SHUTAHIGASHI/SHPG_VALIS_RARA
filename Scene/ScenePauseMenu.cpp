@@ -24,7 +24,7 @@ ScenePauseMenu::ScenePauseMenu(SceneManager& manager) :
 	m_pSelectMenu(std::make_shared<SelectMenuBase>())
 {
 	// 選択メニューの初期化
-	m_pSelectMenu->Init(false);
+	m_pSelectMenu->Init(true);
 	// シーン文字列設定
 	for (auto& item : kMenuTexts)
 	{

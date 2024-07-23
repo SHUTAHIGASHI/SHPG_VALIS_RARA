@@ -48,7 +48,7 @@ SoundManager::~SoundManager()
 	// 効果音データ
 	for (auto& soundData : m_soundData)
 	{
-		DeleteSoundMem(soundData.soundHandle);
+		DeleteSoundMem(soundData.second);
 	}
 	m_soundData.clear();
 
@@ -69,8 +69,8 @@ void SoundManager::UpdateBGM()
 void SoundManager::PlaySE(SoundType sound)
 {
 	int volumePal = (255 / 100) * m_volumeSE;
-	ChangeVolumeSoundMem(m_volumeSE, GetCurrentSoundHandle(sound));
-	PlaySoundMem(GetCurrentSoundHandle(sound), DX_PLAYTYPE_BACK);
+	ChangeVolumeSoundMem(m_volumeSE, m_soundData[sound]);
+	PlaySoundMem(m_soundData[sound], DX_PLAYTYPE_BACK);
 }
 
 void SoundManager::SetSEVolume(int volume)
@@ -105,30 +105,17 @@ SoundManager::SoundManager() :
 	m_soundData(),
 	m_hMusic(-1)
 {
+	// サウンド設定の読み込み
 	LoadSoundConfig();
+	// データの読み込み
 	LoadData();
-}
-
-int SoundManager::GetCurrentSoundHandle(SoundType sound)
-{
-	int currentSound = -1;
-
-	for (auto& soundData : m_soundData)
-	{
-		if (soundData.soundType == sound)
-		{
-			currentSound = soundData.soundHandle;
-			break;
-		}
-	}
-
-	return currentSound;
 }
 
 void SoundManager::LoadData()
 {
 	// サウンド
-	m_soundData.push_back(SoundData(LoadSoundMem("Data/SoundData/Select.wav"), SoundType::select));
+	m_soundData[SoundType::select] = LoadSoundMem("Data/SoundData/Select.wav");
+	m_soundData[SoundType::shot] = LoadSoundMem("Data/SoundData/Ringo.wav");
 
 	// ミュージック
 	m_hMusic = LoadSoundMem("Data/MusicData/Getsurin_Meikyuu.mp3");
