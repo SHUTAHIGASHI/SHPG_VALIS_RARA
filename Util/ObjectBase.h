@@ -13,6 +13,9 @@ class ObjectBase
 		VECTOR exPos = Game::kVecZero;
 		VECTOR pos = Game::kVecZero;
 		VECTOR dir = Game::kVecZero;
+		// íçéãì_
+		VECTOR lookPos = Game::kVecZero;
+		VECTOR lookDir = Game::kVecZero;
 		// âÒì]
 		VECTOR rota = Game::kVecZero;
 		VECTOR rotaDir = Game::kVecZero;

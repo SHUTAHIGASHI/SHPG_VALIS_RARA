@@ -11,6 +11,15 @@ namespace
 {
 	// 画像拡大率
 	constexpr float kScale = 100.0f;
+
+	// 移動速度
+	constexpr float kPlayerMoveSpeed = 2.0f;
+
+	// プレイヤー視点移動速度
+	constexpr float kPovMoveSpeed = 4.0f;
+	// プレイヤーからカメラまでの距離
+	constexpr float kLookPosDistance = 120.0f;
+
 	// ロックオン範囲
 	constexpr float kLockRange = 50.0f;
 	// ショット連射速度
@@ -22,6 +31,8 @@ Player::Player():
 	m_hLockCursorImg(-1),
 	m_shotDelay(kShotRate),
 	m_isLockOn(false),
+	m_playerAngleAxisX(0.0f),
+	m_playerAngleAxisY(0.0f),
 	m_cursorPos(Game::kVecZero),
 	m_lockObjPos(Game::kVecZero),
 	m_targetPos(Game::kVecZero),
@@ -35,6 +46,8 @@ Player::Player():
 	m_hLockCursorImg = Load::GetInstance().GetHandle("lockCursor");
 	// 画像拡大率設定
 	m_status.scale = kScale;
+	// 移動速度設定
+	m_status.moveSpeed = kPlayerMoveSpeed;
 }
 
 Player::~Player()
@@ -50,6 +63,13 @@ void Player::Init()
 
 void Player::Update(const InputState& input)
 {
+	// 移動処理
+	ControllMove(input);
+	// 視点処理
+	ControllView(input);
+	// 視点更新
+	UpdateView();
+
 	// カーソル更新
 	UpdateCursor(input);
 	// ショット管理
@@ -68,9 +88,137 @@ void Player::Draw()
 
 	// レーザー描画
 	DrawLine3D(m_status.pos, m_targetPos, 0xff0000);
-
 	// 2D描画
 	Draw2D();
+
+	DrawSphere3D(m_status.pos, 10.0f, 16, 0xff0000, 0xff0000, true);
+	DrawSphere3D(m_status.lookPos, 10.0f, 16, 0xff0000, 0xff0000, true);
+}
+
+void Player::ControllView(const InputState& input)
+{
+	// 右視点移動
+	if (input.IsPressed(InputType::lookRight))
+	{
+		m_playerAngleAxisY += kPovMoveSpeed;
+	}
+	// 左視点移動
+	else if (input.IsPressed(InputType::lookLeft))
+	{
+		m_playerAngleAxisY += -kPovMoveSpeed;
+	}
+	// 上視点移動
+	if (input.IsPressed(InputType::lookUp))
+	{
+		m_playerAngleAxisX += -kPovMoveSpeed;
+	}
+	// 下視点移動
+	else if (input.IsPressed(InputType::lookDown))
+	{
+		m_playerAngleAxisX += kPovMoveSpeed;
+	}
+}
+
+void Player::UpdateView()
+{
+	// 注視点横方向の処理
+	{
+		// 注視点の角度の限界を指定
+		if (m_playerAngleAxisY > 360.0f)
+		{
+			m_playerAngleAxisY = 0;
+		}
+		if (m_playerAngleAxisY < 0)
+		{
+			m_playerAngleAxisY = 360.0f;
+		}
+
+		// 角度をラジアンに変換
+		float rad = m_playerAngleAxisY * (DX_PI_F / 180.0f);
+
+		// 中心位置から半径をもとに軌道を計算
+		m_status.lookDir.x = sin(rad) * kLookPosDistance;
+		m_status.lookDir.z = cos(rad) * kLookPosDistance;
+
+		// 中心位置の代入
+		m_status.lookPos = m_status.pos;
+		// ベクトルを位置に加算
+		m_status.lookPos = VAdd(m_status.lookPos, m_status.lookDir);
+	}
+
+	// 注視点縦方向の処理
+	{
+		// 注視点の角度の限界を指定
+		if (m_playerAngleAxisX > 180.0f)
+		{
+			m_playerAngleAxisX = 180.0f;
+		}
+		if (m_playerAngleAxisX < 0.0f)
+		{
+			m_playerAngleAxisX = 0.0f;
+		}
+
+		// 角度をラジアンに変換
+		float rad = m_playerAngleAxisX * (DX_PI_F / 180.0f);
+
+		// 中心位置から半径をもとに軌道を計算
+		m_status.lookDir.y = cos(rad) * kLookPosDistance;
+
+		// ベクトルを位置に加算
+		m_status.lookPos = VAdd(m_status.lookPos, m_status.lookDir);
+	}
+
+	// カメラ位置設定
+	m_pCamera->SetPosAndTarget(m_status.pos, m_status.lookPos);
+}
+
+void Player::ControllMove(const InputState& input)
+{
+	VECTOR moveDir = Game::kVecZero;
+
+	// 前方移動入力
+	if (input.IsPressed(InputType::moveForward))
+	{
+		moveDir = VSub(m_status.lookPos, m_status.pos);
+		moveDir.y = 0.0f;
+		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
+		moveDir = VScale(moveDir, m_status.moveSpeed);
+		m_status.pos = VAdd(m_status.pos, moveDir);
+	}
+	// 後方移動入力
+	if (input.IsPressed(InputType::moveBehind))
+	{
+		moveDir = VSub(m_status.lookPos, m_status.pos);
+		moveDir.y = 0.0f;
+		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
+		moveDir = VScale(moveDir, -m_status.moveSpeed);
+		m_status.pos = VAdd(m_status.pos, moveDir);
+	}
+	// 右移動入力
+	if (input.IsPressed(InputType::moveRight))
+	{
+		moveDir = VSub(m_status.lookPos, m_status.pos);
+		moveDir.y = 0.0f;
+		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
+		moveDir = VScale(moveDir, m_status.moveSpeed);
+		// 進行方向右へ90度回転
+		MATRIX mtx = MGetRotY(DX_PI_F / 2);
+		moveDir = VTransform(moveDir, mtx);
+		m_status.pos = VAdd(m_status.pos, moveDir);
+	}
+	// 左移動入力
+	if (input.IsPressed(InputType::moveLeft))
+	{
+		moveDir = VSub(m_status.lookPos, m_status.pos);
+		moveDir.y = 0.0f;
+		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
+		moveDir = VScale(moveDir, m_status.moveSpeed);
+		// 進行方向左へ90度回転
+		MATRIX mtx = MGetRotY(-DX_PI_F / 2);
+		moveDir = VTransform(moveDir, mtx);
+		m_status.pos = VAdd(m_status.pos, moveDir);
+	}
+
 }
 
 void Player::ControllShot(const InputState& input)

@@ -59,8 +59,6 @@ void SceneTitleMenu::Update(const InputState& input)
 	m_countFrame++;
 	// 更新処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
-	// スカイドーム更新
-	m_pSkyDome->Update(Game::kVecZero);
 }
 
 void SceneTitleMenu::Draw()

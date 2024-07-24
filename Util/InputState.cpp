@@ -1,4 +1,5 @@
 #include "InputState.h"
+#include "Game.h"
 
 void InputState::Update()
 {
@@ -16,6 +17,8 @@ void InputState::Update()
 	// マウスホイールの状態管理
 	mouseState.mouseWheelState = GetMouseWheelRotVol(true);
 	// マウスカーソルの座標取得
+	mouseState.exX = mouseState.x;
+	mouseState.exY = mouseState.y;
 	GetMousePoint(&mouseState.x, &mouseState.y);
 
 	// パッドキー状態取得
@@ -25,46 +28,6 @@ void InputState::Update()
 	GetJoypadDirectInputState(DX_INPUT_PAD1, &dinputPadState);
 }
 
-bool InputState::IsMouseWheel(bool isPlus) const
-{
-	if (isPlus)
-	{
-		if (mouseState.mouseWheelState > 0)
-		{
-			return true;
-		}
-	}
-	else
-	{
-		if (mouseState.mouseWheelState < 0)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool InputState::IsStickInput(int stickType, bool isPlus)const
-{
-	if (isPlus)
-	{
-		if (stickType > 0)
-		{
-			return true;
-		}
-	}
-	else
-	{
-		if (stickType < 0)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 bool InputState::IsTriggered(InputType type)const
 {
 	if (type == InputType::all)
@@ -72,7 +35,9 @@ bool InputState::IsTriggered(InputType type)const
 		return !lastKeyState[KEY_INPUT_RETURN] &&
 			keyState[KEY_INPUT_RETURN] ||
 			!(lastPadState) &&
-			(padState);
+			(padState) ||
+			!(mouseState.lastKeyMouseState) &&
+			(mouseState.keyMouseState);;
 	}
 	else if (type == InputType::pause)
 	{
@@ -260,22 +225,26 @@ bool InputState::IsPressed(InputType type)const
 	else if (type == InputType::lookUp)
 	{
 		return keyState[KEY_INPUT_UP] ||
-			(IsStickInput(dinputPadState.Ry, false));
+			(IsStickInput(dinputPadState.Ry, false))||
+			(IsMouseMoveY(true));
 	}
 	else if (type == InputType::lookDown)
 	{
 		return keyState[KEY_INPUT_DOWN] ||
-			(IsStickInput(dinputPadState.Ry, true));
+			(IsStickInput(dinputPadState.Ry, true))||
+			(IsMouseMoveY(false));
 	}
 	else if (type == InputType::lookRight)
 	{
 		return keyState[KEY_INPUT_RIGHT] ||
-			(IsStickInput(dinputPadState.Rx, true));
+			(IsStickInput(dinputPadState.Rx, true))||
+			(IsMouseMoveX(true));
 	}
 	else if (type == InputType::lookLeft)
 	{
 		return keyState[KEY_INPUT_LEFT] ||
-			(IsStickInput(dinputPadState.Rx, false));
+			(IsStickInput(dinputPadState.Rx, false))||
+			(IsMouseMoveX(false));
 	}
 	else if (type == InputType::moveForward)
 	{
@@ -308,6 +277,82 @@ bool InputState::IsPressed(InputType type)const
 		return keyState[KEY_INPUT_RSHIFT] ||
 			(padState & PAD_INPUT_1) ||
 			(mouseState.keyMouseState & MOUSE_INPUT_RIGHT);
+	}
+
+	return false;
+}
+
+bool InputState::IsMouseWheel(bool isPlus) const
+{
+	if (isPlus)
+	{
+		if (mouseState.mouseWheelState > 0)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		if (mouseState.mouseWheelState < 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool InputState::IsMouseMoveX(bool isPlus) const
+{
+	if (isPlus)
+	{
+		if (mouseState.x > mouseState.exX)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		if (mouseState.x < mouseState.exX)
+		{
+			return true;
+		}
+	}
+}
+
+bool InputState::IsMouseMoveY(bool isPlus) const
+{
+	if (isPlus)
+	{
+		if (mouseState.y > mouseState.exY)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		if (mouseState.y < mouseState.exY)
+		{
+			return true;
+		}
+	}
+}
+
+bool InputState::IsStickInput(int stickType, bool isPlus)const
+{
+	if (isPlus)
+	{
+		if (stickType > 0)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		if (stickType < 0)
+		{
+			return true;
+		}
 	}
 
 	return false;

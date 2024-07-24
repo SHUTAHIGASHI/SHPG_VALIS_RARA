@@ -19,9 +19,11 @@ public:
 	void Init();
 	// 更新
 	void Update();
-
 	// 画面揺れ
 	void OnScreenQuake();
+
+	// カメラ座標セット
+	void SetPosAndTarget(VECTOR pos, VECTOR target) { m_pos = pos; m_targetPos = target; }
 
 	// カメラ座標取得
 	VECTOR GetPos() { return m_pos; }

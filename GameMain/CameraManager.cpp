@@ -6,8 +6,6 @@ namespace
 {
 	// 画面揺れの大きさ
 	constexpr int kQuakeScaleNum = 10;
-	// 注視点定数
-	static const VECTOR kTargetPos = VGet(0.0f, 100.0f, 500.0f);
 }
 
 // コンストラクタ
@@ -18,7 +16,8 @@ CameraManager::CameraManager():
 	m_fov(0.0f),
 	m_rotaAxisY(0.0f),
 	m_screenQuakeScale(0),
-	m_pCamera(std::make_shared<Camera>())
+	m_pCamera(std::make_shared<Camera>()),
+	m_pPlayer(nullptr)
 {
 }
 
@@ -66,12 +65,8 @@ void CameraManager::OnScreenQuake()
 
 void CameraManager::UpdatePos()
 {
-	// 注視点座標の設定
-	m_targetPos = VAdd(m_pPlayer->GetPos(), kTargetPos);
-	// カメラの座標を設定
-	m_pos = VGet(m_pPlayer->GetPos().x,
-		m_pPlayer->GetPos().y + 50.0f,
-		m_pPlayer->GetPos().z - 200.0f);
+	// カメラに位置を反映
+	m_pCamera->SetPosAndTarget(m_pos, m_targetPos);
 }
 
 void CameraManager::UpdateQuake()

@@ -48,6 +48,9 @@ void SceneMain::Init()
 
 void SceneMain::Update(const InputState& input)
 {
+	// カーソル座標固定
+	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
+
 	// Update処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
 
@@ -58,7 +61,7 @@ void SceneMain::Update(const InputState& input)
 	// 敵管理更新
 	m_pEnemyManager->Update();
 	// スカイドームの更新
-	m_pSkyDome->Update(m_pPlayer->GetPos());
+	m_pSkyDome->Update();
 
 	// エフェクトの更新処理
 	EffekseerManager::GetInstance().Update();

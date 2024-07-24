@@ -7,22 +7,27 @@ class Model;
 class SkyDome
 {
 public:
+	// コンストラクタ
 	SkyDome();
+	// デストラクタ
 	~SkyDome();
-
-	void Init(VECTOR playerPos);
-	void Update(VECTOR playerPos);
+	// 初期化
+	void Init(VECTOR pos);
+	// 更新
+	void Update();
+	// 描画
 	void Draw();
 
+	// 各種設定
+	void SetPos(VECTOR pos);
 	void SetScale(float scale);
+
 private:
+	// モデル
 	std::shared_ptr<Model> m_pModel;
-
+	// ハンドル
 	int m_handle;
-
+	// サイズ
 	float m_scale;
-	float m_angle = 0.0f;
-
-	VECTOR m_dir;
 };
 

@@ -24,6 +24,12 @@ public:
 	void Draw() override;
 
 private:
+	// 視点の操作
+	void ControllView(const InputState& input);
+	// 視点の更新
+	void UpdateView();
+	// 移動処理
+	void ControllMove(const InputState& input);
 	// ショット管理
 	void ControllShot(const InputState& input);
 	// ショット生成
@@ -42,17 +48,23 @@ private:
 	int m_hLockCursorImg;
 	// ショット連射速度
 	int m_shotDelay;
+
 	// カーソルロック判定
 	bool m_isLockOn;
+
+	// 注視点の移動量
+	float m_playerAngleAxisX;
+	float m_playerAngleAxisY;
+
 	// カーソル座標
 	VECTOR m_cursorPos;
 	// ロックオンカーソル座標
 	VECTOR m_lockObjPos;
 	// 着弾地点
 	VECTOR m_targetPos;
+
 	// ショット配列
-	std::list<class Shot*> m_pShots;
-	
+	std::list<class Shot*> m_pShots;	
 
 private:// 各種ポインタ
 	// ショットターゲットポインタ

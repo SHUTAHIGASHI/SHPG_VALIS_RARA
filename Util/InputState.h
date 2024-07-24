@@ -29,8 +29,11 @@ enum class InputType
 
 struct MouseInputState
 {
-	// マウスカーソル座標
+	// マウスカーソル座標X
+	int exX = 0;
 	int x = 0;
+	// マウスカーソル座標Y
+	int exY = 0;
 	int y = 0;
 	// マウス入力状態
 	int keyMouseState = 0;
@@ -42,19 +45,24 @@ struct MouseInputState
 class InputState
 {
 public:
+	// 入力状態更新
+	void Update();
 	// トリガー判定
 	bool IsTriggered(InputType type)const;
 	// 押し込み判定
 	bool IsPressed(InputType type)const;
-	// 入力状態更新
-	void Update();
-	// マウスホイールの入力状態取得
-	bool IsMouseWheel(bool isPlus)const;
-	// パッドスティックの入力状態取得
-	bool IsStickInput(int stickType, bool isPlus)const;
 	// マウスカーソルの座標取得
 	int GetMousePosX()const { return mouseState.x; }
 	int GetMousePosY()const { return mouseState.y; }
+
+private:
+	// マウスホイールの入力状態取得
+	bool IsMouseWheel(bool isPlus)const;
+	// マウスの移動状態取得
+	bool IsMouseMoveX(bool isPlus)const;
+	bool IsMouseMoveY(bool isPlus)const;
+	// パッドスティックの入力状態取得
+	bool IsStickInput(int stickType, bool isPlus)const;
 
 private:
 	int lastPadState = 0;
