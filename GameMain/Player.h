@@ -53,8 +53,8 @@ private:
 	bool m_isLockOn;
 
 	// 注視点の移動量
-	float m_playerAngleAxisX;
-	float m_playerAngleAxisY;
+	float m_playerAngleY;
+	float m_playerAngleX;
 
 	// カーソル座標
 	VECTOR m_cursorPos;

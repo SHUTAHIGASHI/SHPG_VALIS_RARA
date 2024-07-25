@@ -120,11 +120,11 @@
     <ClCompile Include="GameMain\Player.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyNeffy.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="GameMain\EnemyChino.cpp">
+      <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyChino.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="GameMain\EnemyNeffy.cpp">
+      <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,11 +212,11 @@
     <ClInclude Include="GameMain\Player.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyNeffy.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="GameMain\EnemyChino.h">
+      <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyChino.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="GameMain\EnemyNeffy.h">
+      <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

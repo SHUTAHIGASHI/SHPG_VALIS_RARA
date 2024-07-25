@@ -16,7 +16,7 @@ namespace
 	constexpr float kPlayerMoveSpeed = 16.0f;
 
 	// マウス感度
-	constexpr float kMouseSensitivity = 0.2f;
+	constexpr float kMouseSensitivity = 0.095f;
 	// プレイヤー視点移動速度
 	constexpr float kPovMoveSpeed = 4.0f;
 	// プレイヤーからカメラまでの距離
@@ -33,8 +33,8 @@ Player::Player():
 	m_hLockCursorImg(-1),
 	m_shotDelay(kShotRate),
 	m_isLockOn(false),
-	m_playerAngleAxisX(0.0f),
-	m_playerAngleAxisY(0.0f),
+	m_playerAngleY(0.0f),
+	m_playerAngleX(0.0f),
 	m_cursorPos(Game::kVecZero),
 	m_lockObjPos(Game::kVecZero),
 	m_targetPos(Game::kVecZero),
@@ -87,9 +87,6 @@ void Player::Draw()
 	{
 		shot->Draw();
 	}
-
-	// レーザー描画
-	DrawLine3D(m_status.pos, m_targetPos, 0xff0000);
 	// 2D描画
 	Draw2D();
 
@@ -99,28 +96,28 @@ void Player::Draw()
 
 void Player::ControllView(const InputState& input)
 {
-	m_playerAngleAxisX += input.GetMouseMoveY() * kMouseSensitivity;
-	m_playerAngleAxisY += input.GetMouseMoveX() * kMouseSensitivity;
+	m_playerAngleX += input.GetMouseMoveX() * kMouseSensitivity;
+	m_playerAngleY -= input.GetMouseMoveY() * kMouseSensitivity;
 
 	// 右視点移動
 	if (input.IsPressed(InputType::lookRight))
 	{
-		m_playerAngleAxisY += kPovMoveSpeed;
+		m_playerAngleX += kPovMoveSpeed;
 	}
 	// 左視点移動
 	else if (input.IsPressed(InputType::lookLeft))
 	{
-		m_playerAngleAxisY += -kPovMoveSpeed;
+		m_playerAngleX += -kPovMoveSpeed;
 	}
 	// 上視点移動
 	if (input.IsPressed(InputType::lookUp))
 	{
-		m_playerAngleAxisX += -kPovMoveSpeed;
+		m_playerAngleY += -kPovMoveSpeed;
 	}
 	// 下視点移動
 	else if (input.IsPressed(InputType::lookDown))
 	{
-		m_playerAngleAxisX += kPovMoveSpeed;
+		m_playerAngleY += kPovMoveSpeed;
 	}
 }
 
@@ -129,49 +126,56 @@ void Player::UpdateView()
 	// 注視点横方向の処理
 	{
 		// 注視点の角度の限界を指定
-		if (m_playerAngleAxisY > 360.0f)
+		if (m_playerAngleX > 360.0f)
 		{
-			m_playerAngleAxisY = 0;
+			m_playerAngleX = 0;
 		}
-		if (m_playerAngleAxisY < 0)
+		if (m_playerAngleX < 0)
 		{
-			m_playerAngleAxisY = 360.0f;
+			m_playerAngleX = 360.0f;
 		}
 
 		// 角度をラジアンに変換
-		float rad = m_playerAngleAxisY * (DX_PI_F / 180.0f);
+		float rad = m_playerAngleX * (DX_PI_F / 180.0f);
 
 		// 中心位置から半径をもとに軌道を計算
-		m_status.lookDir.x = sin(rad) * kLookPosDistance;
-		m_status.lookDir.z = cos(rad) * kLookPosDistance;
-
-		// 中心位置の代入
-		m_status.lookPos = m_status.pos;
-		// ベクトルを位置に加算
-		m_status.lookPos = VAdd(m_status.lookPos, m_status.lookDir);
+		m_status.lookDir.x = sin(rad);
+		m_status.lookDir.z = cos(rad);
 	}
 
 	// 注視点縦方向の処理
 	{
 		// 注視点の角度の限界を指定
-		if (m_playerAngleAxisX > 180.0f)
+		if (m_playerAngleY > 89.0f)
 		{
-			m_playerAngleAxisX = 180.0f;
+			m_playerAngleY = 89.0f;
 		}
-		if (m_playerAngleAxisX < 0.0f)
+		if (m_playerAngleY < -89.0f)
 		{
-			m_playerAngleAxisX = 0.0f;
+			m_playerAngleY = -89.0f;
 		}
 
 		// 角度をラジアンに変換
-		float rad = m_playerAngleAxisX * (DX_PI_F / 180.0f);
+		float rad = m_playerAngleY * (DX_PI_F / 180.0f);
 
 		// 中心位置から半径をもとに軌道を計算
-		m_status.lookDir.y = cos(rad) * kLookPosDistance;
-
-		// ベクトルを位置に加算
-		m_status.lookPos = VAdd(m_status.lookPos, m_status.lookDir);
+		m_status.lookDir.y = tan(rad);
 	}
+
+	// 正規化
+	if (VSize(m_status.lookDir) > 0) m_status.lookDir = VNorm(m_status.lookDir);
+	m_status.lookDir = VScale(m_status.lookDir, kLookPosDistance);
+	// 中心位置の代入
+	m_status.lookPos = m_status.pos;
+	// ベクトルを位置に加算
+	m_status.lookPos = VAdd(m_status.lookPos, m_status.lookDir);
+
+	//// とりあえずのカメラ位置算出 
+	//VECTOR cameraDir = VSub(m_status.lookPos, m_status.pos);
+	//if (VSize(cameraDir) > 0) cameraDir = VNorm(cameraDir);
+	//cameraDir = VScale(cameraDir, -120.0f);
+	//VECTOR cameraPos = VAdd(m_status.pos, cameraDir);
+	//cameraPos.y += 120.0f;
 
 	// カメラ位置設定
 	m_pCamera->SetPosAndTarget(m_status.pos, m_status.lookPos);
@@ -225,13 +229,13 @@ void Player::ControllMove(const InputState& input)
 void Player::ControllShot(const InputState& input)
 {
 	// ターゲット位置
-	VECTOR targetPos = ConvScreenPosToWorldPos(VGet(m_cursorPos.x, m_cursorPos.y, 0.0f));
+	//VECTOR targetPos = ConvScreenPosToWorldPos(VGet(m_cursorPos.x, m_cursorPos.y, 0.0f));
+	VECTOR targetPos = m_status.lookPos;
 	// 着弾地点の座標
 	VECTOR targetDir = VSub(targetPos, m_pCamera->GetPos());
 	if (VSize(targetDir) > 0) targetDir = VNorm(targetDir);
 	targetDir = VScale(targetDir, ShotParam::kShotSpeed);
 	m_targetPos = VAdd(m_pCamera->GetPos(), VScale(targetDir, ShotParam::kShotTime));
-	m_targetPos = m_status.lookPos;
 
 	// ショット連射速度
 	m_shotDelay--;
