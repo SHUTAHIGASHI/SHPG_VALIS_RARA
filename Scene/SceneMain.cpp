@@ -43,6 +43,7 @@ void SceneMain::Init()
 	m_pPlayer->SetCamera(m_pCamera.get());
 	m_pPlayer->Init();
 	// 敵管理初期化
+	m_pEnemyManager->SetPlayer(m_pPlayer.get());
 	m_pEnemyManager->Init();
 	// スカイドームの初期化処理
 	m_pSkyDome->Init(m_pPlayer->GetPos());
@@ -73,6 +74,9 @@ void SceneMain::Draw()
 {
 	//スカイドーム描画
 	m_pSkyDome->Draw();
+	// ステージライン描画
+	DrawStageLine();
+
 	// 敵管理描画
 	m_pEnemyManager->Draw();
 	// プレイヤー描画
@@ -80,9 +84,6 @@ void SceneMain::Draw()
 
 	// エフェクト描画
 	EffekseerManager::GetInstance().Draw();
-
-	// ステージライン描画
-	DrawStageLine();
 }
 
 void SceneMain::End()

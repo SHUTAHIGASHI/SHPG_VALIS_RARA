@@ -2,8 +2,9 @@
 #include "ObjectBase.h"
 #include "EnemyBase.h"
 #include "EnemyNeffy.h"
-#include "EnemyChino.h"
+#include "EnemyChaseNeffy.h"
 #include "Game.h"
+#include "Player.h"
 
 namespace
 {
@@ -12,12 +13,9 @@ namespace
 }
 
 EnemyManager::EnemyManager():
-	m_pEnemies()
+	m_pEnemies(),
+	m_pPlayer(nullptr)
 {
-	for (int i = 0; i < kEnemyNum; i++)
-	{
-		CreateEnemy();
-	}
 }
 
 EnemyManager::~EnemyManager()
@@ -26,9 +24,9 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::Init()
 {
-	for (auto& enemy : m_pEnemies)
+	for (int i = 0; i < kEnemyNum; i++)
 	{
-		enemy->Init();
+		CreateEnemy();
 	}
 }
 
@@ -43,7 +41,16 @@ void EnemyManager::Update()
 	// 敵の更新
 	for (auto& enemy : m_pEnemies)
 	{
+		// 更新
 		enemy->Update();
+		// 当たり判定
+		if (enemy->CheckCollision(m_pPlayer))
+		{
+			// 敵のダメージ処理
+			enemy->OnHit();
+			// プレイヤーのダメージ処理
+			m_pPlayer->OnHit();
+		}
 	}
 
 	// 敵の削除
@@ -68,9 +75,9 @@ VECTOR EnemyManager::GetRandomPos()
 {
 	VECTOR result;
 
-	result.x = GetRand(Game::kStageSizeX) - 500;
+	result.x = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeX)) - 500);
 	result.y = 0.0f;
-	result.z = GetRand(Game::kStageSizeZ) + Game::kStageSizeZ;
+	result.z = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeZ)) + Game::kStageSizeZ);
 
 	return result;
 }
@@ -81,7 +88,7 @@ EnemyBase* EnemyManager::GetRandomEnemy()
 
 	if(index == 0)
 	{
-		return new EnemyChino(GetRandomPos());
+		return new EnemyChaseNeffy(m_pPlayer, GetRandomPos());
 	}
 	else
 	{

@@ -23,6 +23,9 @@ public:
 	// 描画
 	void Draw() override;
 
+	// 被ダメージ処理
+	void OnHit();
+
 private:
 	// 視点の操作
 	void ControllView(const InputState& input);
@@ -45,7 +48,12 @@ private:
 
 private:
 	// 画像ハンドル
+	int m_hFpsHand;
+	int m_hCursorImg;
 	int m_hLockCursorImg;
+	// 画像サイズ
+	int m_HandSizeX;
+	int m_HandSizeY;
 	// ショット連射速度
 	int m_shotDelay;
 
@@ -56,8 +64,6 @@ private:
 	float m_playerAngleY;
 	float m_playerAngleX;
 
-	// カーソル座標
-	VECTOR m_cursorPos;
 	// ロックオンカーソル座標
 	VECTOR m_lockObjPos;
 	// 着弾地点

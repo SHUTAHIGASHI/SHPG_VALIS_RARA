@@ -23,7 +23,7 @@
     <ClCompile Include="Effect\EffekseerManager.cpp" />
     <ClCompile Include="GameMain\CameraManager.cpp" />
     <ClCompile Include="GameMain\EnemyBase.cpp" />
-    <ClCompile Include="GameMain\EnemyChino.cpp" />
+    <ClCompile Include="GameMain\EnemyChaseNeffy.cpp" />
     <ClCompile Include="GameMain\EnemyManager.cpp" />
     <ClCompile Include="GameMain\EnemyNeffy.cpp" />
     <ClCompile Include="GameMain\Player.cpp" />
@@ -54,7 +54,7 @@
     <ClInclude Include="Effect\EffekseerManager.h" />
     <ClInclude Include="GameMain\CameraManager.h" />
     <ClInclude Include="GameMain\EnemyBase.h" />
-    <ClInclude Include="GameMain\EnemyChino.h" />
+    <ClInclude Include="GameMain\EnemyChaseNeffy.h" />
     <ClInclude Include="GameMain\EnemyManager.h" />
     <ClInclude Include="GameMain\EnemyNeffy.h" />
     <ClInclude Include="GameMain\Player.h" />

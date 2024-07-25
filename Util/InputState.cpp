@@ -163,6 +163,25 @@ bool InputState::IsTriggered(InputType type)const
 			!(lastPadState & PAD_INPUT_LEFT) &&
 			(padState & PAD_INPUT_LEFT);
 	}
+	else if (type == InputType::dash)
+	{
+		return !lastKeyState[KEY_INPUT_LSHIFT] &&
+			keyState[KEY_INPUT_LSHIFT] ||
+			!(lastPadState & PAD_INPUT_3) &&
+			(padState & PAD_INPUT_3);
+			}
+	else if (type == InputType::jump)
+	{
+		return !lastKeyState[KEY_INPUT_SPACE] &&
+			keyState[KEY_INPUT_SPACE];
+	}
+	else if (type == InputType::crouch)
+	{
+		return !lastKeyState[KEY_INPUT_LCONTROL] &&
+			keyState[KEY_INPUT_LCONTROL] ||
+			!lastKeyState[KEY_INPUT_C] &&
+			keyState[KEY_INPUT_C];
+	}
 	else if (type == InputType::shot)
 	{
 		return !lastKeyState[KEY_INPUT_RSHIFT] &&
@@ -174,9 +193,7 @@ bool InputState::IsTriggered(InputType type)const
 	}
 	else if (type == InputType::sprShot)
 	{
-		return !lastKeyState[KEY_INPUT_SPACE] &&
-			keyState[KEY_INPUT_SPACE] ||
-			!(lastPadState & PAD_INPUT_1) &&
+		return !(lastPadState & PAD_INPUT_1) &&
 			(padState & PAD_INPUT_1) ||
 			!(mouseState.lastKeyMouseState & MOUSE_INPUT_RIGHT) &&
 			(mouseState.keyMouseState & MOUSE_INPUT_RIGHT);
@@ -273,6 +290,20 @@ bool InputState::IsPressed(InputType type)const
 	{
 		return keyState[KEY_INPUT_A] ||
 			(padState & PAD_INPUT_LEFT);
+	}
+	else if (type == InputType::dash)
+	{
+		return keyState[KEY_INPUT_LSHIFT] ||
+			(padState & PAD_INPUT_3);
+	}
+	else if (type == InputType::jump)
+	{
+		return keyState[KEY_INPUT_SPACE];
+	}
+	else if (type == InputType::crouch)
+	{
+		return keyState[KEY_INPUT_LCONTROL] ||
+			keyState[KEY_INPUT_C];
 	}
 	else if (type == InputType::shot)
 	{

@@ -1,16 +1,19 @@
 #pragma once
 #include "EnemyBase.h"
-class EnemyChino :
+
+class EnemyChaseNeffy :
     public EnemyBase
 {
 public:
     // コンストラクタ
-    EnemyChino(VECTOR);
+    EnemyChaseNeffy(class ObjectBase*, VECTOR);
     // デストラクタ
-    ~EnemyChino();
+    ~EnemyChaseNeffy();
 
     // 更新
     void Update() override;
 private:
+    // プレイヤー
+    class ObjectBase* m_pTarget;
 };
 

@@ -4,7 +4,7 @@
 namespace CameraSetting
 {
 	// Near/Far
-	constexpr float kCameraNear = 100.0f;
+	constexpr float kCameraNear = 10.0f;
 	constexpr float kCameraFar = 12800.0f;
 	// ‹–ìŠp’è”
 	constexpr float kFovNum = 80.0f;

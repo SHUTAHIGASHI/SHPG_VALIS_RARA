@@ -13,10 +13,16 @@ namespace
 	constexpr float kScale = 100.0f;
 
 	// 移動速度
-	constexpr float kPlayerMoveSpeed = 16.0f;
+	constexpr float kPlayerMoveSpeed = 12.0f;
+	// ダッシュ率
+	constexpr float kDashRate = 2.0f;
+	// 重力
+	constexpr float kGravity = 0.5f;
+	// ジャンプ力
+	constexpr float kJumpPower = 12.0f;
 
 	// マウス感度
-	constexpr float kMouseSensitivity = 0.095f;
+	constexpr float kMouseSensitivity = 0.09f;
 	// プレイヤー視点移動速度
 	constexpr float kPovMoveSpeed = 4.0f;
 	// プレイヤーからカメラまでの距離
@@ -30,12 +36,12 @@ namespace
 
 Player::Player():
 	ObjectBase(),
+	m_hCursorImg(-1),
 	m_hLockCursorImg(-1),
 	m_shotDelay(kShotRate),
 	m_isLockOn(false),
 	m_playerAngleY(0.0f),
 	m_playerAngleX(0.0f),
-	m_cursorPos(Game::kVecZero),
 	m_lockObjPos(Game::kVecZero),
 	m_targetPos(Game::kVecZero),
 	m_pShots(),
@@ -44,8 +50,11 @@ Player::Player():
 	m_pCamera(nullptr)
 {
 	// 画像読み込み
-	m_status.hImg = Load::GetInstance().GetHandle("player");
+	m_hFpsHand = Load::GetInstance().GetHandle("fpsHand");
+	m_hCursorImg = Load::GetInstance().GetHandle("cursor");
 	m_hLockCursorImg = Load::GetInstance().GetHandle("lockCursor");
+	// 画像サイズ取得
+	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
 	// 画像拡大率設定
 	m_status.scale = kScale;
 	// 移動速度設定
@@ -89,9 +98,12 @@ void Player::Draw()
 	}
 	// 2D描画
 	Draw2D();
+}
 
-	//DrawSphere3D(m_status.pos, 10.0f, 16, 0xff0000, 0xff0000, true);
-	//DrawSphere3D(m_status.lookPos, 10.0f, 16, 0xff0000, 0xff0000, true);
+void Player::OnHit()
+{
+	// カメラ揺れ処理
+	m_pCamera->OnScreenQuake();
 }
 
 void Player::ControllView(const InputState& input)
@@ -112,12 +124,12 @@ void Player::ControllView(const InputState& input)
 	// 上視点移動
 	if (input.IsPressed(InputType::lookUp))
 	{
-		m_playerAngleY += -kPovMoveSpeed;
+		m_playerAngleY += kPovMoveSpeed;
 	}
 	// 下視点移動
 	else if (input.IsPressed(InputType::lookDown))
 	{
-		m_playerAngleY += kPovMoveSpeed;
+		m_playerAngleY += -kPovMoveSpeed;
 	}
 }
 
@@ -170,21 +182,36 @@ void Player::UpdateView()
 	// ベクトルを位置に加算
 	m_status.lookPos = VAdd(m_status.lookPos, m_status.lookDir);
 
-	//// とりあえずのカメラ位置算出 
-	//VECTOR cameraDir = VSub(m_status.lookPos, m_status.pos);
-	//if (VSize(cameraDir) > 0) cameraDir = VNorm(cameraDir);
-	//cameraDir = VScale(cameraDir, -120.0f);
-	//VECTOR cameraPos = VAdd(m_status.pos, cameraDir);
-	//cameraPos.y += 120.0f;
-
 	// カメラ位置設定
 	m_pCamera->SetPosAndTarget(m_status.pos, m_status.lookPos);
 }
 
 void Player::ControllMove(const InputState& input)
 {
+	// 地面判定チェック
+	if (m_status.pos.y <= 0.0f)
+	{
+		// 地面判定
+		m_status.isGround = true;
+	}
+	else
+	{
+		// 空中判定
+		m_status.isGround = false;
+	}
+
 	// 移動ベクトル
 	VECTOR moveDir = Game::kVecZero;
+
+	// ダッシュ入力
+	if (input.IsPressed(InputType::dash))
+	{
+		m_status.moveSpeed = kPlayerMoveSpeed * kDashRate;
+	}
+	else
+	{
+		m_status.moveSpeed = kPlayerMoveSpeed;
+	}
 
 	// 前方移動入力
 	if (input.IsPressed(InputType::moveForward))
@@ -220,16 +247,34 @@ void Player::ControllMove(const InputState& input)
 		tempDir = VTransform(tempDir, mtx);
 		moveDir = VAdd(moveDir, tempDir);
 	}
-
+	// 通常の移動処理
 	if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
 	moveDir = VScale(moveDir, m_status.moveSpeed);
 	m_status.pos = VAdd(m_status.pos, moveDir);
+
+	// ジャンプ処理
+	if (m_status.isGround)
+	{
+		// ジャンプ力初期化
+		m_status.jumpPower = 0.0f;
+		if (input.IsTriggered(InputType::jump))
+		{
+			// ジャンプ処理
+			m_status.jumpPower += kJumpPower;
+		}
+	}
+	else
+	{
+		// 重力加算
+		m_status.jumpPower -= kGravity;
+	}
+	// ジャンプ処理を座標に加算
+	m_status.pos.y += m_status.jumpPower;
 }
 
 void Player::ControllShot(const InputState& input)
 {
 	// ターゲット位置
-	//VECTOR targetPos = ConvScreenPosToWorldPos(VGet(m_cursorPos.x, m_cursorPos.y, 0.0f));
 	VECTOR targetPos = m_status.lookPos;
 	// 着弾地点の座標
 	VECTOR targetDir = VSub(targetPos, m_pCamera->GetPos());
@@ -263,13 +308,13 @@ void Player::ControllShot(const InputState& input)
 			CreateSprShot();
 		}
 	}
-
-	// ショットサウンド再生
-	SoundManager::GetInstance().PlaySE(SoundType::shot);
 }
 
 void Player::CreateShot()
 {
+	// ショットサウンド再生
+	SoundManager::GetInstance().PlaySE(SoundType::shot);
+
 	// ショット生成
 	m_pShots.push_back(new Shot(m_status.pos, m_targetPos));
 
@@ -282,6 +327,9 @@ void Player::CreateShot()
 
 void Player::CreateSprShot()
 {
+	// ショットサウンド再生
+	SoundManager::GetInstance().PlaySE(SoundType::sprShot);
+
 	// ショット生成
 	m_pShots.push_back(new Shot(m_status.pos, m_pTargetObj));
 
@@ -317,10 +365,6 @@ void Player::UpdateShot()
 
 void Player::UpdateCursor(const InputState& input)
 {
-	// カーソル座標取得
-	m_cursorPos.x = input.GetMousePosX();
-	m_cursorPos.y = input.GetMousePosY();
-
 	// 座標と判定リセット
 	m_lockObjPos = Game::kVecZero;
 	m_isLockOn = false;
@@ -333,7 +377,7 @@ void Player::UpdateCursor(const InputState& input)
 			VECTOR screenPos = ConvWorldPosToScreenPos(objPos);
 
 			// カーソルとオブジェクトの距離を計算
-			float distance = VSize(VSub(screenPos, m_cursorPos));
+			float distance = VSize(VSub(screenPos, Game::kScreenCenter));
 
 			// カーソルとオブジェクトの距離が一定範囲内なら
 			if (distance < kLockRange)
@@ -352,13 +396,16 @@ void Player::UpdateCursor(const InputState& input)
 
 void Player::Draw2D()
 {
-	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.0f, 0.0f, m_hLockCursorImg, true);
-	// 画像描画
-	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
+	// クロスヘア描画
+	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.0f, 0.0f, m_hCursorImg, true);
 	// ロックオンカーソル描画
 	if (m_isLockOn)
 	{
 		VECTOR lockCursorPos = ConvWorldPosToScreenPos(m_lockObjPos);
 		DrawRotaGraphF(lockCursorPos.x, lockCursorPos.y, 1.0f, 0.0f, m_hLockCursorImg, true);
 	}
+	// FPSハンド描画
+	DrawRotaGraphF(static_cast<float>(Game::kScreenWidth - (m_HandSizeX * 10.0f)),
+		static_cast<float>(Game::kScreenHeight - (m_HandSizeY * 10.0f) / 2),
+		10.0f, 0.0f, m_hFpsHand, true);
 }

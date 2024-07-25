@@ -23,8 +23,11 @@ enum class InputType
 	moveBehind,		// 後方移動
 	moveRight,		// 右移動
 	moveLeft,		// 左移動
+	dash,			// ダッシュ
+	jump,			// ジャンプ
+	crouch,			// しゃがみ
 	shot,			// 攻撃
-	sprShot,			// スペシャル攻撃
+	sprShot,		// スペシャル攻撃
 };
 
 struct MouseInputState

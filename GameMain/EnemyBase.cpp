@@ -1,6 +1,7 @@
 #include "EnemyBase.h"
 #include "Load.h"
 #include "Game.h"
+#include "SoundManager.h"
 
 EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	ObjectBase()
@@ -41,7 +42,17 @@ void EnemyBase::Draw()
 }
 
 void EnemyBase::OnHit()
+{	
+	// 当たった時の処理
+	m_status.isEnabled = false;
+	// ダメージ音再生
+	SoundManager::GetInstance().PlaySE(SoundType::enemyDamage);
+}
+
+void EnemyBase::OnHitPlayer()
 {
 	// 当たった時の処理
 	m_status.isEnabled = false;
+	// ダメージ音再生
+	SoundManager::GetInstance().PlaySE(SoundType::enemyDamage);
 }

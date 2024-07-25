@@ -12,13 +12,13 @@ public:
     virtual ~SceneMain();
 
     // シーン初期化
-    void Init();
+    void Init()override;
     // 更新処理
-    void Update(const InputState& input);
+    void Update(const InputState& input)override;
     // 描画処理
-    void Draw();
+    void Draw()override;
     // 終了
-    void End();
+    void End()override;
 
 private:
 	// ステージライン描画

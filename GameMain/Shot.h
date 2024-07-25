@@ -5,7 +5,7 @@
 namespace ShotParam
 {
 	// ’e‚Ì‘¬“x
-	constexpr float kShotSpeed = 512.0f;
+	constexpr float kShotSpeed = 256.0f;
 	// ’e‚Ì”¼Œa
 	constexpr float kShotRadius = 32.0f;
 	// ’e‚Ì—LŒøŽžŠÔ

@@ -27,6 +27,8 @@ public:
 
 	// ヒット処理
 	virtual void OnHit();
+	// プレイヤーとのヒット処理
+	virtual void OnHitPlayer();
 protected:
 };
 

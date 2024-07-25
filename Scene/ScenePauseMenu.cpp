@@ -23,6 +23,8 @@ ScenePauseMenu::ScenePauseMenu(SceneManager& manager) :
 	Scene(manager),
 	m_pSelectMenu(std::make_shared<SelectMenuBase>())
 {
+	// マウス表示
+	SetMouseDispFlag(true);
 	// 選択メニューの初期化
 	m_pSelectMenu->Init(true);
 	// シーン文字列設定
@@ -36,7 +38,8 @@ ScenePauseMenu::ScenePauseMenu(SceneManager& manager) :
 
 ScenePauseMenu::~ScenePauseMenu()
 {
-
+	// マウス非表示
+	SetMouseDispFlag(false);
 }
 
 void ScenePauseMenu::Update(const InputState& input)

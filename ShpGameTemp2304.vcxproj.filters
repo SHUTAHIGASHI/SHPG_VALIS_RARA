@@ -120,7 +120,7 @@
     <ClCompile Include="GameMain\Player.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="GameMain\EnemyChino.cpp">
+    <ClCompile Include="GameMain\EnemyChaseNeffy.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
     <ClCompile Include="GameMain\EnemyNeffy.cpp">
@@ -212,7 +212,7 @@
     <ClInclude Include="GameMain\Player.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="GameMain\EnemyChino.h">
+    <ClInclude Include="GameMain\EnemyChaseNeffy.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
     <ClInclude Include="GameMain\EnemyNeffy.h">

@@ -13,6 +13,9 @@ public:
 	// デストラクタ
 	~EnemyManager();
 
+	// プレイヤーポインタ設定
+	void SetPlayer(class Player* Player) { m_pPlayer = Player; }
+
 	// 初期化
 	void Init();
 	// 更新
@@ -34,5 +37,7 @@ private:
 private:
 	// 敵配列
 	std::list<class EnemyBase*> m_pEnemies;
+	// プレイヤーポインタ
+	class Player* m_pPlayer;
 };
 

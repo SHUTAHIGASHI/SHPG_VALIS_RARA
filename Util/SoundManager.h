@@ -3,11 +3,14 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <DxLib.h>
 
 enum class SoundType
 {
 	select,
 	shot,
+	sprShot,
+	enemyDamage,
 };
 
 /// <summary>
@@ -29,7 +32,6 @@ public:
 		// ‚»‚ê‚ÌQÆ‚ğ•Ô‚·
 		return instance;
 	}
-
 	// BGM‚ÌXV
 	void UpdateBGM();
 

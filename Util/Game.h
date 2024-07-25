@@ -34,6 +34,8 @@ namespace Game
 
 	// ０のベクトル
 	static VECTOR kVecZero = VGet(0.0f, 0.0f, 0.0f);
+	// 画面中心
+	static VECTOR kScreenCenter = VGet(static_cast<float>(kScreenWidthHalf), static_cast<float>(kScreenHeightHalf), 0.0f);
 
 	// ステージデータファイル
 	const char* const kStageDataFileName = "Data/StageData.csv";

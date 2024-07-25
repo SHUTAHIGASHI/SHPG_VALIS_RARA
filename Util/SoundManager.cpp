@@ -4,9 +4,14 @@
 
 namespace
 {
+	// サウンド設定ファイル情報
 	constexpr char sound_file_signature[] = "SND_";
 	constexpr char sound_config_file_path[] = "./sound.conf";
 	constexpr float sound_config_version = 1.0f;
+	// 1メートル相当の距離
+	constexpr float kMetreDistance = 16.0f;
+	// 3Dサウンドデータの聞こえる距離
+	constexpr float k3DSoundDistance = 1800.0f;
 }
 
 void SoundManager::LoadSoundConfig()
@@ -116,6 +121,8 @@ void SoundManager::LoadData()
 	// サウンド
 	m_soundData[SoundType::select] = LoadSoundMem("Data/SoundData/Select.wav");
 	m_soundData[SoundType::shot] = LoadSoundMem("Data/SoundData/Ringo.wav");
+	m_soundData[SoundType::sprShot] = LoadSoundMem("Data/SoundData/SprRingo.wav");
+	m_soundData[SoundType::enemyDamage] = LoadSoundMem("Data/SoundData/neffyuwaaaa.wav");
 
 	// ミュージック
 	m_hMusic = LoadSoundMem("Data/MusicData/Getsurin_Meikyuu.mp3");
