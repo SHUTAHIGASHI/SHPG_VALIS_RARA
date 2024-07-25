@@ -30,10 +30,8 @@ enum class InputType
 struct MouseInputState
 {
 	// マウスカーソル座標X
-	int exX = 0;
 	int x = 0;
 	// マウスカーソル座標Y
-	int exY = 0;
 	int y = 0;
 	// マウス入力状態
 	int keyMouseState = 0;
@@ -47,6 +45,9 @@ class InputState
 public:
 	// 入力状態更新
 	void Update();
+	// マウス移動状態取得
+	float GetMouseMoveX()const;
+	float GetMouseMoveY()const;
 	// トリガー判定
 	bool IsTriggered(InputType type)const;
 	// 押し込み判定

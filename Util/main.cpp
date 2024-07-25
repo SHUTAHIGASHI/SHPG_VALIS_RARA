@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 
 	// ゲーム中のマウスポインタ描画設定
-	SetMouseDispFlag(false);
+	//SetMouseDispFlag(false);
 	// マウスカーソル位置設定
 	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
 
@@ -104,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		scene.Draw();
 
 		// マウスカーソル描画
-		DrawRotaGraph(input.GetMousePosX(), input.GetMousePosY(), 1.0, 0.0, hCursorImg, true, false, true);
+		//DrawRotaGraph(input.GetMousePosX(), input.GetMousePosY(), 1.0, 0.0, hCursorImg, true, false, true);
 
 		// 裏画面を表画面と入れ替える
 		ScreenFlip();

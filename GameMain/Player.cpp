@@ -13,8 +13,10 @@ namespace
 	constexpr float kScale = 100.0f;
 
 	// 移動速度
-	constexpr float kPlayerMoveSpeed = 2.0f;
+	constexpr float kPlayerMoveSpeed = 16.0f;
 
+	// マウス感度
+	constexpr float kMouseSensitivity = 0.2f;
 	// プレイヤー視点移動速度
 	constexpr float kPovMoveSpeed = 4.0f;
 	// プレイヤーからカメラまでの距離
@@ -91,12 +93,15 @@ void Player::Draw()
 	// 2D描画
 	Draw2D();
 
-	DrawSphere3D(m_status.pos, 10.0f, 16, 0xff0000, 0xff0000, true);
-	DrawSphere3D(m_status.lookPos, 10.0f, 16, 0xff0000, 0xff0000, true);
+	//DrawSphere3D(m_status.pos, 10.0f, 16, 0xff0000, 0xff0000, true);
+	//DrawSphere3D(m_status.lookPos, 10.0f, 16, 0xff0000, 0xff0000, true);
 }
 
 void Player::ControllView(const InputState& input)
 {
+	m_playerAngleAxisX += input.GetMouseMoveY() * kMouseSensitivity;
+	m_playerAngleAxisY += input.GetMouseMoveX() * kMouseSensitivity;
+
 	// 右視点移動
 	if (input.IsPressed(InputType::lookRight))
 	{
@@ -174,51 +179,47 @@ void Player::UpdateView()
 
 void Player::ControllMove(const InputState& input)
 {
+	// 移動ベクトル
 	VECTOR moveDir = Game::kVecZero;
 
 	// 前方移動入力
 	if (input.IsPressed(InputType::moveForward))
 	{
-		moveDir = VSub(m_status.lookPos, m_status.pos);
-		moveDir.y = 0.0f;
-		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
-		moveDir = VScale(moveDir, m_status.moveSpeed);
-		m_status.pos = VAdd(m_status.pos, moveDir);
+		VECTOR tempDir = VSub(m_status.lookPos, m_status.pos);
+		tempDir.y = 0.0f;
+		moveDir = VAdd(moveDir, tempDir);
 	}
 	// 後方移動入力
 	if (input.IsPressed(InputType::moveBehind))
 	{
-		moveDir = VSub(m_status.lookPos, m_status.pos);
-		moveDir.y = 0.0f;
-		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
-		moveDir = VScale(moveDir, -m_status.moveSpeed);
-		m_status.pos = VAdd(m_status.pos, moveDir);
+		VECTOR tempDir = VSub(m_status.pos, m_status.lookPos);
+		tempDir.y = 0.0f;
+		moveDir = VAdd(moveDir, tempDir);
 	}
 	// 右移動入力
 	if (input.IsPressed(InputType::moveRight))
 	{
-		moveDir = VSub(m_status.lookPos, m_status.pos);
-		moveDir.y = 0.0f;
-		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
-		moveDir = VScale(moveDir, m_status.moveSpeed);
+		VECTOR tempDir = VSub(m_status.lookPos, m_status.pos);
+		tempDir.y = 0.0f;
 		// 進行方向右へ90度回転
 		MATRIX mtx = MGetRotY(DX_PI_F / 2);
-		moveDir = VTransform(moveDir, mtx);
-		m_status.pos = VAdd(m_status.pos, moveDir);
+		tempDir = VTransform(tempDir, mtx);
+		moveDir = VAdd(moveDir, tempDir);
 	}
 	// 左移動入力
 	if (input.IsPressed(InputType::moveLeft))
 	{
-		moveDir = VSub(m_status.lookPos, m_status.pos);
-		moveDir.y = 0.0f;
-		if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
-		moveDir = VScale(moveDir, m_status.moveSpeed);
+		VECTOR tempDir = VSub(m_status.lookPos, m_status.pos);
+		tempDir.y = 0.0f;
 		// 進行方向左へ90度回転
 		MATRIX mtx = MGetRotY(-DX_PI_F / 2);
-		moveDir = VTransform(moveDir, mtx);
-		m_status.pos = VAdd(m_status.pos, moveDir);
+		tempDir = VTransform(tempDir, mtx);
+		moveDir = VAdd(moveDir, tempDir);
 	}
 
+	if (VSize(moveDir) > 0) moveDir = VNorm(moveDir);
+	moveDir = VScale(moveDir, m_status.moveSpeed);
+	m_status.pos = VAdd(m_status.pos, moveDir);
 }
 
 void Player::ControllShot(const InputState& input)
@@ -230,6 +231,7 @@ void Player::ControllShot(const InputState& input)
 	if (VSize(targetDir) > 0) targetDir = VNorm(targetDir);
 	targetDir = VScale(targetDir, ShotParam::kShotSpeed);
 	m_targetPos = VAdd(m_pCamera->GetPos(), VScale(targetDir, ShotParam::kShotTime));
+	m_targetPos = m_status.lookPos;
 
 	// ショット連射速度
 	m_shotDelay--;
@@ -346,6 +348,7 @@ void Player::UpdateCursor(const InputState& input)
 
 void Player::Draw2D()
 {
+	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.0f, 0.0f, m_hLockCursorImg, true);
 	// 画像描画
 	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
 	// ロックオンカーソル描画

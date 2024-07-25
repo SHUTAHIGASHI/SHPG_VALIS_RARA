@@ -17,8 +17,6 @@ void InputState::Update()
 	// マウスホイールの状態管理
 	mouseState.mouseWheelState = GetMouseWheelRotVol(true);
 	// マウスカーソルの座標取得
-	mouseState.exX = mouseState.x;
-	mouseState.exY = mouseState.y;
 	GetMousePoint(&mouseState.x, &mouseState.y);
 
 	// パッドキー状態取得
@@ -26,6 +24,16 @@ void InputState::Update()
 	padState = GetJoypadInputState(DX_INPUT_PAD1);
 	// パッドキー状態取得(スティック状態管理用)
 	GetJoypadDirectInputState(DX_INPUT_PAD1, &dinputPadState);
+}
+
+float InputState::GetMouseMoveX() const
+{
+	return -static_cast<float>(Game::kScreenWidthHalf - mouseState.x);
+}
+
+float InputState::GetMouseMoveY() const
+{
+	return -static_cast<float>(Game::kScreenHeightHalf - mouseState.y);
 }
 
 bool InputState::IsTriggered(InputType type)const
@@ -225,26 +233,26 @@ bool InputState::IsPressed(InputType type)const
 	else if (type == InputType::lookUp)
 	{
 		return keyState[KEY_INPUT_UP] ||
-			(IsStickInput(dinputPadState.Ry, false))||
-			(IsMouseMoveY(true));
+			(IsStickInput(dinputPadState.Ry, false))/*||
+			(IsMouseMoveY(false))*/;
 	}
 	else if (type == InputType::lookDown)
 	{
 		return keyState[KEY_INPUT_DOWN] ||
-			(IsStickInput(dinputPadState.Ry, true))||
-			(IsMouseMoveY(false));
+			(IsStickInput(dinputPadState.Ry, true))/*||
+			(IsMouseMoveY(true))*/;
 	}
 	else if (type == InputType::lookRight)
 	{
 		return keyState[KEY_INPUT_RIGHT] ||
-			(IsStickInput(dinputPadState.Rx, true))||
-			(IsMouseMoveX(true));
+			(IsStickInput(dinputPadState.Rx, true))/*||
+			(IsMouseMoveX(true))*/;
 	}
 	else if (type == InputType::lookLeft)
 	{
 		return keyState[KEY_INPUT_LEFT] ||
-			(IsStickInput(dinputPadState.Rx, false))||
-			(IsMouseMoveX(false));
+			(IsStickInput(dinputPadState.Rx, false))/*||
+			(IsMouseMoveX(false))*/;
 	}
 	else if (type == InputType::moveForward)
 	{
@@ -306,36 +314,40 @@ bool InputState::IsMouseMoveX(bool isPlus) const
 {
 	if (isPlus)
 	{
-		if (mouseState.x > mouseState.exX)
+		if (mouseState.x > Game::kScreenWidthHalf)
 		{
 			return true;
 		}
 	}
 	else
 	{
-		if (mouseState.x < mouseState.exX)
+		if (mouseState.x < Game::kScreenWidthHalf)
 		{
 			return true;
 		}
 	}
+
+	return false;
 }
 
 bool InputState::IsMouseMoveY(bool isPlus) const
 {
 	if (isPlus)
 	{
-		if (mouseState.y > mouseState.exY)
+		if (mouseState.y > Game::kScreenHeightHalf)
 		{
 			return true;
 		}
 	}
 	else
 	{
-		if (mouseState.y < mouseState.exY)
+		if (mouseState.y < Game::kScreenHeightHalf)
 		{
 			return true;
 		}
 	}
+
+	return false;
 }
 
 bool InputState::IsStickInput(int stickType, bool isPlus)const

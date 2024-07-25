@@ -33,6 +33,8 @@ SceneMain::~SceneMain()
 
 void SceneMain::Init()
 {
+	// マウス非表示
+	SetMouseDispFlag(false);
 	// カメラ初期化
 	m_pCamera->SetPlayer(m_pPlayer.get());
 	m_pCamera->Init();
@@ -69,12 +71,12 @@ void SceneMain::Update(const InputState& input)
 
 void SceneMain::Draw()
 {
+	//スカイドーム描画
+	m_pSkyDome->Draw();
 	// 敵管理描画
 	m_pEnemyManager->Draw();
 	// プレイヤー描画
 	m_pPlayer->Draw();
-	//スカイドーム描画
-	m_pSkyDome->Draw();
 
 	// エフェクト描画
 	EffekseerManager::GetInstance().Draw();
@@ -85,6 +87,8 @@ void SceneMain::Draw()
 
 void SceneMain::End()
 {
+	// マウス表示
+	SetMouseDispFlag(true);
 	// 再生中のエフェクト停止
 	EffekseerManager::GetInstance().StopAllEffect();
 }
