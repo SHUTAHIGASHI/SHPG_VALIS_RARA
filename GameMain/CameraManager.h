@@ -12,15 +12,14 @@ public:
 	// デストラクタ
 	virtual ~CameraManager();
 
-	// プレイヤーポインタセット
-	void SetPlayer(class Player* pPlayer) { m_pPlayer = pPlayer; }
-
 	// 初期化
 	void Init();
 	// 更新
 	void Update();
-	// 画面揺れ
-	void OnScreenQuake();
+	// 被ダメージ画面揺れ
+	void OnDamageQuake();
+	// 移動時の揺れ
+	void OnMoveQuake();
 
 	// カメラ座標セット
 	void SetPosAndTarget(VECTOR pos, VECTOR target) { m_pos = pos; m_targetPos = target; }
@@ -29,10 +28,10 @@ public:
 	VECTOR GetPos() { return m_pos; }
 
 private:// メンバ関数
-	// 座標更新
-	void UpdatePos();
 	// 揺れ更新
-	void UpdateQuake();
+	void UpdateDamageQuake();
+	// 移動時の揺れ更新
+	void UpdateMoveQuake();
 
 private:// メンバ変数
 	// カメラ座標
@@ -43,11 +42,14 @@ private:// メンバ変数
 	float m_fov;
 	// カメラ回転
 	float m_rotaAxisY;
+	// 移動時の揺れの大きさ
+	float m_moveQuakeScale;
+	float m_moveQuakeNum;
+	// 移動時の揺れ判定
+	bool m_isMoveQuake;
 	// 画面揺れの大きさ
-	int m_screenQuakeScale;
+	int m_damageQuakeScale;
+
 	// カメラ
 	std::shared_ptr<class Camera> m_pCamera;
-private:
-	// プレイヤーポインタ
-	class Player* m_pPlayer;
 };

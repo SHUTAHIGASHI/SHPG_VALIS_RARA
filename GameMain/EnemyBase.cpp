@@ -2,6 +2,13 @@
 #include "Load.h"
 #include "Game.h"
 #include "SoundManager.h"
+#include "UiManager.h"
+
+namespace
+{
+	// 基準体力
+	const int kBaseHp = 3;
+}
 
 EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	ObjectBase()
@@ -16,10 +23,17 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	m_status.pos = pos;
 	// 画像設定
 	m_status.hImg = Load::GetInstance().GetHandle(typeName);
+	// 体力設定
+	m_status.hp = kBaseHp;
+
+	// UIに敵の体力を登録
+	UiManager::GetInstance().AddUI(this);
 }
 
 EnemyBase::~EnemyBase()
 {
+	// UIから敵の体力を削除
+	UiManager::GetInstance().DeleteUI(this);
 }
 
 void EnemyBase::Update()
@@ -43,16 +57,29 @@ void EnemyBase::Draw()
 
 void EnemyBase::OnHit()
 {	
-	// 当たった時の処理
-	m_status.isEnabled = false;
-	// ダメージ音再生
-	SoundManager::GetInstance().PlaySE(SoundType::enemyDamage);
+	// 体力を減らす
+	m_status.hp--;
+	if(m_status.hp <= 0)
+	{
+		// 体力が0以下になったら
+		OnDead();
+	}
+	else
+	{
+		// ダメージ音再生
+		SoundManager::GetInstance().PlaySE(SoundType::enemyDamage);
+	}
 }
 
 void EnemyBase::OnHitPlayer()
 {
-	// 当たった時の処理
+	// todo プレイヤーに当たった時の処理
+}
+
+void EnemyBase::OnDead()
+{
+	// 体力が0以下になったら
 	m_status.isEnabled = false;
-	// ダメージ音再生
-	SoundManager::GetInstance().PlaySE(SoundType::enemyDamage);
+	// 死亡音再生
+	SoundManager::GetInstance().PlaySE(SoundType::enemyDeath);
 }

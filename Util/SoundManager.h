@@ -11,6 +11,7 @@ enum class SoundType
 	shot,
 	sprShot,
 	enemyDamage,
+	enemyDeath,
 };
 
 /// <summary>

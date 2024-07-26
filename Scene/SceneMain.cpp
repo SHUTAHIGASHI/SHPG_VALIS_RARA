@@ -13,8 +13,8 @@
 #include "EnemyManager.h"
 // 全般
 #include "CameraManager.h"
-#include "EffekseerManager.h"
 #include "SoundManager.h"
+#include "UiManager.h"
 #include "SkyDome.h"
 
 SceneMain::SceneMain(SceneManager& manager) :
@@ -36,7 +36,6 @@ void SceneMain::Init()
 	// マウス非表示
 	SetMouseDispFlag(false);
 	// カメラ初期化
-	m_pCamera->SetPlayer(m_pPlayer.get());
 	m_pCamera->Init();
 	// プレイヤー初期化
 	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
@@ -65,9 +64,10 @@ void SceneMain::Update(const InputState& input)
 	m_pEnemyManager->Update();
 	// スカイドームの更新
 	m_pSkyDome->Update();
+	m_pSkyDome->SetPos(m_pPlayer->GetPos());
 
-	// エフェクトの更新処理
-	EffekseerManager::GetInstance().Update();
+	// UI更新
+	UiManager::GetInstance().Update();
 }
 
 void SceneMain::Draw()
@@ -82,16 +82,14 @@ void SceneMain::Draw()
 	// プレイヤー描画
 	m_pPlayer->Draw();
 
-	// エフェクト描画
-	EffekseerManager::GetInstance().Draw();
+	// UI描画
+	UiManager::GetInstance().Draw();
 }
 
 void SceneMain::End()
 {
 	// マウス表示
 	SetMouseDispFlag(true);
-	// 再生中のエフェクト停止
-	EffekseerManager::GetInstance().StopAllEffect();
 }
 
 void SceneMain::DrawStageLine()
@@ -99,15 +97,15 @@ void SceneMain::DrawStageLine()
 	// グリッドを表示
 	for (float z = -Game::kStageSizeZ; z <= Game::kStageSizeZ; z += 100.0f)
 	{
-		VECTOR start = VGet(-Game::kStageSizeX, -100.0f, z);
-		VECTOR end = VGet(Game::kStageSizeX, -100.0f, z);
+		VECTOR start = VGet(-Game::kStageSizeX, -156.0, z);
+		VECTOR end = VGet(Game::kStageSizeX, -156.0, z);
 		DrawLine3D(start, end, 0x00ff00);
 	}
 
 	for (float x = -Game::kStageSizeX; x <= Game::kStageSizeX; x += 100.0f)
 	{
-		VECTOR start = VGet(x, -100.0f, -Game::kStageSizeZ);
-		VECTOR end = VGet(x, -100.0f, Game::kStageSizeZ);
+		VECTOR start = VGet(x, -156.0, -Game::kStageSizeZ);
+		VECTOR end = VGet(x, -156.0, Game::kStageSizeZ);
 		DrawLine3D(start, end, 0xff0000);
 	}
 }

@@ -35,6 +35,7 @@ class ObjectBase
 		int hImg = 0;
 		// 体力
 		int hp = 0;
+		int maxHp = 0;
 		// 無敵時間
 		int invTime = 0;
 	};
@@ -59,11 +60,14 @@ public:
 	// オブジェクトのステータスを取得
 	const VECTOR GetPos() const { return m_status.pos; }
 	const VECTOR GetDir() const { return m_status.dir; }
+	const VECTOR GetLookPos() const { return m_status.lookPos; }
 	const float GetSpeed() const { return m_status.moveSpeed; }
 	const float GetRadius() const { return m_status.radius; }
 	const int GetHP() const { return m_status.hp; }
 	const bool IsEnabled() const { return m_status.isEnabled; }
 	const bool IsDead() const { return m_status.isDead; }
+	// HPのポインタを取得
+	int* GetHpPointer() { return &m_status.hp; }
 
 protected:
 	// オブジェクトのステータス

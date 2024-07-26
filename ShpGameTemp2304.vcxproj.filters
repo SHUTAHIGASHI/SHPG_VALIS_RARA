@@ -25,17 +25,17 @@
     <Filter Include="ヘッダー ファイル\Util">
       <UniqueIdentifier>{c281ed0a-dd31-4293-a4c7-85ef38ddf4c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Effect">
-      <UniqueIdentifier>{0d03c5b7-37f4-4fbd-98e1-181976953976}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Effect">
-      <UniqueIdentifier>{7d53c006-20a6-4a0c-b306-d558b654b63a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\GameScene">
       <UniqueIdentifier>{c89e4e28-24e0-4c5b-b9eb-8ee16eb1841d}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\GameScene">
       <UniqueIdentifier>{fb4135a9-b952-4f19-8d83-c3b0652466ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI">
+      <UniqueIdentifier>{2bc8d13c-8966-4741-a738-85b8c32b2598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI">
+      <UniqueIdentifier>{e986564e-d48e-4241-a590-8a6da2249d9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,9 +69,6 @@
     <ClCompile Include="Scene\SceneFade.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Effect\EffectBase.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Util\SoundManager.cpp">
       <Filter>ソース ファイル\Util</Filter>
     </ClCompile>
@@ -80,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="GameMain\CameraManager.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect\EffekseerManager.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneGameOver.cpp">
       <Filter>ソース ファイル\Scene</Filter>
@@ -126,6 +120,12 @@
     <ClCompile Include="GameMain\EnemyNeffy.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UiBar.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UiManager.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene\Scene.h">
@@ -158,9 +158,6 @@
     <ClInclude Include="Scene\SceneDebug.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Effect\EffectBase.h">
-      <Filter>ヘッダー ファイル\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneFade.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
@@ -172,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="GameMain\CameraManager.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Effect\EffekseerManager.h">
-      <Filter>ヘッダー ファイル\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneGameOver.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
@@ -217,6 +211,12 @@
     </ClInclude>
     <ClInclude Include="GameMain\EnemyNeffy.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UiBar.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UiManager.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

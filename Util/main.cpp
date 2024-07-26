@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "SoundManager.h"
-#include "EffekseerManager.h"
+#include "UiManager.h"
 #include "SceneManager.h"
 #include "SceneTitleMenu.h"
 #include "SceneDebug.h"
@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// サウンドマネージャー宣言
 	auto& soundManager = SoundManager::GetInstance();
 	// エフェクシアマネージャー宣言
-	auto& effekseerManager = EffekseerManager::GetInstance();
+	auto& uiManager = UiManager::GetInstance();
 	// キー入力状態クラス宣言
 	InputState input;
 	// シーンマネージャー宣言

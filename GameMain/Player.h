@@ -2,6 +2,13 @@
 #include "ObjectBase.h"
 #include <list>
 
+enum class PostureType
+{
+	stand,
+	crouch,
+	slide
+};
+
 class Player :
 	public ObjectBase
 {
@@ -31,8 +38,14 @@ private:
 	void ControllView(const InputState& input);
 	// 視点の更新
 	void UpdateView();
+
 	// 移動処理
 	void ControllMove(const InputState& input);
+	// 姿勢の更新
+	void UpdatePosture(const InputState& input);
+	// スライディングの更新
+	void UpdateSlide();
+
 	// ショット管理
 	void ControllShot(const InputState& input);
 	// ショット生成
@@ -41,12 +54,20 @@ private:
 	void CreateSprShot();
 	// ショット更新
 	void UpdateShot();
+
 	// カーソル更新
 	void UpdateCursor(const InputState& input);
+
 	// 2D描画
 	void Draw2D();
 
+	// スライディング処理
+	void OnSlide();
+
 private:
+	// プレイヤーの姿勢
+	PostureType m_posture;
+
 	// 画像ハンドル
 	int m_hFpsHand;
 	int m_hCursorImg;
@@ -56,14 +77,25 @@ private:
 	int m_HandSizeY;
 	// ショット連射速度
 	int m_shotDelay;
+	// スライディング時間
+	int m_slideTime;
 
+	// 移動判定
+	bool m_isMove;
+	// ダッシュ判定
+	bool m_isDash;
 	// カーソルロック判定
 	bool m_isLockOn;
+
+	// 視線の高さ
+	float m_eyeHeight;
 
 	// 注視点の移動量
 	float m_playerAngleY;
 	float m_playerAngleX;
 
+	// スライディングベクトル
+	VECTOR m_slideVec;
 	// ロックオンカーソル座標
 	VECTOR m_lockObjPos;
 	// 着弾地点

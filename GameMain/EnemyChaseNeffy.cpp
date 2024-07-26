@@ -9,6 +9,7 @@ EnemyChaseNeffy::EnemyChaseNeffy(ObjectBase* target, VECTOR pos):
 
 EnemyChaseNeffy::~EnemyChaseNeffy()
 {
+	// ターゲットの解放
 	m_pTarget = nullptr;
 }
 

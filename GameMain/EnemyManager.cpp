@@ -47,14 +47,14 @@ void EnemyManager::Update()
 		if (enemy->CheckCollision(m_pPlayer))
 		{
 			// 敵のダメージ処理
-			enemy->OnHit();
+			enemy->OnHitPlayer();
 			// プレイヤーのダメージ処理
 			m_pPlayer->OnHit();
 		}
 	}
 
 	// 敵の削除
-	m_pEnemies.remove_if([](ObjectBase* obj) { return !obj->IsEnabled(); });
+	m_pEnemies.remove_if([](EnemyBase* obj) { return !obj->IsEnabled(); });
 }
 
 void EnemyManager::Draw()

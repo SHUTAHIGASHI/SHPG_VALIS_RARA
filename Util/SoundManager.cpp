@@ -122,7 +122,8 @@ void SoundManager::LoadData()
 	m_soundData[SoundType::select] = LoadSoundMem("Data/SoundData/Select.wav");
 	m_soundData[SoundType::shot] = LoadSoundMem("Data/SoundData/Ringo.wav");
 	m_soundData[SoundType::sprShot] = LoadSoundMem("Data/SoundData/SprRingo.wav");
-	m_soundData[SoundType::enemyDamage] = LoadSoundMem("Data/SoundData/neffyuwaaaa.wav");
+	m_soundData[SoundType::enemyDamage] = LoadSoundMem("Data/SoundData/neffyuwaaa.wav");
+	m_soundData[SoundType::enemyDeath] = LoadSoundMem("Data/SoundData/neffyuwaaaa.wav");
 
 	// ミュージック
 	m_hMusic = LoadSoundMem("Data/MusicData/Getsurin_Meikyuu.mp3");

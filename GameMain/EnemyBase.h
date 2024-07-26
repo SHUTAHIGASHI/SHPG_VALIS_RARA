@@ -18,7 +18,7 @@ class EnemyBase :
 {
 public:
 	EnemyBase(std::string typeName, VECTOR pos);
-	~EnemyBase();
+	virtual ~EnemyBase();
 
 	// 更新
 	virtual void Update() override;
@@ -30,5 +30,8 @@ public:
 	// プレイヤーとのヒット処理
 	virtual void OnHitPlayer();
 protected:
+
+	// 死亡時の処理
+	virtual void OnDead();
 };
 

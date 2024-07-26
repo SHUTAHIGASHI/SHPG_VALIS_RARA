@@ -4,13 +4,12 @@
 #include "SceneOption.h"
 #include "SceneTitleMenu.h"
 #include "SelectMenuBase.h"
-#include "EffekseerManager.h"
 #include "SoundManager.h"
 
 namespace
 {
 	// テキスト
-	const char* const kTextPause = "～ポーズメニュー～";
+	const char* const kTextPause = "～ポーズ～";
 	// 選択項目
 	const char* const kMenuTexts[] = {
 		"戻る",

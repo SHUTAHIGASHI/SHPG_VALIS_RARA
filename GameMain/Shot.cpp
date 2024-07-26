@@ -1,5 +1,4 @@
 #include "Shot.h"
-#include "EffekseerManager.h"
 #include "Load.h"
 
 using namespace ShotParam;
@@ -29,8 +28,6 @@ Shot::Shot(VECTOR pos, ObjectBase* targetObj):
 
 Shot::~Shot()
 {
-	// ƒVƒ‡ƒbƒg‚Ìíœ
-	EffekseerManager::GetInstance().StopEffectTargetObj(this);
 	// ‰æ‘œíœ
 	m_status.hImg = -1;
 }
