@@ -38,7 +38,12 @@ public:
 	// UIの削除
 	void DeleteUI(class ObjectBase* obj);
 
+	// プレイヤー座標を設定
+	void SetPlayerPos(const VECTOR pos) { m_playerPos = pos; }
+
 private:
+	// プレイヤー座標
+	VECTOR m_playerPos;
 
 private:
 	// UIのリスト

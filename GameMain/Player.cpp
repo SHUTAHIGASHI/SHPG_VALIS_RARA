@@ -6,6 +6,7 @@
 #include "Load.h"
 #include "CameraManager.h"
 #include "SoundManager.h"
+#include "UiManager.h"
 
 namespace
 {
@@ -119,6 +120,9 @@ void Player::Update(const InputState& input)
 	ControllShot(input);
 	// ショット更新
 	UpdateShot();
+
+	// UIにプレイヤー座標を送信
+	UiManager::GetInstance().SetPlayerPos(m_status.pos);
 }
 
 void Player::Draw()

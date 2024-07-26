@@ -1,10 +1,12 @@
 #include "UiManager.h"
 #include "SceneMain.h"
 #include "UiBar.h"
+#include "ObjectBase.h"
 
 namespace
 {
-
+	// UI‚ð•`‰æ‚·‚é”ÍˆÍ
+	constexpr float kDrawRange = 600.0f;
 }
 
 UiManager::~UiManager()
@@ -25,7 +27,10 @@ void UiManager::Draw()
 	// UI‚Ì•`‰æ
 	for (auto& ui : m_pUIList)
 	{
-		ui->Draw();
+		if (VSize(VSub(m_playerPos, ui->GetObj()->GetPos())) < kDrawRange)
+		{
+			ui->Draw();
+		}
 	}
 }
 
