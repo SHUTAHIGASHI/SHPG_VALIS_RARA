@@ -30,6 +30,8 @@ public:
 	// プレイヤーとのヒット処理
 	virtual void OnHitPlayer();
 protected:
+	// 削除処理
+	virtual void OnDelete();
 
 	// 死亡時の処理
 	virtual void OnDead();

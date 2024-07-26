@@ -5,7 +5,7 @@
 namespace ShotParam
 {
 	// ’e‚Ì‘¬“x
-	constexpr float kShotSpeed = 256.0f;
+	constexpr float kShotSpeed = 128.0f;
 	// ’e‚Ì”¼Œa
 	constexpr float kShotRadius = 32.0f;
 	// ’e‚Ì—LŒøŠÔ
@@ -20,9 +20,11 @@ public:
 	~Shot();
 
 	// XV
-	void Update();
+	void Update()override;
 	// •`‰æ
-	void Draw();
+	void Draw()override;
+	// I—¹
+	void End()override;
 
 	// ’…’e
 	void OnHit();

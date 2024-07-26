@@ -5,9 +5,9 @@
 namespace
 {
 	// ÉQÅ[ÉWÇÃç¿ïW
-	constexpr int kGaugeW = 100;
-	constexpr int kGaugeH = 15;
-	constexpr int kDrawPosDiff = 50;
+	constexpr int kGaugeW = 50;
+	constexpr int kGaugeH = 10;
+	constexpr int kDrawPosDiff = 30;
 }
 
 UiBar::UiBar(class ObjectBase* obj) :
@@ -49,10 +49,6 @@ void UiBar::Update()
 	if (m_currentNumRate < 30)
 	{
 		m_color = Game::kColorRed;
-	}
-	else if (m_currentNumRate < 60)
-	{
-		m_color = Game::kColorOrange;
 	}
 	else
 	{

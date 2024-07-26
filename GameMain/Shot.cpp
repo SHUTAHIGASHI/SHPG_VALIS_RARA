@@ -28,8 +28,6 @@ Shot::Shot(VECTOR pos, ObjectBase* targetObj):
 
 Shot::~Shot()
 {
-	// ‰æ‘œíœ
-	m_status.hImg = -1;
 }
 
 void Shot::Update()
@@ -52,10 +50,18 @@ void Shot::Draw()
 	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
 }
 
+void Shot::End()
+{
+	// ‰æ‘œíœ
+	m_status.hImg = -1;
+}
+
 void Shot::OnHit()
 {
 	// “–‚½‚Á‚½Žž‚Ìˆ—
 	m_status.isEnabled = false;
+	// I—¹ˆ—
+	this->End();
 }
 
 void Shot::SetScale(float scale)

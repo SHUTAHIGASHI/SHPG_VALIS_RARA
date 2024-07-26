@@ -19,5 +19,6 @@ void EnemyNeffy::Update()
 	if (m_status.pos.z < kStageLimitZ)
 	{
 		m_status.isEnabled = false;
+		this->OnDelete();
 	}
 }

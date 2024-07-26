@@ -53,6 +53,8 @@ public:
 	virtual void Update(const InputState& input) {};
 	// •`‰æ
 	virtual void Draw() {};
+	// I—¹
+	virtual void End() {};
 
 	// Õ“Ë”»’è
 	bool CheckCollision(ObjectBase* obj);

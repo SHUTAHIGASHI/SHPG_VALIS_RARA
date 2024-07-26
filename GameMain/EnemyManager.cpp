@@ -52,7 +52,6 @@ void EnemyManager::Update()
 			m_pPlayer->OnHit();
 		}
 	}
-
 	// “G‚Ìíœ
 	m_pEnemies.remove_if([](EnemyBase* obj) { return !obj->IsEnabled(); });
 }

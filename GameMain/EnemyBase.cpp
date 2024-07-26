@@ -32,8 +32,6 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 
 EnemyBase::~EnemyBase()
 {
-	// UI‚©‚ç“G‚Ì‘Ì—Í‚ðíœ
-	UiManager::GetInstance().DeleteUI(this);
 }
 
 void EnemyBase::Update()
@@ -76,10 +74,18 @@ void EnemyBase::OnHitPlayer()
 	// todo ƒvƒŒƒCƒ„[‚É“–‚½‚Á‚½Žž‚Ìˆ—
 }
 
+void EnemyBase::OnDelete()
+{
+	// UI‚©‚ç“G‚Ì‘Ì—Í‚ðíœ
+	UiManager::GetInstance().DeleteUI(this);
+}
+
 void EnemyBase::OnDead()
 {
 	// ‘Ì—Í‚ª0ˆÈ‰º‚É‚È‚Á‚½‚ç
 	m_status.isEnabled = false;
 	// Ž€–S‰¹Ä¶
 	SoundManager::GetInstance().PlaySE(SoundType::enemyDeath);
+	// íœˆ—
+	this->OnDelete();
 }
