@@ -20,6 +20,8 @@ SkyDome::SkyDome() :
 	m_pModel = std::make_shared<Model>(m_handle);
 	// スカイドームのスケールを設定
 	m_pModel->SetScale(m_scale);
+	// 座標初期化
+	m_pModel->SetPosition(Game::kVecZero);
 }
 
 SkyDome::~SkyDome()

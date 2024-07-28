@@ -26,7 +26,7 @@ public:
 	virtual void Draw() override;
 
 	// ヒット処理
-	virtual void OnHit();
+	virtual void OnHit(int damage);
 	// プレイヤーとのヒット処理
 	virtual void OnHitPlayer();
 protected:

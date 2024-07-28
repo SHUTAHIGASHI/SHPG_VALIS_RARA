@@ -1,27 +1,31 @@
 #include "SceneFade.h"
 #include "SceneManager.h"
+#include "Load.h"
 
 namespace
 {
-	// フェード処理の速度
-#ifdef _DEBUG
-	constexpr int kFadeSpeed = 30;
-#else
-	constexpr int kFadeSpeed = 5;
-#endif // _DEBUG
+	// 画像拡大率
+	constexpr double kGraphScaleMin = 0.2;
+	constexpr double kGraphScaleMax = 100.0;
+	constexpr double kGraphScaleNum = 3.0;
 }
 
-SceneFade::SceneFade(SceneManager& manager):
+SceneFade::SceneFade(SceneManager& manager) :
 	Scene(manager),
 	m_updateFunc(&SceneFade::CloseUpdate),
 	m_isFadeClose(false),
 	m_isFadeOpen(false),
-	m_fadeNum(0)
+	m_hFadeImg(-1),
+	m_imgScale(kGraphScaleMin)
 {
+	// フェード処理用画像
+	m_hFadeImg = Load::GetInstance().GetHandle("shot");
+	GetGraphSize(m_hFadeImg, &m_graphSizeX, &m_graphSizeY);
 }
 
 SceneFade::~SceneFade()
 {
+	m_hFadeImg = -1;
 }
 
 void SceneFade::Update(const InputState& input)
@@ -32,18 +36,16 @@ void SceneFade::Update(const InputState& input)
 void SceneFade::Draw()
 {
 	// フェード処理
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeNum);
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DrawRotaGraph(Game::kScreenWidthHalf, Game::kScreenHeightHalf, m_imgScale, 0.0, m_hFadeImg, true);
 }
 
 void SceneFade::CloseUpdate()
 {
-	m_fadeNum += kFadeSpeed;
+	m_imgScale += kGraphScaleNum;
 
-	if (m_fadeNum > 255)
+	if (m_imgScale > kGraphScaleMax)
 	{
-		m_fadeNum = 255;
+		m_imgScale = kGraphScaleMax;
 		m_isFadeClose = true;
 		m_updateFunc = &SceneFade::OpenUpdate;
 	}
@@ -51,11 +53,11 @@ void SceneFade::CloseUpdate()
 
 void SceneFade::OpenUpdate()
 {
-	m_fadeNum -= kFadeSpeed;
+	m_imgScale -= kGraphScaleNum;
 
-	if (m_fadeNum < 0)
+	if (m_imgScale < kGraphScaleMin)
 	{
-		m_fadeNum = 0;
+		m_imgScale = kGraphScaleMin;
 		m_isFadeOpen = true;
 	}
 }

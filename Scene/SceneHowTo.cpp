@@ -14,7 +14,7 @@ SceneHowTo::SceneHowTo(SceneManager& manager) :
 	m_pos()
 {
 	// âÊëúì«Ç›çûÇ›
-	m_hImg = LoadGraph("Data/ImageData/HowImage.png");
+	m_hImg = LoadGraph("Data/ImageData/RARA_GAME_HOWTO.png");
 }
 
 SceneHowTo::~SceneHowTo()
@@ -41,13 +41,17 @@ void SceneHowTo::Update(const InputState& input)
 
 void SceneHowTo::Draw()
 {
+	// îwåiï`âÊ
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	// âÊëúï`âÊ
-	DrawExtendGraphF(0.0f, 0.0f, Game::kScreenWidth, Game::kScreenHeight, m_hImg, true);
+	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.2, 0.0, m_hImg, true);
 	float stringLength = static_cast<float>(GetDrawFormatStringWidth(kTextBack));
 	// 10ÉtÉåÅ[ÉÄÇ≤Ç∆Ç…ì_ñ≈
 	if ((m_countFrame / 10) % 6 != 0)
 	{
 		// ÉeÉLÉXÉgï`âÊ
-		DrawFormatStringF(Game::kScreenWidthHalf - (stringLength / 2), Game::kScreenHeight - 100, Game::kColorWhite, "%s", kTextBack);
+		DrawFormatStringF(Game::kScreenWidthHalf - (stringLength / 2), Game::kScreenHeight - 150, Game::kColorWhite, "%s", kTextBack);
 	}
 }

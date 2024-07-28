@@ -7,9 +7,9 @@ namespace
 {
 	// タイトルテキスト描画位置
 	constexpr float kTitleDrawPosX = Game::kScreenWidthHalf;
-	constexpr float kTitleDrawPosY = Game::kScreenHeightHalf - 175.0f;
+	constexpr float kTitleDrawPosY = Game::kScreenHeightHalf - 240.0f;
 	// テキスト描画位置
-	constexpr float kTextDrawPosY = Game::kScreenHeightHalf - 80.0f;
+	constexpr float kTextDrawPosY = Game::kScreenHeightHalf - 150.0f;
 	// テキスト描画間隔
 	constexpr float kTextDistance = 70.0f;
 	// サウンドテキストの間隔
@@ -22,8 +22,10 @@ namespace
 	constexpr int kVolumeChangeNum = 10;
 
 	// テキスト
+	const char* const kTitleText = "～ 設定 ～";
 	const char* const kMenuTexts[] = {
 		"閉じる",
+		"感度",
 		"音楽",
 		"効果音",
 		"ウィンドウモード",
@@ -41,7 +43,7 @@ SceneOption::SceneOption(SceneManager& manager) :
 	m_volumeBGM(0),
 	m_volumeSE(0),
 	m_selectedPos(0),
-	m_selectedItemName(),
+	m_selectedItemName("閉じる"),
 	m_hBgImg(-1),
 	m_hMusicVolImg(-1),
 	m_isCursorRanged(false),
@@ -49,7 +51,7 @@ SceneOption::SceneOption(SceneManager& manager) :
 	m_isSavedWindowMode(false)
 {
 	// 画像読み込み
-	m_hBgImg = LoadGraph("Data/ImageData/BoardBg.png");
+	m_hBgImg = LoadGraph("Data/ImageData/RARA_GAME_BG.png");
 	m_hMusicVolImg = Load::GetInstance().GetHandle("shot");
 }
 
@@ -120,18 +122,23 @@ void SceneOption::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	// 背景描画
 	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.2, 0.0, m_hBgImg, true);
+	// タイトル描画
+	SetFontSize(60);
+	auto titleLength = GetDrawFormatStringWidth(kTitleText);
+	DrawFormatStringF(kTitleDrawPosX - (titleLength / 2), kTitleDrawPosY, kTextColor, "%s", kTitleText);
+	SetFontSize(Game::kFontSize);
 	// 項目描画
 	DrawMenuText();
 }
 
 void SceneOption::ChangeVolume(const InputState& input)
 {
-	if (m_selectedPos == 1)
+	if (m_selectedItemName == "音楽")
 	{
 		// BGM
 		ControllVolume(input, m_volumeBGM);
 	}
-	else if (m_selectedPos == 2)
+	else if (m_selectedItemName == "効果音")
 	{
 		// SE
 		ControllVolume(input, m_volumeSE);
@@ -182,7 +189,7 @@ void SceneOption::DrawSoundBar(float drawX, float drawY, int volume)
 	for (int i = 0; i < 10; i++)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 75);
-		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 1.0, 0.0, m_hMusicVolImg, true);
+		DrawRotaGraphF(drawX + (i * 40), drawY + 20.0f, 1.0, 0.0, m_hMusicVolImg, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
@@ -191,7 +198,7 @@ void SceneOption::DrawSoundBar(float drawX, float drawY, int volume)
 	for (int i = 0; i < n; i++)
 	{
 		// 音量バー描画
-		DrawRotaGraphF(drawX + (i * 40), drawY + 25.0f, 1.0, 0.0, m_hMusicVolImg, true);
+		DrawRotaGraphF(drawX + (i * 40), drawY + 20.0f, 1.0, 0.0, m_hMusicVolImg, true);
 	}
 }
 
@@ -206,8 +213,7 @@ void SceneOption::DrawMenuText()
 			if (i == m_selectedPos) continue;
 		}
 
-		std::string tSelectedItemName;
-		tSelectedItemName = GetCurrentText(i);
+		std::string tSelectedItemName = GetCurrentText(i);
 		int textLength = GetDrawFormatStringWidth(tSelectedItemName.c_str());
 		drawX = static_cast<float>(Game::kScreenWidthHalf - (textLength / 2));
 		drawY = static_cast<float>(kTextDrawPosY) + (i * kTextDistance);
@@ -215,15 +221,16 @@ void SceneOption::DrawMenuText()
 		DrawFormatStringF(drawX, drawY, Game::kColorGray, "%s", tSelectedItemName.c_str());
 	}
 	// 選択中の項目描画
-	m_selectedItemName = "> " + GetCurrentText(m_selectedPos) + " <";
-	drawX = static_cast<float>(Game::kScreenWidthHalf - (GetDrawFormatStringWidth(m_selectedItemName.c_str()) / 2));
+	std::string drawText = "> " + m_selectedItemName + " <";
+	int textLength = GetDrawFormatStringWidth(drawText.c_str());
+	drawX = static_cast<float>(Game::kScreenWidthHalf - (textLength / 2));
 	drawY = static_cast<float>(kTextDrawPosY) + (m_selectedPos * kTextDistance);
 	// 音量変更モード
 	if (m_isVolumeChangeMode)
 	{
 		int* volume = 0;
-		if (m_selectedPos == 1) volume = &m_volumeBGM;
-		else if (m_selectedPos == 2)volume = &m_volumeSE;
+		if (m_selectedItemName == "音楽") volume = &m_volumeBGM;
+		else if (m_selectedItemName == "効果音")volume = &m_volumeSE;
 		else return;
 		// 音量バー描画
 		DrawSoundBar(Game::kScreenWidthHalf - 180.0f, drawY, *volume);
@@ -233,7 +240,7 @@ void SceneOption::DrawMenuText()
 		// 選択中の項目描画
 		if ((m_countFrame / 10) % 6 != 0)
 		{
-			DrawFormatStringF(drawX, drawY - 2, kTextColor, "%s", m_selectedItemName.c_str());
+			DrawFormatStringF(drawX, drawY - 2, kTextColor, "%s", drawText.c_str());
 		}
 	}
 }
@@ -253,8 +260,14 @@ void SceneOption::CursorUpdate(const InputState& input)
 		if (input.GetMousePosX() > buttonPosX && input.GetMousePosX() < buttonPosX + textLength
 			&& input.GetMousePosY() > buttonPosY && input.GetMousePosY() < buttonPosY + Game::kFontSize)
 		{
+			// カーソルが枠内にある
 			m_isCursorRanged = true;
+			// 選択位置更新
 			m_selectedPos = i;
+			// 選択中の項目の文字列をセット
+			m_selectedItemName = GetCurrentText(m_selectedPos);
+
+			break;
 		}
 	}
 }
@@ -264,7 +277,7 @@ void SceneOption::OnSelect()
 	// 選択音再生
 	SoundManager::GetInstance().PlaySE(SoundType::select);
 	// 選択項目による処理
-	if (m_selectedPos == 0)
+	if (m_selectedItemName == "閉じる")
 	{
 		// 音量情報をリセットして閉じる
 		ResetVolumeInfo();
@@ -273,18 +286,22 @@ void SceneOption::OnSelect()
 		// シーンを閉じる
 		m_Manager.PopScene();
 	}
-	else if (m_selectedPos == 1 || m_selectedPos == 2)
+	else if (m_selectedItemName == "感度")
+	{
+		// 未実装
+	}
+	else if (m_selectedItemName == "音楽" || m_selectedItemName == "効果音")
 	{
 		// 音量変更モード
 		m_isVolumeChangeMode = !m_isVolumeChangeMode;
 	}
-	else if (m_selectedPos == 3)
+	else if (m_selectedItemName == "ウィンドウモード")
 	{
 		// ウィンドウモード変更
 		auto result = ChangeWindowMode(!static_cast<bool>(GetWindowModeFlag()));
 		assert(result == DX_CHANGESCREEN_OK);
 	}
-	else if (m_selectedPos == 4)
+	else if (m_selectedItemName == "保存して閉じる")
 	{
 		// 音量情報を保存して閉じる
 		m_Manager.PopScene();

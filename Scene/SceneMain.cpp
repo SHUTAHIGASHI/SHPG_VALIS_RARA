@@ -35,8 +35,6 @@ void SceneMain::Init()
 {
 	// マウス非表示
 	SetMouseDispFlag(false);
-	// カメラ初期化
-	m_pCamera->Init();
 	// プレイヤー初期化
 	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
 	m_pPlayer->SetCamera(m_pCamera.get());
@@ -46,6 +44,8 @@ void SceneMain::Init()
 	m_pEnemyManager->Init();
 	// スカイドームの初期化処理
 	m_pSkyDome->Init(m_pPlayer->GetPos());
+	// カメラ初期化
+	m_pCamera->Init();
 }
 
 void SceneMain::Update(const InputState& input)

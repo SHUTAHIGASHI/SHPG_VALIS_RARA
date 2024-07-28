@@ -42,9 +42,13 @@ namespace
 	constexpr float kLockRange = 50.0f;
 	// ショット連射速度
 	constexpr int kShotRate = 10;
+	// ショットのダメージ
+	constexpr int kShotDamage = 10;
 
 	// 体力
 	constexpr int kMaxHp = 100;
+	// 無敵時間
+	constexpr int kInvTime = 60;
 }
 
 Player::Player():
@@ -57,6 +61,7 @@ Player::Player():
 	m_HandSizeY(0),
 	m_shotDelay(kShotRate),
 	m_slideTime(0),
+	m_invTime(0),
 	m_isMove(false),
 	m_isDash(false),
 	m_isLockOn(false),
@@ -94,10 +99,15 @@ void Player::Init()
 	m_status.moveSpeed = kPlayerMoveSpeed;
 	// 体力設定
 	m_status.hp = kMaxHp;
+	// 視点更新
+	UpdateView();
 }
 
 void Player::Update(const InputState& input)
 {
+	// 無敵時間減少
+	if (m_invTime > 0) m_invTime--;
+
 	// 移動処理
 	ControllMove(input);
 	// 姿勢更新
@@ -138,10 +148,15 @@ void Player::Draw()
 
 void Player::OnHit()
 {
+	// 無敵時間中なら
+	if (m_invTime > 0) return;
+
 	// 体力減少
 	m_status.hp -= 10;
 	// カメラ揺れ処理
 	m_pCamera->OnDamageQuake();
+	// 無敵時間設定
+	m_invTime = kInvTime;
 }
 
 void Player::ControllView(const InputState& input)
@@ -494,7 +509,7 @@ void Player::UpdateShot()
 			if (shot->CheckCollision(obj))
 			{
 				// 敵ヒット処理
-				obj->OnHit();
+				obj->OnHit(kShotDamage);
 				// ショット削除
 				shot->OnHit();
 			}

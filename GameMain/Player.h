@@ -79,6 +79,8 @@ private:
 	int m_shotDelay;
 	// スライディング時間
 	int m_slideTime;
+	// 無敵時間
+	int m_invTime;
 
 	// 移動判定
 	bool m_isMove;

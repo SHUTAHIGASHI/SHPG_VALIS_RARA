@@ -7,7 +7,7 @@
 namespace
 {
 	// Šî€‘Ì—Í
-	const int kBaseHp = 3;
+	const int kBaseHp = 30;
 }
 
 EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
@@ -53,12 +53,13 @@ void EnemyBase::Draw()
 	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
 }
 
-void EnemyBase::OnHit()
+void EnemyBase::OnHit(int damage)
 {	
 	// ‘Ì—Í‚ğŒ¸‚ç‚·
-	m_status.hp--;
+	m_status.hp -= damage;
 	if(m_status.hp <= 0)
 	{
+		m_status.hp = 0;
 		// ‘Ì—Í‚ª0ˆÈ‰º‚É‚È‚Á‚½‚ç
 		OnDead();
 	}
