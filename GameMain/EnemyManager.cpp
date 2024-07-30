@@ -13,6 +13,7 @@ namespace
 }
 
 EnemyManager::EnemyManager():
+	m_roundCount(0),
 	m_pEnemies(),
 	m_pPlayer(nullptr)
 {
@@ -62,6 +63,10 @@ void EnemyManager::Draw()
 	{
 		enemy->Draw();
 	}
+}
+
+void EnemyManager::OnRoundEnd()
+{
 }
 
 void EnemyManager::CreateEnemy()

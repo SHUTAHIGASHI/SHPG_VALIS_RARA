@@ -32,7 +32,7 @@ namespace
 	// ÉXÉRÉAï`âÊèâä˙à íu
 	constexpr float kScorePosY = 1000.0f;
 	// ÉXÉNÉçÅ[Éãë¨ìx
-	constexpr float kScrollSpeed = 12.0f;
+	constexpr float kScrollSpeed = 16.0f;
 	// ï∂éöä‘äu
 	constexpr int kTextDistance = static_cast<int>(Game::kFontSize * 1.5);
 }
@@ -81,6 +81,10 @@ void SceneResult::Update(const InputState& input)
 
 void SceneResult::Draw()
 {
+	// îwåiï`âÊ
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 75);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	// îwåiï`âÊ
 	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf + m_scorePosY, 1.0f, 0.0f, m_hBgImg, true);
 

@@ -83,6 +83,15 @@ void SceneMain::End()
 	UiManager::GetInstance().DeleteAllUI();
 }
 
+void SceneMain::OnGameOver()
+{
+	// 実行する更新処理変更
+	m_updateFunc = &SceneMain::EndUpdate;
+
+	// シーン変更
+	m_Manager.PushSceneAllUpdate(new SceneResult(m_Manager));
+}
+
 void SceneMain::DrawStageLine()
 {
 	// グリッドを表示
@@ -127,12 +136,8 @@ void SceneMain::NormalUpdate(const InputState& input)
 	// ゲームオーバー
 	if (m_pPlayer->IsDead())
 	{
-		// シーン変更
-		m_Manager.PushSceneAllUpdate(new SceneResult(m_Manager));
-
-		// 実行する更新処理変更
-		m_updateFunc = &SceneMain::EndUpdate;
-
+		// ゲームオーバー処理を実行
+		OnGameOver();
 		return;
 	}
 }

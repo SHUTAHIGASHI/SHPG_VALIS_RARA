@@ -413,10 +413,14 @@ void Player::UpdatePosture(const InputState& input)
 		// ダッシュ中
 		if (m_isDash)
 		{
-			// スライディング処理
-			OnSlide();
+			// 地面にいるときのみスライディング
+			if (m_status.isGround)
+			{
+				// スライディング処理
+				OnSlide();
 
-			return;
+				return;
+			}
 		}
 
 		// 立ち姿勢なら

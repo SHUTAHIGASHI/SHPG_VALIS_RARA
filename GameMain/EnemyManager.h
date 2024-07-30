@@ -2,6 +2,8 @@
 #include <list>
 #include <DxLib.h>
 
+
+
 /// <summary>
 /// ステージの敵管理クラス
 /// </summary>
@@ -27,6 +29,8 @@ public:
 	std::list<class EnemyBase*> GetEnemies() { return m_pEnemies; }
 
 private:
+	// ラウンド終了時の処理
+	void OnRoundEnd();
 	// 敵生成
 	void CreateEnemy();
 	// 生成座標ランダム取得
@@ -34,7 +38,17 @@ private:
 	// ランダムで敵種取得
 	class EnemyBase* GetRandomEnemy();
 
+	// メンバ関数ポインタ(ラウンド管理)
+	using m_tUpdateFunc = void (EnemyManager::*) ();
+	m_tUpdateFunc m_updateFunc = nullptr;
+	void RoundOnUpdate();     // 通常の更新処理
+	void RoundStartIntervalUpdate();      // ゲームスタート時の更新処理
+	void RoundEndIntervalUpdate();        // ゲームオーバー時の更新処理
+
 private:
+	// ラウンド数カウント
+	int m_roundCount;
+
 	// 敵配列
 	std::list<class EnemyBase*> m_pEnemies;
 	// プレイヤーポインタ

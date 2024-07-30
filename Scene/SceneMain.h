@@ -21,6 +21,8 @@ public:
     void End()override;
 
 private:
+    // ゲームオーバー処理
+    void OnGameOver();
 	// ステージライン描画
 	void DrawStageLine();
 
