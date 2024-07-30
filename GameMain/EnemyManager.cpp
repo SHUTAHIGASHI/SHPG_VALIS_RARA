@@ -49,7 +49,7 @@ void EnemyManager::Update()
 			// 敵のダメージ処理
 			enemy->OnHitPlayer();
 			// プレイヤーのダメージ処理
-			m_pPlayer->OnHit();
+			m_pPlayer->OnDamage(10);
 		}
 	}
 	// 敵の削除

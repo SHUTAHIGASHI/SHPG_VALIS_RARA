@@ -101,7 +101,7 @@ void SelectMenuBase::DrawSceneText()
 		int drawX = static_cast<int>(m_titleDrawPos.x - (textLength / 2));
 		int drawY = static_cast<int>(m_titleDrawPos.y);
 		// 文字描画
-		DrawFormatString(drawX, drawY, Game::kColorWhite, "%s", m_sceneText->c_str());
+		DrawFormatString(drawX, drawY, m_selectedItemColor, "%s", m_sceneText->c_str());
 		// フォントサイズ戻す
 		SetFontSize(Game::kFontSize);
 	}

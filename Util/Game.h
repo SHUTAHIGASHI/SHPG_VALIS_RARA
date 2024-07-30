@@ -32,8 +32,9 @@ namespace Game
 	constexpr int kColorWhite = 0xffffff;
 	constexpr int kColorGray = 0xa9a9a9;
 
-	// ０のベクトル
+	// ベクトル
 	static VECTOR kVecZero = VGet(0.0f, 0.0f, 0.0f);
+	static VECTOR kVecOne = VGet(1.0f, 1.0f, 1.0f);
 	// 画面中心
 	static VECTOR kScreenCenter = VGet(static_cast<float>(kScreenWidthHalf), static_cast<float>(kScreenHeightHalf), 0.0f);
 

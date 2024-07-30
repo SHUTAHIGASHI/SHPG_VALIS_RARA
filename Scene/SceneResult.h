@@ -3,14 +3,14 @@
 #include <memory>
 #include <string>
 
-class SceneClear :
+class SceneResult :
     public Scene
 {
 public:
     // コンストラクタ
-    SceneClear(SceneManager& manager);
+    SceneResult(SceneManager& manager);
     // デストラクタ
-    virtual ~SceneClear();
+    virtual ~SceneResult();
 
     // 初期化
     void Init(){}
@@ -23,7 +23,7 @@ public:
 
 private:
     // メンバ関数ポインタ(更新)
-    using m_tUpdateFunc = void (SceneClear::*) (const InputState& input);
+    using m_tUpdateFunc = void (SceneResult::*) (const InputState& input);
     m_tUpdateFunc m_updateFunc = nullptr;
     void StartUpdate(const InputState& input);      // 開始時の更新処理
     void NormalUpdate(const InputState& input);     // 通常の更新処理

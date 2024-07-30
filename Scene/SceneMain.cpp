@@ -4,7 +4,7 @@
 #include "SceneTitleMenu.h"
 #include "ScenePauseMenu.h"
 #include "SceneGameOver.h"
-#include "SceneClear.h"
+#include "SceneResult.h"
 #include "SceneHowTo.h"
 #include "SceneFade.h"
 // ゲーム関係
@@ -46,25 +46,14 @@ void SceneMain::Init()
 	m_pSkyDome->Init(m_pPlayer->GetPos());
 	// カメラ初期化
 	m_pCamera->Init();
+	// カーソル座標固定
+	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
 }
 
 void SceneMain::Update(const InputState& input)
 {
-	// カーソル座標固定
-	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
-
 	// Update処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
-
-	// カメラ更新
-	m_pCamera->Update();
-	// プレイヤー更新
-	m_pPlayer->Update(input);
-	// 敵管理更新
-	m_pEnemyManager->Update();
-	// スカイドームの更新
-	m_pSkyDome->Update();
-	m_pSkyDome->SetPos(m_pPlayer->GetPos());
 
 	// UI更新
 	UiManager::GetInstance().Update();
@@ -90,6 +79,8 @@ void SceneMain::End()
 {
 	// マウス表示
 	SetMouseDispFlag(true);
+	// 全UIの削除
+	UiManager::GetInstance().DeleteAllUI();
 }
 
 void SceneMain::DrawStageLine()
@@ -119,12 +110,53 @@ void SceneMain::NormalUpdate(const InputState& input)
 		m_Manager.PushScene(new ScenePauseMenu(m_Manager));
 		return;
 	}
+
+	// カーソル座標固定
+	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
+
+	// カメラ更新
+	m_pCamera->Update();
+	// プレイヤー更新
+	m_pPlayer->Update(input);
+	// 敵管理更新
+	m_pEnemyManager->Update();
+	// スカイドームの更新
+	m_pSkyDome->Update();
+	m_pSkyDome->SetPos(m_pPlayer->GetPos());
+
+	// ゲームオーバー
+	if (m_pPlayer->IsDead())
+	{
+		// シーン変更
+		m_Manager.PushSceneAllUpdate(new SceneResult(m_Manager));
+
+		// 実行する更新処理変更
+		m_updateFunc = &SceneMain::EndUpdate;
+
+		return;
+	}
 }
 
 void SceneMain::StartUpdate(const InputState& input)
 {
+	// ポーズメニューへ移行
+	if (input.IsTriggered(InputType::pause))
+	{
+		// ポーズメニューシーンへ移行
+		m_Manager.PushScene(new ScenePauseMenu(m_Manager));
+		return;
+	}
 }
 
 void SceneMain::EndUpdate(const InputState& input)
 {
+	// カメラ更新
+	m_pCamera->Update();
+	// プレイヤー更新
+	m_pPlayer->UpdateGameover();
+	// 敵管理更新
+	m_pEnemyManager->Update();
+	// スカイドームの更新
+	m_pSkyDome->Update();
+	m_pSkyDome->SetPos(m_pPlayer->GetPos());
 }

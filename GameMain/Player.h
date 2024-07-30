@@ -27,11 +27,13 @@ public:
 	void Init() override;
 	// 更新
 	void Update(const InputState& input) override;
+	// ゲームオーバー時の更新
+	void UpdateGameover();
 	// 描画
 	void Draw() override;
 
 	// 被ダメージ処理
-	void OnHit();
+	void OnDamage(int damage);
 
 private:
 	// 視点の操作

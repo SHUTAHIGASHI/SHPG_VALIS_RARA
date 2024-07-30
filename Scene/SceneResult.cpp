@@ -1,4 +1,4 @@
-#include "SceneClear.h"
+#include "SceneResult.h"
 #include "SceneManager.h"
 #include "SelectMenuBase.h"
 #include "Game.h"
@@ -9,7 +9,7 @@
 namespace
 {
 	// テキスト
-	const char* const kTextScene = "ステージクリア！";
+	const char* const kTextScene = "リザルト";
 	const char* const kScoreTexts[] = {
 		"スコア : ",
 		"ランク : "
@@ -37,9 +37,9 @@ namespace
 	constexpr int kTextDistance = static_cast<int>(Game::kFontSize * 1.5);
 }
 
-SceneClear::SceneClear(SceneManager& manager) :
+SceneResult::SceneResult(SceneManager& manager) :
 	Scene(manager),
-	m_updateFunc(&SceneClear::StartUpdate),
+	m_updateFunc(&SceneResult::StartUpdate),
 	m_hBgImg(-1),
 	m_highScore(0),
 	m_rank(""),
@@ -47,11 +47,13 @@ SceneClear::SceneClear(SceneManager& manager) :
 	m_pSelectMenu(std::make_shared<SelectMenuBase>())
 {
 	// 選択メニュー初期化
-	m_pSelectMenu->Init(false);
+	m_pSelectMenu->Init(true);
 	// シーン文字列設定
 	m_pSelectMenu->SetTitleTextAndPos(kTextScene, kTitleDrawPosX, kTitleDrawPosY + m_scorePosY);
 	// 描画位置設定
 	m_pSelectMenu->SetDrawPos(kTextDrawPosX, kTextDrawPosY + m_scorePosY);
+	// 描画色設定
+	m_pSelectMenu->SetSelectedItemColor(Game::kColorGreen);
 	// 選択メニューに項目を追加
 	for (auto& item : kMenuTexts)
 	{
@@ -59,22 +61,25 @@ SceneClear::SceneClear(SceneManager& manager) :
 	}
 
 	// 背景画像読み込み
-	m_hBgImg = LoadGraph("Data/ImageData/OptionBg.png");
+	m_hBgImg = LoadGraph("Data/ImageData/RARA_GAME_BG.png");
+
+	// マウス表示
+	SetMouseDispFlag(true);
 }
 
-SceneClear::~SceneClear()
+SceneResult::~SceneResult()
 {
 	// 背景画像削除
-	DeleteGraph(m_hBgImg);
+	m_hBgImg = -1;
 }
 
-void SceneClear::Update(const InputState& input)
+void SceneResult::Update(const InputState& input)
 {
 	// Update処理のメンバ関数ポインタ
 	(this->*m_updateFunc)(input);
 }
 
-void SceneClear::Draw()
+void SceneResult::Draw()
 {
 	// 背景描画
 	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf + m_scorePosY, 1.0f, 0.0f, m_hBgImg, true);
@@ -92,14 +97,14 @@ void SceneClear::Draw()
 		int drawX = static_cast<int>(kHighScoreDrawPosX - (textLength / 2));
 		int drawY = static_cast<int>(kHighScoreDrawPosY + (i * kTextDistance));
 		// 描画
-		DrawFormatString(drawX, drawY + static_cast<int>(m_scorePosY), Game::kColorWhite, "%s", scoreText.c_str());
+		DrawFormatString(drawX, drawY + static_cast<int>(m_scorePosY), Game::kColorGreen, "%s", scoreText.c_str());
 		i++;
 	}
 	// メニュー描画
 	m_pSelectMenu->Draw();
 }
 
-void SceneClear::StartUpdate(const InputState& input)
+void SceneResult::StartUpdate(const InputState& input)
 {
 	// スコア表示位置が0になるまでスクロール
 	if (m_scorePosY < 0.0f)
@@ -109,7 +114,7 @@ void SceneClear::StartUpdate(const InputState& input)
 	else
 	{
 		m_scorePosY = 0.0f;
-		m_updateFunc = &SceneClear::NormalUpdate;
+		m_updateFunc = &SceneResult::NormalUpdate;
 	}
 
 	// 描画位置設定
@@ -117,7 +122,7 @@ void SceneClear::StartUpdate(const InputState& input)
 	m_pSelectMenu->SetTitleDrawPos(kTitleDrawPosX, kTitleDrawPosY + m_scorePosY);
 }
 
-void SceneClear::NormalUpdate(const InputState& input)
+void SceneResult::NormalUpdate(const InputState& input)
 {
 	// 選択メニュー更新
 	m_pSelectMenu->Update(input);
@@ -127,12 +132,12 @@ void SceneClear::NormalUpdate(const InputState& input)
 		// SE再生
 		SoundManager::GetInstance().PlaySE(SoundType::select);
 		// 選択項目によって処理を分岐
-		m_updateFunc = &SceneClear::EndUpdate;
+		m_updateFunc = &SceneResult::EndUpdate;
 		return;
 	}
 }
 
-void SceneClear::EndUpdate(const InputState& input)
+void SceneResult::EndUpdate(const InputState& input)
 {
 	// スコア表示位置が指定位置になるまでスクロール
 	if (m_scorePosY < kScorePosY)

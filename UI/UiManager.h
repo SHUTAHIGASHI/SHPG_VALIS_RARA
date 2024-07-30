@@ -37,6 +37,8 @@ public:
 	void AddUI(class ObjectBase* obj);
 	// UIの削除
 	void DeleteUI(class ObjectBase* obj);
+	// 全UIの削除
+	void DeleteAllUI();
 
 	// プレイヤー座標を設定
 	void SetPlayerPos(const VECTOR pos) { m_playerPos = pos; }

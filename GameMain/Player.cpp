@@ -21,12 +21,17 @@ namespace
 	constexpr float kSlideRate = 2.5f;
 	// 重力
 	constexpr float kGravity = 0.5f;
+	// 慣性
+	constexpr float kInertia = 0.9f;
 	// ジャンプ力
 	constexpr float kJumpPower = 12.0f;
 
 	// 姿勢ごとの高さ
+	constexpr float kCrouchSpeed = 8.0f;
+	constexpr float kSlideCrouchSpeed = 10.0f;
 	constexpr float kStandHeight = 0.0f;
 	constexpr float kCrouchHeight = -70.0f;
+	constexpr float kDeadHeight = -140.0f;
 
 	// スライディング時間
 	constexpr int kSlideTime = 20;
@@ -46,7 +51,7 @@ namespace
 	constexpr int kShotDamage = 10;
 
 	// 体力
-	constexpr int kMaxHp = 100;
+	constexpr int kMaxHp = 30;
 	// 無敵時間
 	constexpr int kInvTime = 60;
 }
@@ -135,6 +140,23 @@ void Player::Update(const InputState& input)
 	UiManager::GetInstance().SetPlayerPos(m_status.pos);
 }
 
+void Player::UpdateGameover()
+{
+	// 姿勢更新
+	m_eyeHeight -= kCrouchSpeed;
+	if (m_eyeHeight < kDeadHeight)
+	{
+		m_eyeHeight = kDeadHeight;
+	}
+	// 高さ反映
+	m_status.pos.y = m_eyeHeight;
+
+	// 視点更新
+	UpdateView();
+	// ショット更新
+	UpdateShot();
+}
+
 void Player::Draw()
 {
 	// ショット描画
@@ -146,13 +168,21 @@ void Player::Draw()
 	Draw2D();
 }
 
-void Player::OnHit()
+void Player::OnDamage(int damage)
 {
 	// 無敵時間中なら
 	if (m_invTime > 0) return;
 
 	// 体力減少
-	m_status.hp -= 10;
+	m_status.hp -= damage;
+	// 体力が0以下なら
+	if (m_status.hp <= 0)
+	{
+		// 体力を0に設定
+		m_status.hp = 0;
+		// ゲームオーバー
+		m_status.isDead = true;
+	}
 	// カメラ揺れ処理
 	m_pCamera->OnDamageQuake();
 	// 無敵時間設定
@@ -257,27 +287,13 @@ void Player::ControllMove(const InputState& input)
 		m_status.isGround = false;
 	}
 
-	// ダッシュ入力
-	if (input.IsPressed(InputType::dash))
-	{
-		// ダッシュ中フラグON
-		m_isDash = true;
-		// ダッシュ中は速度２倍
-		m_status.moveSpeed = kPlayerMoveSpeed * kDashRate;
-	}
-	else
-	{
-		// ダッシュ中フラグOFF
-		m_isDash = false;
-		// 通常速度
-		m_status.moveSpeed = kPlayerMoveSpeed;
-	}
-
 	// 地面にいるときのみ移動入力
 	if (m_status.isGround)
 	{
-		// 移動ベクトル初期化
-		m_status.dir = Game::kVecZero;
+		// 慣性処理
+		m_status.moveSpeed -= kInertia;
+		if (m_status.moveSpeed < 0.0f) m_status.moveSpeed = 0.0f;
+
 		// 前方移動入力
 		if (input.IsPressed(InputType::moveForward))
 		{
@@ -321,6 +337,32 @@ void Player::ControllMove(const InputState& input)
 			m_isMove = true;
 		}
 	}
+
+	if (m_isMove)
+	{
+		// ダッシュ入力
+		if (input.IsPressed(InputType::dash))
+		{
+			// しゃがみ姿勢なら
+			if (m_posture == PostureType::crouch)
+			{
+				m_posture = PostureType::stand;
+			}
+
+			// ダッシュ中フラグON
+			m_isDash = true;
+			// ダッシュ中は速度２倍
+			m_status.moveSpeed = kPlayerMoveSpeed * kDashRate;
+		}
+		else
+		{
+			// ダッシュ中フラグOFF
+			m_isDash = false;
+			// 通常速度
+			m_status.moveSpeed = kPlayerMoveSpeed;
+		}
+	}
+
 	// 通常の移動処理
 	if (VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
 	m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
@@ -339,6 +381,11 @@ void Player::ControllMove(const InputState& input)
 				m_status.jumpPower += kJumpPower;
 				// 空中判定
 				m_status.isGround = false;
+			}
+			else if (m_posture == PostureType::crouch)
+			{
+				// 立ち姿勢
+				m_posture = PostureType::stand;
 			}
 		}
 	}
@@ -384,14 +431,22 @@ void Player::UpdatePosture(const InputState& input)
 			// 立ち姿勢
 			m_posture = PostureType::stand;
 		}
+	}
 
-		// しゃがみ姿勢
-		if (m_posture == PostureType::stand)
+	// しゃがみ姿勢
+	if (m_posture == PostureType::stand)
+	{
+		m_eyeHeight += kCrouchSpeed;
+		if (m_eyeHeight > kStandHeight)
 		{
 			m_eyeHeight = kStandHeight;
 		}
-		// 伏せ姿勢
-		else if (m_posture == PostureType::crouch)
+	}
+	// 伏せ姿勢
+	else if (m_posture == PostureType::crouch)
+	{
+		m_eyeHeight -= kCrouchSpeed;
+		if (m_eyeHeight < kCrouchHeight)
 		{
 			m_eyeHeight = kCrouchHeight;
 		}
@@ -418,10 +473,15 @@ void Player::UpdateSlide()
 	{
 		// 立ち姿勢
 		m_posture = PostureType::stand;
-		// 高さ指定
-		m_eyeHeight = kStandHeight;
 		// スライディング速度初期化
 		m_slideVec = Game::kVecZero;
+	}
+
+	// スライディング姿勢変更
+	m_eyeHeight -= kSlideCrouchSpeed;
+	if (m_eyeHeight < kCrouchHeight)
+	{
+		m_eyeHeight = kCrouchHeight;
 	}
 
 	// 高さ反映
@@ -565,6 +625,9 @@ void Player::Draw2D()
 	DrawRotaGraphF(static_cast<float>(Game::kScreenWidth - (m_HandSizeX * 10.0f)),
 		static_cast<float>(Game::kScreenHeight - (m_HandSizeY * 10.0f) / 2),
 		10.0f, 0.0f, m_hFpsHand, true);
+
+	// 体力描画
+	DrawFormatString(Game::kScreenWidth - 200, 10, 0xffffff, "HP:%d", m_status.hp);
 }
 
 void Player::OnSlide()
@@ -573,13 +636,11 @@ void Player::OnSlide()
 	m_posture = PostureType::slide;
 	// スライディング時間設定
 	m_slideTime = kSlideTime;
-	// 高さ指定
-	m_eyeHeight = kCrouchHeight;
 	// 進行方向ベクトル取得
 	m_slideVec = VSub(m_status.lookPos, m_status.pos);
 	m_slideVec.y = 0.0f;
 	// 正規化
 	if (VSize(m_slideVec) > 0) m_slideVec = VNorm(m_slideVec);
 	// 速度設定
-	m_slideVec = VScale(m_slideVec, kPlayerMoveSpeed * kSlideRate);
+	m_slideVec = VScale(m_slideVec, m_status.moveSpeed * kSlideRate);
 }

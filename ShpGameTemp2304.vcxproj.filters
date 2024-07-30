@@ -99,7 +99,7 @@
     <ClCompile Include="GameMain\Shot.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\SceneClear.cpp">
+    <ClCompile Include="Scene\SceneResult.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneHowTo.cpp">
@@ -191,7 +191,7 @@
     <ClInclude Include="GameMain\Shot.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\SceneClear.h">
+    <ClInclude Include="Scene\SceneResult.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneHowTo.h">

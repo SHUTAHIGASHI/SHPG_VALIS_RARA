@@ -27,7 +27,7 @@
     <ClCompile Include="GameMain\Player.cpp" />
     <ClCompile Include="GameMain\Shot.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="Scene\SceneClear.cpp" />
+    <ClCompile Include="Scene\SceneResult.cpp" />
     <ClCompile Include="Scene\SceneDebug.cpp" />
     <ClCompile Include="Scene\SceneFade.cpp" />
     <ClCompile Include="Scene\SceneGameOver.cpp" />
@@ -59,7 +59,7 @@
     <ClInclude Include="GameMain\Shot.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="Scene\SceneClear.h" />
+    <ClInclude Include="Scene\SceneResult.h" />
     <ClInclude Include="Scene\SceneDebug.h" />
     <ClInclude Include="Scene\SceneFade.h" />
     <ClInclude Include="Scene\SceneGameOver.h" />

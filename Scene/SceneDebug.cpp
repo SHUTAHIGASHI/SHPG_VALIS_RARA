@@ -5,7 +5,7 @@
 #include "SceneTitleMenu.h"
 #include "ScenePauseMenu.h"
 #include "SceneGameOver.h"
-#include "SceneClear.h"
+#include "SceneResult.h"
 
 namespace
 {
@@ -16,7 +16,7 @@ namespace
 	const char* const kTextGameTitleMenu = "タイトル";
 	const char* const kTextGamePause = "ポーズ";
 	const char* const kTextScene = "ゲームオーバー";
-	const char* const kTextGameEnd = "クリア";
+	const char* const kTextGameEnd = "リザルト";
 }
 
 SceneDebug::SceneDebug(SceneManager& manager) :
@@ -61,7 +61,7 @@ void SceneDebug::Update(const InputState& input)
 		}
 		else
 		{
-			m_Manager.ChangeScene(new SceneClear(m_Manager));
+			m_Manager.ChangeScene(new SceneResult(m_Manager));
 		}
 		return;
 	}

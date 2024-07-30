@@ -27,6 +27,7 @@ void UiManager::Draw()
 	// UIの描画
 	for (auto& ui : m_pUIList)
 	{
+		// プレイヤーから一定範囲内のUIのみ描画
 		if (VSize(VSub(m_playerPos, ui->GetObj()->GetPos())) < kDrawRange)
 		{
 			ui->Draw();
@@ -50,6 +51,24 @@ void UiManager::DeleteUI(ObjectBase* obj)
 		{
 			ui->SetDelete(true);
 		}
+	}
+
+	// 無効になったオブジェクトは排除
+	auto rmIt = std::remove_if(m_pUIList.begin(), m_pUIList.end(),
+		[](UiBar* ui)
+		{
+			return ui->IsDelete();
+		});
+	// 実際に範囲を指定して削除
+	m_pUIList.erase(rmIt, m_pUIList.end());
+}
+
+void UiManager::DeleteAllUI()
+{
+	// 全UIの削除
+	for (auto& ui : m_pUIList)
+	{
+		ui->SetDelete(true);
 	}
 
 	// 無効になったオブジェクトは排除
