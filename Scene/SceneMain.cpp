@@ -10,6 +10,7 @@
 // ゲーム関係
 #include "Game.h"
 #include "Player.h"
+#include "StageManager.h"
 #include "EnemyManager.h"
 // 全般
 #include "CameraManager.h"
@@ -22,7 +23,7 @@ SceneMain::SceneMain(SceneManager& manager) :
 	m_updateFunc(&SceneMain::NormalUpdate),
 	m_pCamera(std::make_shared<CameraManager>()),
 	m_pPlayer(std::make_shared<Player>()),
-	m_pEnemyManager(std::make_shared<EnemyManager>()),
+	m_pStage(std::make_shared<StageManager>()),
 	m_pSkyDome(std::make_shared<SkyDome>())
 {
 }
@@ -36,12 +37,12 @@ void SceneMain::Init()
 	// マウス非表示
 	SetMouseDispFlag(false);
 	// プレイヤー初期化
-	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
+	m_pPlayer->SetEnemyManager(m_pStage->GetEnemy().get());
 	m_pPlayer->SetCamera(m_pCamera.get());
 	m_pPlayer->Init();
 	// 敵管理初期化
-	m_pEnemyManager->SetPlayer(m_pPlayer.get());
-	m_pEnemyManager->Init();
+	m_pStage->SetPlayer(m_pPlayer.get());
+	m_pStage->Init();
 	// スカイドームの初期化処理
 	m_pSkyDome->Init(m_pPlayer->GetPos());
 	// カメラ初期化
@@ -67,7 +68,7 @@ void SceneMain::Draw()
 	DrawStageLine();
 
 	// 敵管理描画
-	m_pEnemyManager->Draw();
+	m_pStage->Draw();
 	// プレイヤー描画
 	m_pPlayer->Draw();
 
@@ -128,7 +129,7 @@ void SceneMain::NormalUpdate(const InputState& input)
 	// プレイヤー更新
 	m_pPlayer->Update(input);
 	// 敵管理更新
-	m_pEnemyManager->Update();
+	m_pStage->Update();
 	// スカイドームの更新
 	m_pSkyDome->Update();
 	m_pSkyDome->SetPos(m_pPlayer->GetPos());
@@ -160,7 +161,7 @@ void SceneMain::EndUpdate(const InputState& input)
 	// プレイヤー更新
 	m_pPlayer->UpdateGameover();
 	// 敵管理更新
-	m_pEnemyManager->Update();
+	m_pStage->Update();
 	// スカイドームの更新
 	m_pSkyDome->Update();
 	m_pSkyDome->SetPos(m_pPlayer->GetPos());

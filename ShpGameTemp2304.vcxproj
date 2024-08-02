@@ -26,6 +26,7 @@
     <ClCompile Include="GameMain\EnemyNeffy.cpp" />
     <ClCompile Include="GameMain\Player.cpp" />
     <ClCompile Include="GameMain\Shot.cpp" />
+    <ClCompile Include="GameMain\StageManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneResult.cpp" />
     <ClCompile Include="Scene\SceneDebug.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="GameMain\EnemyNeffy.h" />
     <ClInclude Include="GameMain\Player.h" />
     <ClInclude Include="GameMain\Shot.h" />
+    <ClInclude Include="GameMain\StageManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneResult.h" />

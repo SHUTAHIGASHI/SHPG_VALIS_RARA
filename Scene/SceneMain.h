@@ -34,9 +34,9 @@ private:
     void EndUpdate(const InputState& input);        // ゲームオーバー時の更新処理
 
 private:
-    std::shared_ptr<class CameraManager> m_pCamera;         // カメラ
-	std::shared_ptr<class Player> m_pPlayer;               // プレイヤー 
-	std::shared_ptr<class EnemyManager> m_pEnemyManager;   // 敵管理
-	std::shared_ptr<class SkyDome> m_pSkyDome;             // スカイドーム
+    std::shared_ptr<class CameraManager> m_pCamera; // カメラ
+	std::shared_ptr<class Player> m_pPlayer;        // プレイヤー 
+	std::shared_ptr<class StageManager> m_pStage;   // 敵管理
+	std::shared_ptr<class SkyDome> m_pSkyDome;      // スカイドーム
 };
 

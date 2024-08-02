@@ -13,7 +13,10 @@ namespace
 }
 
 EnemyManager::EnemyManager():
-	m_roundCount(0),
+	m_createEnemyCount(0),
+	m_enemyMaxOnRound(15),
+	m_enemyMaxOnScreen(kEnemyNum),
+	m_isEnemyCreateEnd(false),
 	m_pEnemies(),
 	m_pPlayer(nullptr)
 {
@@ -25,18 +28,30 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::Init()
 {
-	for (int i = 0; i < kEnemyNum; i++)
-	{
-		CreateEnemy();
-	}
+	// “G‚Ì¶¬”‰Šú‰»
+	m_createEnemyCount = 0;
+	// “G‚Ì¶¬Š®—¹”»’è‰Šú‰»
+	m_isEnemyCreateEnd = false;
+	// “G‚Ì”z—ñƒNƒŠƒA
+	m_pEnemies.clear();
 }
 
 void EnemyManager::Update()
 {
 	// “G‚Ì¶¬
-	if (m_pEnemies.size() < kEnemyNum)
+	if (m_createEnemyCount < m_enemyMaxOnRound)
 	{
-		CreateEnemy();
+		// Œ»Ý‚Ì“G”‚ªÅ‘å“¯Žž¶¬”‚æ‚è­‚È‚¢ê‡
+		if (m_pEnemies.size() < m_enemyMaxOnScreen)
+		{
+			// “G‚ð¶¬
+			CreateEnemy();
+		}
+	}
+	else
+	{
+		// “G‚Ì¶¬Š®—¹
+		m_isEnemyCreateEnd = true;
 	}
 
 	// “G‚ÌXV
@@ -63,14 +78,16 @@ void EnemyManager::Draw()
 	{
 		enemy->Draw();
 	}
-}
 
-void EnemyManager::OnRoundEnd()
-{
+	// “G‚Ì¶¬”•\Ž¦
+	DrawFormatString(0, 0, 0xffffff, "¶¬”:%d", m_createEnemyCount);
 }
 
 void EnemyManager::CreateEnemy()
 {
+	// “G¶¬”ƒJƒEƒ“ƒg
+	m_createEnemyCount++;
+	// “G¶¬
 	m_pEnemies.push_back(GetRandomEnemy());
 	m_pEnemies.back()->Init();
 }
