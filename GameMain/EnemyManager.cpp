@@ -83,6 +83,14 @@ void EnemyManager::Draw()
 	DrawFormatString(0, 0, 0xffffff, "¶¬”:%d", m_createEnemyCount);
 }
 
+void EnemyManager::DiffcultyUp()
+{
+	// “G‚ÌÅ‘å¶¬”‚ğ‘‰Á
+	m_enemyMaxOnRound += 5;
+	// “G‚ÌÅ‘å“¯¶¬”‚ğ‘‰Á
+	m_enemyMaxOnScreen += 1;
+}
+
 void EnemyManager::CreateEnemy()
 {
 	// “G¶¬”ƒJƒEƒ“ƒg

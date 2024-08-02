@@ -2,6 +2,8 @@
 #include "SceneMain.h"
 #include "UiBar.h"
 #include "ObjectBase.h"
+#include "StageManager.h"
+#include "string"
 
 namespace
 {
@@ -32,6 +34,12 @@ void UiManager::Draw()
 		{
 			ui->Draw();
 		}
+	}
+
+	// ステージ状態の描画
+	if(m_pStage != nullptr)
+	{
+		DrawRoundState();
 	}
 }
 
@@ -79,4 +87,31 @@ void UiManager::DeleteAllUI()
 		});
 	// 実際に範囲を指定して削除
 	m_pUIList.erase(rmIt, m_pUIList.end());
+}
+
+void UiManager::DrawRoundState()
+{
+	// ラウンド状態の描画
+	auto roundState = m_pStage->GetRoundState();
+
+	if(roundState == RoundState::ROUND_START)
+	{
+		// ラウンド開始
+		std::string drawText = "ラウンド" + std::to_string(m_pStage->GetRoundCount());
+		// 文字列サイズ取得
+		int textLength = GetDrawFormatStringWidth(drawText.c_str());
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf, 0xffffff, "%s", drawText.c_str());
+	}
+	else if (roundState == RoundState::ROUND_ON)
+	{
+		return;
+	}
+	else if (roundState == RoundState::ROUND_END)
+	{
+		// ラウンド終了
+		std::string drawText = "ラウンドクリア";
+		// 文字列サイズ取得
+		int textLength = GetDrawFormatStringWidth(drawText.c_str());
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf, 0xffffff, "%s", drawText.c_str());
+	}
 }

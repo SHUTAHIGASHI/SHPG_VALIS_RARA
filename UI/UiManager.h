@@ -28,6 +28,9 @@ private:
 	void operator = (const UiManager&) = delete;	// 代入も禁止
 
 public:
+	// ステージクラスの設定
+	void SetStage(class StageManager* stage) { m_pStage = stage; }
+
 	// 更新
 	void Update();
 	// 描画
@@ -43,11 +46,21 @@ public:
 	// プレイヤー座標を設定
 	void SetPlayerPos(const VECTOR pos) { m_playerPos = pos; }
 
+	// ステージのポインタ削除
+	void DeleteStage() { m_pStage = nullptr; }
+
+private:
+	// ラウンド状態の描画
+	void DrawRoundState();
+
 private:
 	// プレイヤー座標
-	VECTOR m_playerPos;
+	VECTOR m_playerPos = Game::kVecZero;
 
 private:
 	// UIのリスト
 	std::list<class UiBar*> m_pUIList;
+
+	// ステージクラス
+	class StageManager* m_pStage = nullptr;
 };

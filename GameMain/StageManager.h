@@ -1,6 +1,16 @@
 #pragma once
 #include <memory>
 
+enum class RoundState
+{
+	// ラウンド開始
+	ROUND_START,
+	// ラウンド中
+	ROUND_ON,
+	// ラウンド終了
+	ROUND_END
+};
+
 class StageManager
 {
 public:
@@ -19,6 +29,11 @@ public:
 	// 描画
 	void Draw();
 
+	// ラウンド状態取得
+	RoundState GetRoundState() { return m_roundState; }
+	// ラウンド数取得
+	int GetRoundCount() { return m_roundCount; }
+
 	// 敵取得
 	std::shared_ptr<class EnemyManager> GetEnemy() { return m_pEnemyManager; }
 
@@ -34,6 +49,8 @@ private:
 	void RoundEndIntervalUpdate();		// ゲームオーバー時の更新処理
 
 private:
+	// ラウンド状態
+	RoundState m_roundState;
 	// ラウンド数カウント
 	int m_roundCount;
 	// ラウンドの遅延時間

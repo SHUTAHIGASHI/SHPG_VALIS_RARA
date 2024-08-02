@@ -23,6 +23,9 @@ public:
 	// 描画
 	void Draw();
 
+	// 難易度アップ
+	void DiffcultyUp();
+
 	// 敵生成完了判定
 	bool IsEnemyCreateEnd() { return m_isEnemyCreateEnd; }
 

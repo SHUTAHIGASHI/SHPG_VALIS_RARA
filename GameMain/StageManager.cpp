@@ -1,5 +1,6 @@
 #include "StageManager.h"
 #include "EnemyManager.h"
+#include "UiManager.h"
 
 namespace
 {
@@ -9,16 +10,21 @@ namespace
 }
 
 StageManager::StageManager():
-	m_roundCount(0),
+	m_roundState(RoundState::ROUND_START),
+	m_roundCount(1),
 	m_roundInterval(0),
 	m_updateFunc(&StageManager::RoundStartIntervalUpdate),
 	m_pEnemyManager(std::make_shared<EnemyManager>()),
 	m_pPlayer(nullptr)
 {
+	// UIマネージャにステージを設定
+	UiManager::GetInstance().SetStage(this);
 }
 
 StageManager::~StageManager()
 {
+	// UIマネージャにステージを解除
+	UiManager::GetInstance().DeleteStage();
 }
 
 void StageManager::Init()
@@ -38,6 +44,9 @@ void StageManager::Draw()
 {
 	// 敵管理描画
 	m_pEnemyManager->Draw();
+
+	// ステージ状態描画
+	DrawFormatString(0, 40, GetColor(255, 255, 255), "Round:%d", m_roundCount);
 }
 
 void StageManager::OnRoundEnd()
@@ -56,6 +65,8 @@ void StageManager::RoundOnUpdate()
 	{
 		if (m_pEnemyManager->GetEnemies().size() <= 0)
 		{
+			// ラウンド状態変更
+			m_roundState = RoundState::ROUND_END;
 			// ラウンド終了
 			OnRoundEnd();
 			// ラウンド開始
@@ -73,6 +84,8 @@ void StageManager::RoundStartIntervalUpdate()
 	}
 	else
 	{
+		// ラウンド状態変更
+		m_roundState = RoundState::ROUND_ON;
 		// ラウンド開始
 		m_updateFunc = &StageManager::RoundOnUpdate;
 		// 敵管理の初期化
@@ -91,6 +104,8 @@ void StageManager::RoundEndIntervalUpdate()
 	}
 	else
 	{
+		// ラウンド状態変更
+		m_roundState = RoundState::ROUND_START;
 		// ラウンド終了
 		m_updateFunc = &StageManager::RoundStartIntervalUpdate;
 		// ラウンド遅延初期化
