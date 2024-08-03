@@ -14,9 +14,11 @@ namespace
 	constexpr float kScale = 100.0f;
 
 	// 移動速度
-	constexpr float kPlayerMoveSpeed = 10.0f;
-	// ダッシュ速度率
-	constexpr float kDashRate = 1.5f;
+	constexpr float kPlayerMoveSpeed = 8.0f;
+	// 移動加速度
+	constexpr float kPlayerMoveAccel = 1.6f;
+	// ダッシュ速度
+	constexpr float kPlayerDashSpeed = kPlayerMoveSpeed * 2.0f;
 	// スライディング速度率
 	constexpr float kSlideRate = 2.5f;
 	// 重力
@@ -35,6 +37,8 @@ namespace
 
 	// スライディング時間
 	constexpr int kSlideTime = 20;
+	// スライディングクールダウン
+	constexpr int kSlideCoolTime = 60;
 
 	// マウス感度
 	constexpr float kMouseSensitivity = 0.09f;
@@ -53,7 +57,10 @@ namespace
 	// 体力
 	constexpr int kMaxHp = 30;
 	// 無敵時間
-	constexpr int kInvTime = 60;
+	constexpr int kDamageInvTime = 60;
+
+	// ヒットマーク描画フレーム
+	constexpr int kHitMarkFrame = 10;
 }
 
 Player::Player():
@@ -62,13 +69,13 @@ Player::Player():
 	m_hFpsHand(-1),
 	m_hCursorImg(-1),
 	m_hLockCursorImg(-1),
+	m_hHitCursorImg(-1),
 	m_HandSizeX(0),
 	m_HandSizeY(0),
 	m_shotDelay(kShotRate),
 	m_slideTime(0),
 	m_invTime(0),
 	m_isMove(false),
-	m_isDash(false),
 	m_isLockOn(false),
 	m_eyeHeight(kStandHeight),
 	m_playerAngleY(0.0f),
@@ -87,7 +94,9 @@ Player::~Player()
 {
 	// 画像削除
 	m_status.hImg = -1;
+	m_hCursorImg = -1;
 	m_hLockCursorImg = -1;
+	m_hHitCursorImg = -1;
 }
 
 void Player::Init()
@@ -96,6 +105,7 @@ void Player::Init()
 	m_hFpsHand = Load::GetInstance().GetHandle("fpsHand");
 	m_hCursorImg = Load::GetInstance().GetHandle("cursor");
 	m_hLockCursorImg = Load::GetInstance().GetHandle("lockCursor");
+	m_hHitCursorImg = Load::GetInstance().GetHandle("hitCursor");
 	// 画像サイズ取得
 	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
 	// 画像拡大率設定
@@ -186,7 +196,7 @@ void Player::OnDamage(int damage)
 	// カメラ揺れ処理
 	m_pCamera->OnDamageQuake();
 	// 無敵時間設定
-	m_invTime = kInvTime;
+	m_invTime = kDamageInvTime;
 }
 
 void Player::ControllView(const InputState& input)
@@ -341,7 +351,7 @@ void Player::ControllMove(const InputState& input)
 	if (m_isMove)
 	{
 		// ダッシュ入力
-		if (input.IsPressed(InputType::dash))
+		if (input.IsPressed(InputType::dash) && !m_isShot)
 		{
 			// しゃがみ姿勢なら
 			if (m_posture == PostureType::crouch)
@@ -349,17 +359,29 @@ void Player::ControllMove(const InputState& input)
 				m_posture = PostureType::stand;
 			}
 
-			// ダッシュ中フラグON
-			m_isDash = true;
 			// ダッシュ中は速度２倍
-			m_status.moveSpeed = kPlayerMoveSpeed * kDashRate;
+			if (m_status.moveSpeed < kPlayerDashSpeed)
+			{
+				m_status.moveSpeed += kPlayerMoveAccel;
+			}
+			// 最高速度
+			else
+			{
+				m_status.moveSpeed = kPlayerDashSpeed;
+			}
 		}
 		else
 		{
-			// ダッシュ中フラグOFF
-			m_isDash = false;
 			// 通常速度
-			m_status.moveSpeed = kPlayerMoveSpeed;
+			if (m_status.moveSpeed < kPlayerMoveSpeed)
+			{
+				m_status.moveSpeed += kPlayerMoveAccel;
+			}
+			// 最高速度
+			else
+			{
+				m_status.moveSpeed = kPlayerMoveSpeed;
+			}
 		}
 	}
 
@@ -410,8 +432,8 @@ void Player::UpdatePosture(const InputState& input)
 	// しゃがみ判定
 	if (input.IsTriggered(InputType::crouch))
 	{
-		// ダッシュ中
-		if (m_isDash)
+		// ダッシュの最高速の場合
+		if (m_status.moveSpeed >= kPlayerDashSpeed)
 		{
 			// 地面にいるときのみスライディング
 			if (m_status.isGround)
@@ -492,6 +514,24 @@ void Player::UpdateSlide()
 	m_status.pos.y = m_eyeHeight;
 }
 
+void Player::OnSlide()
+{
+	// スライディング姿勢
+	m_posture = PostureType::slide;
+	// スライディング時間設定
+	m_slideTime = kSlideTime;
+	// スライディング中は無敵
+	m_invTime = kSlideTime;
+
+	// 進行方向ベクトル取得
+	m_slideVec = VSub(m_status.lookPos, m_status.pos);
+	m_slideVec.y = 0.0f;
+	// 正規化
+	if (VSize(m_slideVec) > 0) m_slideVec = VNorm(m_slideVec);
+	// 速度設定
+	m_slideVec = VScale(m_slideVec, m_status.moveSpeed * kSlideRate);
+}
+
 void Player::ControllShot(const InputState& input)
 {
 	// ターゲット位置
@@ -512,11 +552,19 @@ void Player::ControllShot(const InputState& input)
 	// 射撃ボタンが押されたら
 	if (input.IsPressed(InputType::shot))
 	{
+		// 射撃中フラグON
+		m_isShot = true;
+		// ショット遅延が0以下なら
 		if (m_shotDelay <= 0)
 		{
 			// ショット生成
 			CreateShot();
 		}
+	}
+	else
+	{
+		// 射撃中フラグOFF
+		m_isShot = false;
 	}
 
 	// スペシャルショットボタンが押されたら
@@ -574,14 +622,24 @@ void Player::UpdateShot()
 			{
 				// 敵ヒット処理
 				obj->OnHit(kShotDamage);
-				// ショット削除
-				shot->OnHit();
+				// ショットヒット処理
+				this->OnHitShot(shot);
 			}
 		}
 	}
 
 	// ショット削除
 	m_pShots.remove_if([](Shot* shot) {return !shot->IsEnabled(); });
+}
+
+void Player::OnHitShot(Shot* pShot)
+{
+	// ショット削除
+	pShot->OnHit();
+	// ヒットマーク表示
+	m_hitMarkFrame = kHitMarkFrame;
+	// ヒットサウンド再生
+	SoundManager::GetInstance().PlaySE(SoundType::shotHit);
 }
 
 void Player::UpdateCursor(const InputState& input)
@@ -625,6 +683,15 @@ void Player::Draw2D()
 		VECTOR lockCursorPos = ConvWorldPosToScreenPos(m_lockObjPos);
 		DrawRotaGraphF(lockCursorPos.x, lockCursorPos.y, 1.0f, 0.0f, m_hLockCursorImg, true);
 	}
+	// ヒットマーク描画
+	if (m_hitMarkFrame > 0)
+	{
+		// 描画
+		DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.0f, 0.0f, m_hHitCursorImg, true);
+		// フレーム減少
+		m_hitMarkFrame--;
+	}
+
 	// FPSハンド描画
 	DrawRotaGraphF(static_cast<float>(Game::kScreenWidth - (m_HandSizeX * 10.0f)),
 		static_cast<float>(Game::kScreenHeight - (m_HandSizeY * 10.0f) / 2),
@@ -632,19 +699,4 @@ void Player::Draw2D()
 
 	// 体力描画
 	DrawFormatString(Game::kScreenWidth - 200, 10, 0xffffff, "HP:%d", m_status.hp);
-}
-
-void Player::OnSlide()
-{
-	// スライディング姿勢
-	m_posture = PostureType::slide;
-	// スライディング時間設定
-	m_slideTime = kSlideTime;
-	// 進行方向ベクトル取得
-	m_slideVec = VSub(m_status.lookPos, m_status.pos);
-	m_slideVec.y = 0.0f;
-	// 正規化
-	if (VSize(m_slideVec) > 0) m_slideVec = VNorm(m_slideVec);
-	// 速度設定
-	m_slideVec = VScale(m_slideVec, m_status.moveSpeed * kSlideRate);
 }

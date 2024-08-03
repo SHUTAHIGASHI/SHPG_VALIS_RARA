@@ -13,6 +13,7 @@ void Load::AllLoadData()
 	m_data["player"] = LoadGraph("Data/ImageData/RaraTest.png");
 	m_data["cursor"] = LoadGraph("Data/ImageData/Cursor.png");
 	m_data["lockCursor"] = LoadGraph("Data/ImageData/LockCursor.png");
+	m_data["hitCursor"] = LoadGraph("Data/ImageData/HitCursor.png");
 	m_data["shot"] = LoadGraph("Data/ImageData/Ringo.png");
 	m_data["chino"] = LoadGraph("Data/ImageData/chinoDot.png");
 	m_data["myu"] = LoadGraph("Data/ImageData/myuDot.png");

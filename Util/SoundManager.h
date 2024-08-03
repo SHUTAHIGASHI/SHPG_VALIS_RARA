@@ -10,6 +10,7 @@ enum class SoundType
 	select,
 	shot,
 	sprShot,
+	shotHit,
 	enemyDamage,
 	enemyDeath,
 };

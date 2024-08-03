@@ -47,6 +47,8 @@ private:
 	void UpdatePosture(const InputState& input);
 	// スライディングの更新
 	void UpdateSlide();
+	// スライディング処理
+	void OnSlide();
 
 	// ショット管理
 	void ControllShot(const InputState& input);
@@ -56,15 +58,14 @@ private:
 	void CreateSprShot();
 	// ショット更新
 	void UpdateShot();
+	// ショットヒット処理
+	void OnHitShot(class Shot* pShot);
 
 	// カーソル更新
 	void UpdateCursor(const InputState& input);
 
 	// 2D描画
 	void Draw2D();
-
-	// スライディング処理
-	void OnSlide();
 
 private:
 	// プレイヤーの姿勢
@@ -74,6 +75,7 @@ private:
 	int m_hFpsHand;
 	int m_hCursorImg;
 	int m_hLockCursorImg;
+	int m_hHitCursorImg;
 	// 画像サイズ
 	int m_HandSizeX;
 	int m_HandSizeY;
@@ -83,13 +85,15 @@ private:
 	int m_slideTime;
 	// 無敵時間
 	int m_invTime;
+	// ヒットマーク描画フレーム
+	int m_hitMarkFrame;
 
 	// 移動判定
 	bool m_isMove;
-	// ダッシュ判定
-	bool m_isDash;
 	// カーソルロック判定
 	bool m_isLockOn;
+	// 射撃中判定
+	bool m_isShot;
 
 	// 視線の高さ
 	float m_eyeHeight;
