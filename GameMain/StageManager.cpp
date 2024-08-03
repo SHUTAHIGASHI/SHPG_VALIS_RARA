@@ -53,6 +53,8 @@ void StageManager::OnRoundEnd()
 {
 	// ラウンド数カウント
 	m_roundCount++;
+	// ラウンドごとの難易度上昇
+	m_pEnemyManager->DiffcultyUp();
 }
 
 void StageManager::RoundOnUpdate()

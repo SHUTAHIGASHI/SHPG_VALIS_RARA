@@ -17,6 +17,7 @@ EnemyManager::EnemyManager():
 	m_enemyMaxOnRound(15),
 	m_enemyMaxOnScreen(kEnemyNum),
 	m_isEnemyCreateEnd(false),
+	m_spawnCenterPos(Game::kVecZero),
 	m_pEnemies(),
 	m_pPlayer(nullptr)
 {
@@ -78,9 +79,6 @@ void EnemyManager::Draw()
 	{
 		enemy->Draw();
 	}
-
-	// “G‚Ì¶¬”•\¦
-	DrawFormatString(0, 0, 0xffffff, "¶¬”:%d", m_createEnemyCount);
 }
 
 void EnemyManager::DiffcultyUp()

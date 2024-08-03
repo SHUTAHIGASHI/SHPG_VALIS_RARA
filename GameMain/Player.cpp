@@ -20,7 +20,7 @@ namespace
 	// ダッシュ速度
 	constexpr float kPlayerDashSpeed = kPlayerMoveSpeed * 2.0f;
 	// スライディング速度率
-	constexpr float kSlideRate = 2.5f;
+	constexpr float kSlideRate = 1.5f;
 	// 重力
 	constexpr float kGravity = 0.5f;
 	// 慣性
@@ -28,9 +28,10 @@ namespace
 	// ジャンプ力
 	constexpr float kJumpPower = 12.0f;
 
-	// 姿勢ごとの高さ
+	// 姿勢ごとの速度
 	constexpr float kCrouchSpeed = 8.0f;
 	constexpr float kSlideCrouchSpeed = 10.0f;
+	// 姿勢ごとの高さ
 	constexpr float kStandHeight = 0.0f;
 	constexpr float kCrouchHeight = -70.0f;
 	constexpr float kDeadHeight = -140.0f;
@@ -75,8 +76,10 @@ Player::Player():
 	m_shotDelay(kShotRate),
 	m_slideTime(0),
 	m_invTime(0),
+	m_hitMarkFrame(0),
 	m_isMove(false),
 	m_isLockOn(false),
+	m_isShot(false),
 	m_eyeHeight(kStandHeight),
 	m_playerAngleY(0.0f),
 	m_playerAngleX(0.0f),

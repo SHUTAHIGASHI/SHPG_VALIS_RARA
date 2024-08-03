@@ -94,13 +94,18 @@ void UiManager::DrawRoundState()
 	// ラウンド状態の描画
 	auto roundState = m_pStage->GetRoundState();
 
+	// ラウンド状態によって描画
 	if(roundState == RoundState::ROUND_START)
 	{
 		// ラウンド開始
 		std::string drawText = "ラウンド" + std::to_string(m_pStage->GetRoundCount());
 		// 文字列サイズ取得
 		int textLength = GetDrawFormatStringWidth(drawText.c_str());
-		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf, 0xffffff, "%s", drawText.c_str());
+		// 背景描画
+		DrawBox(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - (Game::kFontSize / 2),
+			Game::kScreenWidthHalf + (textLength / 2), Game::kScreenHeightHalf + (Game::kFontSize / 2), 0x000000, true);
+		// 文字列描画
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - (Game::kFontSize / 2), 0xffffff, "%s", drawText.c_str());
 	}
 	else if (roundState == RoundState::ROUND_ON)
 	{
@@ -112,6 +117,10 @@ void UiManager::DrawRoundState()
 		std::string drawText = "ラウンドクリア";
 		// 文字列サイズ取得
 		int textLength = GetDrawFormatStringWidth(drawText.c_str());
-		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf, 0xffffff, "%s", drawText.c_str());
+		// 背景描画
+		DrawBox(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - (Game::kFontSize / 2),
+			Game::kScreenWidthHalf + (textLength / 2), Game::kScreenHeightHalf + (Game::kFontSize / 2), 0x000000, true);
+		// 文字列描画
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - (Game::kFontSize / 2), 0xffffff, "%s", drawText.c_str());
 	}
 }

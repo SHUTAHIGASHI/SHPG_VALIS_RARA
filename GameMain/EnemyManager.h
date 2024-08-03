@@ -50,6 +50,9 @@ private:
 	// 敵の生成完了判定
 	bool m_isEnemyCreateEnd;
 
+	// 敵生成中心座標
+	VECTOR m_spawnCenterPos;
+
 	// 敵配列
 	std::list<class EnemyBase*> m_pEnemies;
 	// プレイヤーポインタ
