@@ -10,6 +10,8 @@ namespace
 {
 	// 敵の生成数
 	constexpr int kEnemyNum = 5;
+	// 敵の生成範囲
+	constexpr float kEnemySpawnRange = 1000.0f;
 }
 
 EnemyManager::EnemyManager():
@@ -102,9 +104,10 @@ VECTOR EnemyManager::GetRandomPos()
 {
 	VECTOR result;
 
-	result.x = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeX)) - 500);
+	// 指定した位置を中心に指定した範囲でランダムな位置を返す
+	result.x = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeX)) - kEnemySpawnRange);
 	result.y = 0.0f;
-	result.z = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeZ)) + Game::kStageSizeZ);
+	result.z = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeZ)) - (kEnemySpawnRange / 2));
 
 	return result;
 }

@@ -2,7 +2,7 @@
 #include "ObjectBase.h"
 
 EnemyChaseNeffy::EnemyChaseNeffy(ObjectBase* target, VECTOR pos):
-	EnemyBase("chino", pos)
+	EnemyBase("neffy", pos)
 {
 	m_pTarget = target;
 }

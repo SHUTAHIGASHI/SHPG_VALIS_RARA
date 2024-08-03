@@ -51,6 +51,8 @@ void EnemyBase::Draw()
 {
 	// ‰æ‘œ•`‰æ
 	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
+	// ‹…•`‰æ
+	DrawSphere3D(m_status.pos, m_status.radius, 32, 0xffffff, 0xffffff, false);
 }
 
 void EnemyBase::OnHit(int damage)
