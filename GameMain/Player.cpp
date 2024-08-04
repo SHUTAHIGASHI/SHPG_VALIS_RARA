@@ -73,6 +73,8 @@ Player::Player():
 	m_hHitCursorImg(-1),
 	m_HandSizeX(0),
 	m_HandSizeY(0),
+	m_frameCount(0),
+	m_handFrame(0),
 	m_shotDelay(kShotRate),
 	m_slideTime(0),
 	m_invTime(0),
@@ -123,6 +125,10 @@ void Player::Init()
 
 void Player::Update(const InputState& input)
 {
+	// 毎フレームカウント
+	m_frameCount++;
+	if (m_frameCount > 60) m_frameCount = 0;
+
 	// 無敵時間減少
 	if (m_invTime > 0) m_invTime--;
 
@@ -563,11 +569,19 @@ void Player::ControllShot(const InputState& input)
 			// ショット生成
 			CreateShot();
 		}
+
+		// 手の描画用フレーム更新
+		if(m_frameCount % 5 == 0) m_handFrame++;
+		if (m_handFrame > 3)
+		{
+			m_handFrame = 0;
+		}
 	}
 	else
 	{
 		// 射撃中フラグOFF
 		m_isShot = false;
+		m_handFrame = 0;
 	}
 
 	// スペシャルショットボタンが押されたら
@@ -696,9 +710,12 @@ void Player::Draw2D()
 	}
 
 	// FPSハンド描画
-	DrawRotaGraphF(static_cast<float>(Game::kScreenWidth - (m_HandSizeX * 10.0f)),
-		static_cast<float>(Game::kScreenHeight - (m_HandSizeY * 10.0f) / 2),
-		10.0f, 0.0f, m_hFpsHand, true);
+	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::kChipSize * 10.0f) + 60.0f),
+		static_cast<float>(Game::kScreenHeight - (Game::kChipSize * 10.0f) / 2),
+		Game::kChipSize * m_handFrame, 0.0f,
+		Game::kChipSize, Game::kChipSize, 
+		10.0f, 0.0f, 
+		m_hFpsHand,true);
 
 	// 体力描画
 	DrawFormatString(Game::kScreenWidth - 200, 10, 0xffffff, "HP:%d", m_status.hp);

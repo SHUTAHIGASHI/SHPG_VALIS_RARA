@@ -20,7 +20,7 @@ void Load::AllLoadData()
 	m_data["neffy"] = LoadGraph("Data/ImageData/NeffyTest.png");
 	m_data["nina"] = LoadGraph("Data/ImageData/ninaDot.png");
 	m_data["vitte"] = LoadGraph("Data/ImageData/vitteDot.png");
-	m_data["fpsHand"] = LoadGraph("Data/ImageData/RaraGame_FpsHand.png");
+	m_data["fpsHand"] = LoadGraph("Data/ImageData/RaraGame_Hands.png");
 }
 
 void Load::DeleteAllData()

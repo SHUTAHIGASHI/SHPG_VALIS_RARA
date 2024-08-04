@@ -79,6 +79,10 @@ private:
 	// 画像サイズ
 	int m_HandSizeX;
 	int m_HandSizeY;
+	// 毎フレームカウント
+	int m_frameCount;
+	// 手の描画用フレーム
+	int m_handFrame;
 	// ショット連射速度
 	int m_shotDelay;
 	// スライディング時間

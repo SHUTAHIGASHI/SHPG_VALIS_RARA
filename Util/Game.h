@@ -53,6 +53,8 @@ namespace Game
 	constexpr int kColorDepth = 32;
 	
 	// ゲームの基本設定 //
+	// チップサイズ
+	constexpr float kChipSize = 64.0f;
 	// プレイヤーの基本設定
 	constexpr float kBaseScale = 100.0f;
 	// ステージ基本サイズ

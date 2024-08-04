@@ -116,6 +116,9 @@ EnemyBase* EnemyManager::GetRandomEnemy()
 {
 	int index = GetRand(static_cast<int>(2));
 
+	return new EnemyChaseNeffy(m_pPlayer, GetRandomPos());
+
+	//todo ¶¬‚·‚é“G‚Ìí—Ş‚ğ•ÏX‚·‚é
 	if(index == 0)
 	{
 		return new EnemyChaseNeffy(m_pPlayer, GetRandomPos());
