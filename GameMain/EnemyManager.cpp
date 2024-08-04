@@ -105,9 +105,9 @@ VECTOR EnemyManager::GetRandomPos()
 	VECTOR result;
 
 	// 指定した位置を中心に指定した範囲でランダムな位置を返す
-	result.x = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeX)) - kEnemySpawnRange);
+	result.x = static_cast<float>(m_spawnCenterPos.x + GetRand(static_cast<int>(Game::kStageSizeX)) + kEnemySpawnRange);
 	result.y = 0.0f;
-	result.z = static_cast<float>(GetRand(static_cast<int>(Game::kStageSizeZ)) - (kEnemySpawnRange / 2));
+	result.z = static_cast<float>(m_spawnCenterPos.z + GetRand(static_cast<int>(Game::kStageSizeZ)) - (kEnemySpawnRange / 2));
 
 	return result;
 }

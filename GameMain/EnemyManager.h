@@ -32,6 +32,9 @@ public:
 	// “Gæ“¾
 	std::list<class EnemyBase*> GetEnemies() { return m_pEnemies; }
 
+	// ¶¬‚·‚é’†SˆÊ’uw’è
+	void SetSpawnCenterPos(VECTOR pos) { m_spawnCenterPos = pos; }
+
 private:
 	// “G¶¬
 	void CreateEnemy();

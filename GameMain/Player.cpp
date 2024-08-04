@@ -712,8 +712,8 @@ void Player::Draw2D()
 	// FPSƒnƒ“ƒh•`‰æ
 	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::kChipSize * 10.0f) + 60.0f),
 		static_cast<float>(Game::kScreenHeight - (Game::kChipSize * 10.0f) / 2),
-		Game::kChipSize * m_handFrame, 0.0f,
-		Game::kChipSize, Game::kChipSize, 
+		static_cast<int>(Game::kChipSize * m_handFrame), 0,
+		static_cast<int>(Game::kChipSize), static_cast<int>(Game::kChipSize),
 		10.0f, 0.0f, 
 		m_hFpsHand,true);
 
