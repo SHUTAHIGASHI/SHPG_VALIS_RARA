@@ -9,6 +9,13 @@ enum class PostureType
 	slide
 };
 
+enum class HandState
+{
+	Normal,
+	Shot,
+	Grenade,
+};
+
 class Player :
 	public ObjectBase
 {
@@ -64,12 +71,17 @@ private:
 	// カーソル更新
 	void UpdateCursor(const InputState& input);
 
+	// 手の状態の更新
+	void UpdateHandState();
+
 	// 2D描画
 	void Draw2D();
 
 private:
 	// プレイヤーの姿勢
 	PostureType m_posture;
+	// プレイヤーの手の状態
+	HandState m_handState;
 
 	// 画像ハンドル
 	int m_hFpsHand;
@@ -83,8 +95,9 @@ private:
 	int m_frameCount;
 	// 手の描画用フレーム
 	int m_handFrame;
-	// ショット連射速度
-	int m_shotDelay;
+	// ショット用フレーム
+	int m_shotFrame;
+	int m_handFrameMax;
 	// スライディング時間
 	int m_slideTime;
 	// 無敵時間

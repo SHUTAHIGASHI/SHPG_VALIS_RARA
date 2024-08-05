@@ -50,8 +50,9 @@ namespace
 
 	// ロックオン範囲
 	constexpr float kLockRange = 50.0f;
-	// ショット連射速度
-	constexpr int kShotRate = 10;
+
+	// ショット遅延
+	constexpr int kShotDelay = 4;
 	// ショットのダメージ
 	constexpr int kShotDamage = 10;
 
@@ -67,6 +68,7 @@ namespace
 Player::Player():
 	ObjectBase(),
 	m_posture(PostureType::stand),
+	m_handState(HandState::Normal),
 	m_hFpsHand(-1),
 	m_hCursorImg(-1),
 	m_hLockCursorImg(-1),
@@ -75,7 +77,7 @@ Player::Player():
 	m_HandSizeY(0),
 	m_frameCount(0),
 	m_handFrame(0),
-	m_shotDelay(kShotRate),
+	m_shotFrame(0),
 	m_slideTime(0),
 	m_invTime(0),
 	m_hitMarkFrame(0),
@@ -113,6 +115,7 @@ void Player::Init()
 	m_hHitCursorImg = Load::GetInstance().GetHandle("hitCursor");
 	// 画像サイズ取得
 	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
+	m_handFrameMax = (m_HandSizeX / Game::kChipSize) - 1;
 	// 画像拡大率設定
 	m_status.scale = kScale;
 	// 移動速度設定
@@ -127,7 +130,7 @@ void Player::Update(const InputState& input)
 {
 	// 毎フレームカウント
 	m_frameCount++;
-	if (m_frameCount > 60) m_frameCount = 0;
+	if (m_frameCount >= 60) m_frameCount = 0;
 
 	// 無敵時間減少
 	if (m_invTime > 0) m_invTime--;
@@ -154,6 +157,9 @@ void Player::Update(const InputState& input)
 	ControllShot(input);
 	// ショット更新
 	UpdateShot();
+
+	// 手の状態更新
+	UpdateHandState();
 
 	// UIにプレイヤー座標を送信
 	UiManager::GetInstance().SetPlayerPos(m_status.pos);
@@ -551,42 +557,19 @@ void Player::ControllShot(const InputState& input)
 	targetDir = VScale(targetDir, ShotParam::kShotSpeed);
 	m_targetPos = VAdd(m_pCamera->GetPos(), VScale(targetDir, ShotParam::kShotTime));
 
-	// ショット連射速度
-	m_shotDelay--;
-	if (m_shotDelay < 0)
-	{
-		m_shotDelay = 0;
-	}
-
 	// 射撃ボタンが押されたら
 	if (input.IsPressed(InputType::shot))
 	{
 		// 射撃中フラグON
 		m_isShot = true;
-		// ショット遅延が0以下なら
-		if (m_shotDelay <= 0)
-		{
-			// ショット生成
-			CreateShot();
-		}
-
-		// 手の描画用フレーム更新
-		if(m_frameCount % 5 == 0) m_handFrame++;
-		if (m_handFrame > 3)
-		{
-			m_handFrame = 0;
-		}
-	}
-	else
-	{
-		// 射撃中フラグOFF
-		m_isShot = false;
-		m_handFrame = 0;
 	}
 
 	// スペシャルショットボタンが押されたら
 	if (input.IsTriggered(InputType::sprShot))
 	{
+		// 射撃中フラグONだった場合
+		if (m_isShot) return;
+
 		// ロックオン中なら
 		if (m_isLockOn)
 		{
@@ -600,15 +583,8 @@ void Player::CreateShot()
 {
 	// ショットサウンド再生
 	SoundManager::GetInstance().PlaySE(SoundType::shot);
-
 	// ショット生成
 	m_pShots.push_back(new Shot(m_status.pos, m_targetPos));
-
-	// ショット連射速度初期化
-	if (m_shotDelay <= 0)
-	{
-		m_shotDelay = kShotRate;
-	}
 }
 
 void Player::CreateSprShot()
@@ -618,16 +594,29 @@ void Player::CreateSprShot()
 
 	// ショット生成
 	m_pShots.push_back(new Shot(m_status.pos, m_pTargetObj));
-
-	// ショット連射速度初期化
-	if (m_shotDelay <= 0)
-	{
-		m_shotDelay = kShotRate;
-	}
 }
 
 void Player::UpdateShot()
 {
+	// 射撃中なら
+	if (m_isShot)
+	{
+		// ショットフレーム更新
+		m_shotFrame++;
+		// ショット生成
+		if (m_shotFrame >= m_handFrameMax * kShotDelay)
+		{
+			// ショット生成
+			CreateShot();
+			// ショットフレーム初期化
+			m_shotFrame = 0;
+			// 射撃中フラグOFF
+			m_isShot = false;
+			// 手の描画用フレーム初期化
+			m_handFrame = 0;
+		}
+	}
+
 	// ショット更新
 	for (auto& shot : m_pShots)
 	{
@@ -690,6 +679,39 @@ void Player::UpdateCursor(const InputState& input)
 	}
 }
 
+void Player::UpdateHandState()
+{
+	if (m_isShot)
+	{
+		m_handState = HandState::Shot;
+	}
+	else
+	{
+		m_handState = HandState::Normal;
+	}
+
+	if (m_handState == HandState::Normal)
+	{
+		// 手の状態更新
+		if(m_frameCount % 30 == 0) m_handFrame++;
+		// 手の描画用フレーム初期化
+		if (m_handFrame > m_handFrameMax)
+		{
+			m_handFrame = 0;
+		}
+	}
+	else if (m_handState == HandState::Shot)
+	{
+		// 手の描画用フレーム更新
+		if (m_shotFrame % kShotDelay == 0) m_handFrame++;
+		// 手の描画用フレーム初期化
+		if (m_handFrame > m_handFrameMax)
+		{
+			m_handFrame = 0;
+		}
+	}
+}
+
 void Player::Draw2D()
 {
 	// クロスヘア描画
@@ -712,7 +734,7 @@ void Player::Draw2D()
 	// FPSハンド描画
 	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::kChipSize * 10.0f) + 60.0f),
 		static_cast<float>(Game::kScreenHeight - (Game::kChipSize * 10.0f) / 2),
-		static_cast<int>(Game::kChipSize * m_handFrame), 0,
+		static_cast<int>(Game::kChipSize * m_handFrame), static_cast<int>(m_handState) * Game::kChipSize,
 		static_cast<int>(Game::kChipSize), static_cast<int>(Game::kChipSize),
 		10.0f, 0.0f, 
 		m_hFpsHand,true);
