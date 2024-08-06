@@ -95,9 +95,9 @@ private:
 	int m_frameCount;
 	// 手の描画用フレーム
 	int m_handFrame;
+	int m_handFrameMax;
 	// ショット用フレーム
 	int m_shotFrame;
-	int m_handFrameMax;
 	// スライディング時間
 	int m_slideTime;
 	// 無敵時間

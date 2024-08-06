@@ -52,7 +52,7 @@ namespace
 	constexpr float kLockRange = 50.0f;
 
 	// ショット遅延
-	constexpr int kShotDelay = 4;
+	constexpr int kShotDelay = 3;
 	// ショットのダメージ
 	constexpr int kShotDamage = 10;
 
@@ -77,6 +77,7 @@ Player::Player():
 	m_HandSizeY(0),
 	m_frameCount(0),
 	m_handFrame(0),
+	m_handFrameMax(0),
 	m_shotFrame(0),
 	m_slideTime(0),
 	m_invTime(0),
