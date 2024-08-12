@@ -80,7 +80,7 @@ void Shot::SetScale(float scale)
 void Shot::Init(VECTOR pos)
 {
 	// ‰æ‘œ“Ç‚İ‚İ
-	m_status.hImg = Load::GetInstance().GetHandle("shot");
+	m_status.hImg = Load::GetInstance().GetImageHandle("shot");
 	// ƒVƒ‡ƒbƒg‚Ì‰Šú‰»
 	m_status.moveSpeed = kShotSpeed;
 	m_status.radius = kShotRadius;

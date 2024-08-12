@@ -1,6 +1,8 @@
 #include "StageManager.h"
+#include "Stage.h"
 #include "EnemyManager.h"
 #include "UiManager.h"
+#include "Load.h"
 
 namespace
 {
@@ -14,6 +16,7 @@ StageManager::StageManager():
 	m_roundCount(1),
 	m_roundInterval(0),
 	m_updateFunc(&StageManager::RoundStartIntervalUpdate),
+	m_pStage(std::make_shared<Stage>()),
 	m_pEnemyManager(std::make_shared<EnemyManager>()),
 	m_pPlayer(nullptr)
 {
@@ -29,6 +32,8 @@ StageManager::~StageManager()
 
 void StageManager::Init()
 {
+	// ステージ初期化
+	m_pStage->Init();
 	// 敵管理初期化
 	m_pEnemyManager->SetPlayer(m_pPlayer);
 	m_pEnemyManager->Init();
@@ -42,6 +47,8 @@ void StageManager::Update()
 
 void StageManager::Draw()
 {
+	// ステージ描画
+	m_pStage->Draw();
 	// 敵管理描画
 	m_pEnemyManager->Draw();
 
@@ -59,6 +66,8 @@ void StageManager::OnRoundEnd()
 
 void StageManager::RoundOnUpdate()
 {
+	// ステージ更新
+	m_pStage->Update();
 	// 敵管理更新
 	m_pEnemyManager->Update();
 

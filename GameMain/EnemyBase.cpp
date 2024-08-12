@@ -22,7 +22,7 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	// À•Wİ’è
 	m_status.pos = pos;
 	// ‰æ‘œİ’è
-	m_status.hImg = Load::GetInstance().GetHandle(typeName);
+	m_status.hImg = Load::GetInstance().GetImageHandle(typeName);
 	// ‘Ì—Íİ’è
 	m_status.hp = kBaseHp;
 

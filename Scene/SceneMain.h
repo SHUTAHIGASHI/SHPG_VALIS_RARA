@@ -23,8 +23,6 @@ public:
 private:
     // ゲームオーバー処理
     void OnGameOver();
-	// ステージライン描画
-	void DrawStageLine();
 
     // メンバ関数ポインタ(更新)
     using m_tUpdateFunc = void (SceneMain::*) (const InputState& input);

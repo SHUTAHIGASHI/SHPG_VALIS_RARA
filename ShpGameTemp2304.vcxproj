@@ -38,6 +38,7 @@
     <ClCompile Include="Scene\SceneOption.cpp" />
     <ClCompile Include="Scene\ScenePauseMenu.cpp" />
     <ClCompile Include="Scene\SceneTitleMenu.cpp" />
+    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="UI\UiBar.cpp" />
     <ClCompile Include="UI\UiManager.cpp" />
     <ClCompile Include="Util\Camera.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Scene\SceneOption.h" />
     <ClInclude Include="Scene\ScenePauseMenu.h" />
     <ClInclude Include="Scene\SceneTitleMenu.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="UI\UiBar.h" />
     <ClInclude Include="UI\UiManager.h" />
     <ClInclude Include="Util\Camera.h" />

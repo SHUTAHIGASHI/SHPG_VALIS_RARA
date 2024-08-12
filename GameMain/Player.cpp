@@ -110,10 +110,10 @@ Player::~Player()
 void Player::Init()
 {
 	// ‰æ‘œ“Ç‚İ‚İ
-	m_hFpsHand = Load::GetInstance().GetHandle("fpsHand");
-	m_hCursorImg = Load::GetInstance().GetHandle("cursor");
-	m_hLockCursorImg = Load::GetInstance().GetHandle("lockCursor");
-	m_hHitCursorImg = Load::GetInstance().GetHandle("hitCursor");
+	m_hFpsHand = Load::GetInstance().GetImageHandle("fpsHand");
+	m_hCursorImg = Load::GetInstance().GetImageHandle("cursor");
+	m_hLockCursorImg = Load::GetInstance().GetImageHandle("lockCursor");
+	m_hHitCursorImg = Load::GetInstance().GetImageHandle("hitCursor");
 	// ‰æ‘œƒTƒCƒYæ“¾
 	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
 	m_handFrameMax = (m_HandSizeX / Game::kChipSize) - 1;

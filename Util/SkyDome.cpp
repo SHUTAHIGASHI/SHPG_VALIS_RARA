@@ -15,7 +15,7 @@ SkyDome::SkyDome() :
 	m_scale(kSkyDomeRadius)
 {
 	// モデルの読み込み
-	m_handle = MV1DuplicateModel(Load::GetInstance().GetHandle("skydome"));
+	m_handle = MV1DuplicateModel(Load::GetInstance().GetModelHandle("skydome"));
 	// モデルクラス初期化
 	m_pModel = std::make_shared<Model>(m_handle);
 	// スカイドームのスケールを設定

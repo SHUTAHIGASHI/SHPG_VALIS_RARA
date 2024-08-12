@@ -8,30 +8,35 @@ Load::~Load()
 void Load::AllLoadData()
 {
 	// モデルデータ
-	m_data["skydome"] = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
+	m_modelData["skydome"] = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
+	m_modelData["cube"] = MV1LoadModel("Data/ModelData/CUBE.mv1");
 	// 画像データ
-	m_data["player"] = LoadGraph("Data/ImageData/RaraTest.png");
-	m_data["cursor"] = LoadGraph("Data/ImageData/Cursor.png");
-	m_data["lockCursor"] = LoadGraph("Data/ImageData/LockCursor.png");
-	m_data["hitCursor"] = LoadGraph("Data/ImageData/HitCursor.png");
-	m_data["shot"] = LoadGraph("Data/ImageData/Ringo.png");
-	m_data["chino"] = LoadGraph("Data/ImageData/chinoDot.png");
-	m_data["myu"] = LoadGraph("Data/ImageData/myuDot.png");
-	m_data["neffy"] = LoadGraph("Data/ImageData/NeffyTest.png");
-	m_data["nina"] = LoadGraph("Data/ImageData/ninaDot.png");
-	m_data["vitte"] = LoadGraph("Data/ImageData/vitteDot.png");
-	m_data["fpsHand"] = LoadGraph("Data/ImageData/RaraGame_Hands.png");
+	m_imageData["player"] = LoadGraph("Data/ImageData/RaraTest.png");
+	m_imageData["cursor"] = LoadGraph("Data/ImageData/Cursor.png");
+	m_imageData["lockCursor"] = LoadGraph("Data/ImageData/LockCursor.png");
+	m_imageData["hitCursor"] = LoadGraph("Data/ImageData/HitCursor.png");
+	m_imageData["shot"] = LoadGraph("Data/ImageData/Ringo.png");
+	m_imageData["chino"] = LoadGraph("Data/ImageData/chinoDot.png");
+	m_imageData["myu"] = LoadGraph("Data/ImageData/myuDot.png");
+	m_imageData["neffy"] = LoadGraph("Data/ImageData/NeffyTest.png");
+	m_imageData["nina"] = LoadGraph("Data/ImageData/ninaDot.png");
+	m_imageData["vitte"] = LoadGraph("Data/ImageData/vitteDot.png");
+	m_imageData["fpsHand"] = LoadGraph("Data/ImageData/RaraGame_Hands.png");
 }
 
 void Load::DeleteAllData()
 {
-	// モデルデータを削除する
-	m_data["skydome"] = MV1DeleteModel(m_data["skydome"]);
-
-	// データを削除する
-	for (auto& data : m_data)
+	// 画像データを削除する
+	for (auto& data : m_imageData)
 	{
 		DeleteGraph(data.second);
 	}
-	m_data.clear();
+	m_imageData.clear();
+
+	// モデルデータを削除する
+	for (auto& data : m_modelData)
+	{
+		DeleteGraph(data.second);
+	}
+	m_modelData.clear();
 }

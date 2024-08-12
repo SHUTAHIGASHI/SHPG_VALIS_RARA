@@ -64,8 +64,6 @@ void SceneMain::Draw()
 {
 	//スカイドーム描画
 	m_pSkyDome->Draw();
-	// ステージライン描画
-	DrawStageLine();
 
 	// 敵管理描画
 	m_pStage->Draw();
@@ -91,24 +89,6 @@ void SceneMain::OnGameOver()
 
 	// シーン変更
 	m_Manager.PushSceneAllUpdate(new SceneResult(m_Manager));
-}
-
-void SceneMain::DrawStageLine()
-{
-	// グリッドを表示
-	for (float z = -Game::kStageSizeZ; z <= Game::kStageSizeZ; z += 100.0f)
-	{
-		VECTOR start = VGet(-Game::kStageSizeX, -156.0, z);
-		VECTOR end = VGet(Game::kStageSizeX, -156.0, z);
-		DrawLine3D(start, end, 0x00ff00);
-	}
-
-	for (float x = -Game::kStageSizeX; x <= Game::kStageSizeX; x += 100.0f)
-	{
-		VECTOR start = VGet(x, -156.0, -Game::kStageSizeZ);
-		VECTOR end = VGet(x, -156.0, Game::kStageSizeZ);
-		DrawLine3D(start, end, 0xff0000);
-	}
 }
 
 void SceneMain::NormalUpdate(const InputState& input)

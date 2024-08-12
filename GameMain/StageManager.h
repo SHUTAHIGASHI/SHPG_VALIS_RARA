@@ -56,6 +56,8 @@ private:
 	// ラウンドの遅延時間
 	int m_roundInterval;
 
+	// ステージ
+	std::shared_ptr<class Stage> m_pStage;
 	// 敵管理
 	std::shared_ptr<class EnemyManager> m_pEnemyManager;
 	// プレイヤーポインタ

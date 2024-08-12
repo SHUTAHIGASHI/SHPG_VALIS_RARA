@@ -76,7 +76,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//ロード
 	Load::GetInstance().AllLoadData();
 	// カーソル画像読み込み
-	int hCursorImg = Load::GetInstance().GetHandle("cursor");
+	int hCursorImg = Load::GetInstance().GetImageHandle("cursor");
 
 #ifdef _DEBUG
 	scene.ChangeScene(new SceneDebug(scene));

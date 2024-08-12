@@ -52,7 +52,7 @@ SceneOption::SceneOption(SceneManager& manager) :
 {
 	// ‰æ‘œ“Ç‚İ‚İ
 	m_hBgImg = LoadGraph("Data/ImageData/RARA_GAME_BG.png");
-	m_hMusicVolImg = Load::GetInstance().GetHandle("shot");
+	m_hMusicVolImg = Load::GetInstance().GetImageHandle("shot");
 }
 
 SceneOption::~SceneOption()

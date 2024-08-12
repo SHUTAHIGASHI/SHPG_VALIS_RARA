@@ -34,13 +34,24 @@ public:
 	/// </summary>
 	/// <param name="key">ロードデータのキー</param>
 	/// <returns>ハンドル</returns>
-	int GetHandle(std::string key)
+	int GetImageHandle(std::string key)
 	{
-		return m_data[key];
+		return m_imageData[key];
+	}
+
+	/// <summary>
+	/// 3Dモデルのハンドルを取得する
+	/// </summary>
+	/// <param name="key">ロードデータのキー</param>
+	/// <returns>ハンドル</returns>
+	int GetModelHandle(std::string key)
+	{
+		return m_modelData[key];
 	}
 private:
 	//ロードデータをunordered_mapで管理
-	std::unordered_map<std::string, int> m_data;
+	std::unordered_map<std::string, int> m_imageData;
+	std::unordered_map<std::string, int> m_modelData;
 
 	// シングルトンパターンなのでコンストラクタはprivateに置く
 	Load() {};

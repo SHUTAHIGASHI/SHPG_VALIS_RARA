@@ -19,7 +19,7 @@ SceneFade::SceneFade(SceneManager& manager) :
 	m_imgScale(kGraphScaleMin)
 {
 	// フェード処理用画像
-	m_hFadeImg = Load::GetInstance().GetHandle("shot");
+	m_hFadeImg = Load::GetInstance().GetImageHandle("shot");
 	GetGraphSize(m_hFadeImg, &m_graphSizeX, &m_graphSizeY);
 }
 
