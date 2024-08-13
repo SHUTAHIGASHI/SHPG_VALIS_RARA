@@ -36,11 +36,10 @@ void Stage::Init()
 				if (m_currentStageData[z][x] == 1)
 				{
 					// ブロックの生成
-					// ブロックの位置
-					VECTOR pos = VGet(x * Game::kChipSize, 0.0f, z * Game::kChipSize);
-					// ブロックのハンドル
 					m_cubeHandle.push_back(MV1DuplicateModel(Load::GetInstance().GetModelHandle("cube")));
-					// ブロックの生成
+					// ブロックの位置
+					VECTOR pos = VGet(x * 190.0f, -Game::kCharaHeight, z * 190.0f);
+					// ブロックの座標指定
 					MV1SetPosition(m_cubeHandle.back(), pos);
 				}
 			}
