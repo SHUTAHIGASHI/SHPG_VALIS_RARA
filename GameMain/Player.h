@@ -107,6 +107,8 @@ private:
 
 	// 移動判定
 	bool m_isMove;
+	// ダッシュ判定
+	bool m_isDash;
 	// カーソルロック判定
 	bool m_isLockOn;
 	// 射撃中判定

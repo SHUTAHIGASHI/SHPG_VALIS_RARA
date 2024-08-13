@@ -28,8 +28,6 @@ public:
 	void Draw();
 
 private:
-	// ステージライン描画
-	void DrawStageLine();
 
 private:
 	// キューブの情報

@@ -83,6 +83,7 @@ Player::Player():
 	m_invTime(0),
 	m_hitMarkFrame(0),
 	m_isMove(false),
+	m_isDash(false),
 	m_isLockOn(false),
 	m_isShot(false),
 	m_eyeHeight(kStandHeight),
@@ -116,7 +117,7 @@ void Player::Init()
 	m_hHitCursorImg = Load::GetInstance().GetImageHandle("hitCursor");
 	// 画像サイズ取得
 	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
-	m_handFrameMax = (m_HandSizeX / Game::kChipSize) - 1;
+	m_handFrameMax = (m_HandSizeX / Game::k2DChipSize) - 1;
 	// 画像拡大率設定
 	m_status.scale = kScale;
 	// 移動速度設定
@@ -300,6 +301,8 @@ void Player::ControllMove(const InputState& input)
 {
 	// 移動中フラグ
 	m_isMove = false;
+	// ダッシュ中フラグ
+	m_isDash = false;
 
 	// 地面判定チェック
 	if (m_status.pos.y <= 0.0f)
@@ -328,6 +331,13 @@ void Player::ControllMove(const InputState& input)
 			m_status.dir = VAdd(m_status.dir, tempDir);
 			// 移動中フラグON
 			m_isMove = true;
+
+			// ダッシュ入力
+			if (input.IsPressed(InputType::dash))
+			{
+				// ダッシュ判定
+				m_isDash = true;
+			}
 		}
 		// 後方移動入力
 		if (input.IsPressed(InputType::moveBehind))
@@ -367,7 +377,7 @@ void Player::ControllMove(const InputState& input)
 	if (m_isMove)
 	{
 		// ダッシュ入力
-		if (input.IsPressed(InputType::dash) && !m_isShot)
+		if (m_isDash && !m_isShot)
 		{
 			// しゃがみ姿勢なら
 			if (m_posture == PostureType::crouch)
@@ -733,10 +743,10 @@ void Player::Draw2D()
 	}
 
 	// FPSハンド描画
-	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::kChipSize * 10.0f) + 60.0f),
-		static_cast<float>(Game::kScreenHeight - (Game::kChipSize * 10.0f) / 2),
-		static_cast<int>(Game::kChipSize * m_handFrame), static_cast<int>(m_handState) * Game::kChipSize,
-		static_cast<int>(Game::kChipSize), static_cast<int>(Game::kChipSize),
+	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::k2DChipSize * 10.0f) + 60.0f),
+		static_cast<float>(Game::kScreenHeight - (Game::k2DChipSize * 10.0f) / 2),
+		static_cast<int>(Game::k2DChipSize * m_handFrame), static_cast<int>(m_handState) * Game::k2DChipSize,
+		static_cast<int>(Game::k2DChipSize), static_cast<int>(Game::k2DChipSize),
 		10.0f, 0.0f, 
 		m_hFpsHand,true);
 

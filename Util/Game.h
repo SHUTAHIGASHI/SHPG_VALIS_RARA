@@ -56,7 +56,8 @@ namespace Game
 	// キャラクターの高さ
 	constexpr float kCharaHeight = 156.0f;
 	// チップサイズ
-	constexpr float kChipSize = 64.0f;
+	constexpr float k2DChipSize = 64.0f;
+	constexpr float k3DChipSize = 200.0f;
 	// プレイヤーの基本設定
 	constexpr float kBaseScale = 100.0f;
 	// ステージ基本サイズ
