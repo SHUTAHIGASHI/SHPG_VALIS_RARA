@@ -5,18 +5,20 @@
 namespace
 {
 	// ステージの配列
-	std::list<std::list<int>> kStageList = 
+	std::vector<std::vector<int>> kStageList =
 	{ 
-		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } ,
-		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } ,
-		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } ,
-		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } ,
-		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } ,
-		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } 
+		{ 1,1,1,1,1 } ,
+		{ 1,1,1,1,1 } ,
+		{ 1,1,0,1,1 } ,
+		{ 1,1,1,1,1 } ,
+		{ 1,1,1,1,1 } 
 	};
 }
 
-Stage::Stage()
+Stage::Stage():
+m_currentStageData(kStageList),
+m_stageWidth(kStageList[0].size()),
+m_stageHeight(kStageList.size())
 {
 }
 
@@ -26,6 +28,23 @@ Stage::~Stage()
 
 void Stage::Init()
 {
+	// ステージの初期化
+	for (int z = 0; z < m_currentStageData.size(); z++)
+		{
+			for (int x = 0; x < m_currentStageData[z].size(); x++)
+			{
+				if (m_currentStageData[z][x] == 1)
+				{
+					// ブロックの生成
+					// ブロックの位置
+					VECTOR pos = VGet(x * Game::kChipSize, 0.0f, z * Game::kChipSize);
+					// ブロックのハンドル
+					m_cubeHandle.push_back(MV1DuplicateModel(Load::GetInstance().GetModelHandle("cube")));
+					// ブロックの生成
+					MV1SetPosition(m_cubeHandle.back(), pos);
+				}
+			}
+		}
 }
 
 void Stage::Update()
@@ -34,6 +53,12 @@ void Stage::Update()
 
 void Stage::Draw()
 {
+	// ブロックの描画
+	for (auto& cube : m_cubeHandle)
+	{
+		MV1DrawModel(cube);
+	}
+
 	// ステージライン描画
 	DrawStageLine();
 

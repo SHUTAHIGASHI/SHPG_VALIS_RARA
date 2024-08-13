@@ -129,8 +129,8 @@
     <ClCompile Include="GameMain\StageManager.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="GameMain\Stage.cpp">
+      <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,8 +227,8 @@
     <ClInclude Include="GameMain\StageManager.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="GameMain\Stage.h">
+      <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
