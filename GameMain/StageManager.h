@@ -34,9 +34,6 @@ public:
 	// ラウンド数取得
 	int GetRoundCount() { return m_roundCount; }
 
-	// 敵取得
-	std::shared_ptr<class EnemyManager> GetEnemy() { return m_pEnemyManager; }
-
 private:
 	// ラウンド終了時の処理
 	void OnRoundEnd();

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <DxLib.h>
 
 enum StageType
 {
@@ -10,6 +11,23 @@ enum StageType
 	STAGE_TYPE_PLAYER,
 	STAGE_TYPE_ENEMY,
 	STAGE_TYPE_MAX
+};
+
+struct TileData
+{
+	TileData(int x, int z, int handle) :
+		x(x),
+		z(z),
+		handle(handle)
+	{}
+	~TileData()
+	{
+		handle = -1;
+	}
+
+	int x;
+	int z;
+	int handle;
 };
 
 class Stage
@@ -29,11 +47,20 @@ public:
 
 	// ステージ情報を返す
 	std::vector<std::vector<int>> GetStageData() { return m_currentStageData; }
+
+	// 指定した座標のステージ情報を返す
+	void GetTile(VECTOR pos, int &x, int &z);
+
+	// 指定したタイルの状態を返す
+	int GetTileHandle(int x, int z);
+
 private:
+	// ステージの生成
+	void CreateStage();
 
 private:
 	// キューブの情報
-	std::vector<int> m_cubeHandle;
+	std::vector<TileData> m_cubes;
 
 	// 現在のステージの情報
 	std::vector<std::vector<int>> m_currentStageData;

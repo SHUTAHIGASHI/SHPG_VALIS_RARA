@@ -61,7 +61,7 @@ void EnemyManager::Update()
 	for (auto& enemy : m_pEnemies)
 	{
 		// XV
-		enemy->Update();
+		//enemy->Update();
 		// “–‚½‚è”»’è
 		if (enemy->CheckCollision(m_pPlayer))
 		{

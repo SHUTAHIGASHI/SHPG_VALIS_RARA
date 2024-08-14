@@ -39,6 +39,8 @@ void StageManager::Init()
 	m_pEnemyManager->SetPlayer(m_pPlayer);
 	m_pEnemyManager->Init();
 	// プレイヤーにステージ情報を設定
+	m_pPlayer->SetStage(m_pStage.get());
+	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
 	m_pPlayer->SetStageData(m_pStage->GetStageData());
 }
 

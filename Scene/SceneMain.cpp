@@ -37,7 +37,6 @@ void SceneMain::Init()
 	// マウス非表示
 	SetMouseDispFlag(false);
 	// プレイヤー初期化
-	m_pPlayer->SetEnemyManager(m_pStage->GetEnemy().get());
 	m_pPlayer->SetCamera(m_pCamera.get());
 	m_pPlayer->Init();
 	// 敵管理初期化

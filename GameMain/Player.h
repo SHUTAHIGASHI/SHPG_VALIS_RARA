@@ -25,6 +25,8 @@ public:
 	// デストラクタ
 	virtual ~Player();
 
+	// ステージ管理クラスの設定
+	void SetStage(class Stage* pStage) { m_pStage = pStage; }
 	// エネミーマネージャーの設定
 	void SetEnemyManager(class EnemyManager* pEnemyManager) { m_pEnemyManager = pEnemyManager; }
 	// カメラの設定
@@ -46,6 +48,9 @@ public:
 	void SetStageData(const std::vector<std::vector<int>> stageData) { m_currentStageData = stageData; }
 
 private:
+	// ステージ範囲判定
+	void CheckStageRange();
+
 	// 視点の操作
 	void ControllView(const InputState& input);
 	// 視点の更新
@@ -141,6 +146,8 @@ private:
 private:// 各種ポインタ
 	// ショットターゲットポインタ
 	ObjectBase* m_pTargetObj;
+	// ステージのポインタ
+	class Stage* m_pStage;
 	// エネミーマネージャーのポインタ
 	class EnemyManager* m_pEnemyManager;
 	// カメラのポインタ

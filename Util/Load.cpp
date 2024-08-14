@@ -10,6 +10,7 @@ void Load::AllLoadData()
 	// モデルデータ
 	m_modelData["skydome"] = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
 	m_modelData["cube"] = MV1LoadModel("Data/ModelData/CUBE.mv1");
+	m_modelData["goal"] = MV1LoadModel("Data/ModelData/GOAL.mv1");
 	// 画像データ
 	m_imageData["player"] = LoadGraph("Data/ImageData/RaraTest.png");
 	m_imageData["cursor"] = LoadGraph("Data/ImageData/Cursor.png");

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Game.h"
 #include "Shot.h"
+#include "Stage.h"
 #include "EnemyManager.h"
 #include "EnemyBase.h"
 #include "Load.h"
@@ -60,6 +61,8 @@ namespace
 	constexpr int kMaxHp = 30;
 	// 無敵時間
 	constexpr int kDamageInvTime = 60;
+	// ステージの範囲外ダメージ
+	constexpr int kStageOutDamage = 10;
 
 	// ヒットマーク描画フレーム
 	constexpr int kHitMarkFrame = 10;
@@ -142,6 +145,9 @@ void Player::Update(const InputState& input)
 	// 姿勢更新
 	UpdatePosture(input);
 
+	// ステージの範囲内にプレイヤーを制限
+	CheckStageRange();
+
 	// 視点処理
 	ControllView(input);
 	// 視点更新
@@ -214,6 +220,21 @@ void Player::OnDamage(int damage)
 	m_pCamera->OnDamageQuake();
 	// 無敵時間設定
 	m_invTime = kDamageInvTime;
+}
+
+void Player::CheckStageRange()
+{
+	// ステージの範囲内にプレイヤーを制限
+	if (m_status.pos.x > Game::kStageSizeX) m_status.pos.x = Game::kStageSizeX;
+	if (m_status.pos.x < -Game::kStageSizeX) m_status.pos.x = -Game::kStageSizeX;
+	if (m_status.pos.z > Game::kStageSizeZ) m_status.pos.z = Game::kStageSizeZ;
+	if (m_status.pos.z < -Game::kStageSizeZ) m_status.pos.z = -Game::kStageSizeZ;
+
+	// ステージの上下の範囲外に出た場合ダメージ
+	if (m_status.pos.y < -Game::kStageSizeY)
+	{
+		OnDamage(kStageOutDamage);
+	}
 }
 
 void Player::ControllView(const InputState& input)
@@ -440,15 +461,26 @@ void Player::ControllMove(const InputState& input)
 void Player::CheckGround()
 {
 	// プレイヤーがいる現在のタイル番号を取得
-	int tileZ = static_cast<int>(m_status.pos.z / Game::k3DChipSize) - m_currentStageData.size() / 2;
-	int tileX = static_cast<int>(m_status.pos.x / Game::k3DChipSize) - m_currentStageData[tileZ].size() / 2;
-	printfDx("tileX:%d tileZ:%d\n", tileX, tileZ);
+	int tileX = NULL;
+	int tileZ = NULL;
+	m_pStage->GetTile(m_status.pos, tileX, tileZ);
 
-	// 地面判定
-	if (m_status.pos.y <= 0.0f)
+	// 現在のタイルが地面の場合
+	if (m_currentStageData[tileZ][tileX] == 1)
 	{
+		VECTOR tilePos = MV1GetPosition(m_pStage->GetTileHandle(tileX, tileZ));
 		// 地面判定
-		m_status.isGround = true;
+		if (m_status.pos.y <= 0.0f &&
+			tilePos.y + (Game::k3DChipSize / 2) < m_status.pos.y)
+		{
+			// 地面判定
+			m_status.isGround = true;
+		}
+		else
+		{
+			// 空中判定
+			m_status.isGround = false;
+		}
 	}
 	else
 	{
