@@ -3,6 +3,7 @@
 #include "EnemyManager.h"
 #include "UiManager.h"
 #include "Load.h"
+#include "Player.h"
 
 namespace
 {
@@ -37,6 +38,8 @@ void StageManager::Init()
 	// 敵管理初期化
 	m_pEnemyManager->SetPlayer(m_pPlayer);
 	m_pEnemyManager->Init();
+	// プレイヤーにステージ情報を設定
+	m_pPlayer->SetStageData(m_pStage->GetStageData());
 }
 
 void StageManager::Update()

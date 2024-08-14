@@ -27,6 +27,8 @@ public:
 	// 描画
 	void Draw();
 
+	// ステージ情報を返す
+	std::vector<std::vector<int>> GetStageData() { return m_currentStageData; }
 private:
 
 private:

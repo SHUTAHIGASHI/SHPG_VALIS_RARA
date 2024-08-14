@@ -305,16 +305,7 @@ void Player::ControllMove(const InputState& input)
 	m_isDash = false;
 
 	// 地面判定チェック
-	if (m_status.pos.y <= 0.0f)
-	{
-		// 地面判定
-		m_status.isGround = true;
-	}
-	else
-	{
-		// 空中判定
-		m_status.isGround = false;
-	}
+	CheckGround();
 
 	// 地面にいるときのみ移動入力
 	if (m_status.isGround)
@@ -444,6 +435,26 @@ void Player::ControllMove(const InputState& input)
 	}
 	// ジャンプ処理を座標に加算
 	m_status.pos.y += m_status.jumpPower;
+}
+
+void Player::CheckGround()
+{
+	// プレイヤーがいる現在のタイル番号を取得
+	int tileZ = static_cast<int>(m_status.pos.z / Game::k3DChipSize) - m_currentStageData.size() / 2;
+	int tileX = static_cast<int>(m_status.pos.x / Game::k3DChipSize) - m_currentStageData[tileZ].size() / 2;
+	printfDx("tileX:%d tileZ:%d\n", tileX, tileZ);
+
+	// 地面判定
+	if (m_status.pos.y <= 0.0f)
+	{
+		// 地面判定
+		m_status.isGround = true;
+	}
+	else
+	{
+		// 空中判定
+		m_status.isGround = false;
+	}
 }
 
 void Player::UpdatePosture(const InputState& input)

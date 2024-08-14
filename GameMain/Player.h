@@ -42,6 +42,9 @@ public:
 	// 被ダメージ処理
 	void OnDamage(int damage);
 
+	// ステージ情報の設定
+	void SetStageData(const std::vector<std::vector<int>> stageData) { m_currentStageData = stageData; }
+
 private:
 	// 視点の操作
 	void ControllView(const InputState& input);
@@ -50,6 +53,8 @@ private:
 
 	// 移動処理
 	void ControllMove(const InputState& input);
+	// 地面の判定
+	void CheckGround();
 	// 姿勢の更新
 	void UpdatePosture(const InputState& input);
 	// スライディングの更新
@@ -131,6 +136,8 @@ private:
 	// ショット配列
 	std::list<class Shot*> m_pShots;	
 
+	// 現在のステージの情報
+	std::vector<std::vector<int>> m_currentStageData;
 private:// 各種ポインタ
 	// ショットターゲットポインタ
 	ObjectBase* m_pTargetObj;
