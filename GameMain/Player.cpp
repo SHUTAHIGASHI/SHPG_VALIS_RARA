@@ -58,9 +58,12 @@ namespace
 	constexpr int kShotDamage = 10;
 
 	// 体力
-	constexpr int kMaxHp = 30;
+	constexpr int kMaxHp = 50;
 	// 無敵時間
 	constexpr int kDamageInvTime = 60;
+	// 体力回復までの時間
+	constexpr int kRecoveryTime = 120;
+
 	// ステージの範囲外ダメージ
 	constexpr int kStageOutDamage = 10;
 
@@ -84,6 +87,7 @@ Player::Player():
 	m_shotFrame(0),
 	m_slideTime(0),
 	m_invTime(0),
+	m_recoveryTime(0),
 	m_hitMarkFrame(0),
 	m_isMove(false),
 	m_isDash(false),
@@ -97,6 +101,7 @@ Player::Player():
 	m_targetPos(Game::kVecZero),
 	m_pShots(),
 	m_pTargetObj(nullptr),
+	m_pStage(nullptr),
 	m_pEnemyManager(nullptr),
 	m_pCamera(nullptr)
 {
@@ -140,6 +145,9 @@ void Player::Update(const InputState& input)
 	// 無敵時間減少
 	if (m_invTime > 0) m_invTime--;
 
+	// 体力回復時間減少
+	if (m_recoveryTime > 0) m_recoveryTime--;
+
 	// 移動処理
 	ControllMove(input);
 	// 姿勢更新
@@ -166,6 +174,8 @@ void Player::Update(const InputState& input)
 	// ショット更新
 	UpdateShot();
 
+	// 体力更新
+	UpdateHp();
 	// 手の状態更新
 	UpdateHandState();
 
@@ -205,6 +215,9 @@ void Player::OnDamage(int damage)
 {
 	// 無敵時間中なら
 	if (m_invTime > 0) return;
+
+	// 体力回復時間が0なら
+	m_recoveryTime = kRecoveryTime;
 
 	// 体力減少
 	m_status.hp -= damage;
@@ -729,6 +742,19 @@ void Player::UpdateCursor(const InputState& input)
 				m_pTargetObj = obj;
 				break;
 			}
+		}
+	}
+}
+
+void Player::UpdateHp()
+{
+	if(m_recoveryTime <= 0)
+	{
+		// 体力回復
+		m_status.hp++;
+		if (m_status.hp > kMaxHp)
+		{
+			m_status.hp = kMaxHp;
 		}
 	}
 }

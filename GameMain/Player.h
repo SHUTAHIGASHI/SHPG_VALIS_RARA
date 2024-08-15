@@ -80,7 +80,8 @@ private:
 
 	// カーソル更新
 	void UpdateCursor(const InputState& input);
-
+	// 体力の更新	
+	void UpdateHp();
 	// 手の状態の更新
 	void UpdateHandState();
 
@@ -112,6 +113,8 @@ private:
 	int m_slideTime;
 	// 無敵時間
 	int m_invTime;
+	// 体力回復時間
+	int m_recoveryTime;
 	// ヒットマーク描画フレーム
 	int m_hitMarkFrame;
 
