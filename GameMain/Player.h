@@ -88,6 +88,9 @@ private:
 	// 2D描画
 	void Draw2D();
 
+	// 移動可能かの判定
+	bool CheckCanMove(VECTOR nextPos);
+
 private:
 	// プレイヤーの姿勢
 	PostureType m_posture;

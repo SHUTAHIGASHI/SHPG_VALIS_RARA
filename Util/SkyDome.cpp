@@ -7,12 +7,13 @@ namespace
 	// スカイドームの半径
 	constexpr float kSkyDomeRadius = 10.0f;
 	// スカイドームの回転速度
-	constexpr float kSkyDomeRotSpeed = 0.0003f;
+	constexpr float kSkyDomeRotSpeed = 0.0002f;
 }
 
 SkyDome::SkyDome() :
 	m_pModel(nullptr),
-	m_scale(kSkyDomeRadius)
+	m_scale(kSkyDomeRadius),
+	m_rot(0.0f)
 {
 	// モデルの読み込み
 	m_handle = MV1DuplicateModel(Load::GetInstance().GetModelHandle("skydome"));
@@ -36,6 +37,10 @@ void SkyDome::Init(VECTOR pos)
 
 void SkyDome::Update()
 {
+	// スカイドーム回転
+	m_pModel->SetRotation(VGet(0.0f, m_rot, 0.0f));
+	m_rot += kSkyDomeRotSpeed;
+	if (m_rot >= DX_PI_F) m_rot = -DX_PI_F;
 }
 
 void SkyDome::Draw()

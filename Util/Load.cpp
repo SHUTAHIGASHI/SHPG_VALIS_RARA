@@ -10,6 +10,14 @@ void Load::AllLoadData()
 	// モデルデータ
 	m_modelData["skydome"] = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
 	m_modelData["cube"] = MV1LoadModel("Data/ModelData/CUBE.mv1");
+	m_modelData["fence"] = MV1LoadModel("Data/ModelData/FENCE.mv1");
+	m_modelData["cube_chino"] = MV1LoadModel("Data/ModelData/CUBE_CHINO.mv1");
+	m_modelData["cube_myu"] = MV1LoadModel("Data/ModelData/CUBE_MYU.mv1");
+	m_modelData["cube_neffy"] = MV1LoadModel("Data/ModelData/CUBE_NEFFY.mv1");
+	m_modelData["cube_nina"] = MV1LoadModel("Data/ModelData/CUBE_NINA.mv1");
+	m_modelData["cube_rara"] = MV1LoadModel("Data/ModelData/CUBE_RARA.mv1");
+	m_modelData["cube_vitte"] = MV1LoadModel("Data/ModelData/CUBE_VITTE.mv1");
+
 	m_modelData["goal"] = MV1LoadModel("Data/ModelData/GOAL.mv1");
 	// 画像データ
 	m_imageData["player"] = LoadGraph("Data/ImageData/RaraTest.png");

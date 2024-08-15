@@ -29,5 +29,7 @@ private:
 	int m_handle;
 	// サイズ
 	float m_scale;
+	// 回転角度
+	float m_rot;
 };
 

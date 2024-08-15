@@ -237,12 +237,6 @@ void Player::OnDamage(int damage)
 
 void Player::CheckStageRange()
 {
-	// ステージの範囲内にプレイヤーを制限
-	if (m_status.pos.x > Game::kStageSizeX) m_status.pos.x = Game::kStageSizeX;
-	if (m_status.pos.x < -Game::kStageSizeX) m_status.pos.x = -Game::kStageSizeX;
-	if (m_status.pos.z > Game::kStageSizeZ) m_status.pos.z = Game::kStageSizeZ;
-	if (m_status.pos.z < -Game::kStageSizeZ) m_status.pos.z = -Game::kStageSizeZ;
-
 	// ステージの上下の範囲外に出た場合ダメージ
 	if (m_status.pos.y < -Game::kStageSizeY)
 	{
@@ -439,7 +433,14 @@ void Player::ControllMove(const InputState& input)
 	// 通常の移動処理
 	if (VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
 	m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
-	m_status.pos = VAdd(m_status.pos, m_status.dir);
+	auto nextPos = VAdd(m_status.pos, m_status.dir);
+	// 移動が可能かの判定
+	if (CheckCanMove(nextPos))
+	{
+		// 移動処理
+		m_status.pos = nextPos;
+	}
+
 
 	// ジャンプ処理
 	if (m_status.isGround)
@@ -473,13 +474,13 @@ void Player::ControllMove(const InputState& input)
 
 void Player::CheckGround()
 {
-	// プレイヤーがいる現在のタイル番号を取得
 	int tileX = NULL;
 	int tileZ = NULL;
+	// プレイヤーがいる現在のタイル番号を取得
 	m_pStage->GetTile(m_status.pos, tileX, tileZ);
 
 	// 現在のタイルが地面の場合
-	if (m_currentStageData[tileZ][tileX] == 1)
+	if (m_currentStageData[tileZ][tileX] != StageTile::EN)
 	{
 		VECTOR tilePos = MV1GetPosition(m_pStage->GetTileHandle(tileX, tileZ));
 		// 地面判定
@@ -500,6 +501,33 @@ void Player::CheckGround()
 		// 空中判定
 		m_status.isGround = false;
 	}
+}
+
+bool Player::CheckCanMove(VECTOR nextPos)
+{
+	// 移動先のタイル番号を取得
+	int tileX = NULL;
+	int tileZ = NULL;
+	m_pStage->GetTile(nextPos, tileX, tileZ);
+
+	// 移動先のタイルが壁じゃない場合
+	if (m_currentStageData[tileZ][tileX] == StageTile::WL)
+	{
+		// 移動不可能
+		return false;
+	}
+	else if (m_currentStageData[tileZ][tileX] == StageTile::F1)
+	{
+		// 移動不可能
+		return false;
+	}
+	else if (m_currentStageData[tileZ][tileX] == StageTile::F2)
+	{
+		// 移動不可能
+		return false;
+	}
+
+	return true;
 }
 
 void Player::UpdatePosture(const InputState& input)

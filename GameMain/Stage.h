@@ -3,15 +3,21 @@
 #include <memory>
 #include <DxLib.h>
 
-enum StageType
+namespace StageTile
 {
-	STAGE_TYPE_NONE = 0,
-	STAGE_TYPE_WALL,
-	STAGE_TYPE_GOAL,
-	STAGE_TYPE_PLAYER,
-	STAGE_TYPE_ENEMY,
-	STAGE_TYPE_MAX
-};
+	constexpr int EN = 0;
+	constexpr int FL = 1;
+	constexpr int WL = 2;
+	constexpr int F1 = 3;
+	constexpr int F2 = 4;
+	constexpr int GL = 5;
+	constexpr int CH = 6;
+	constexpr int MY = CH + 1;
+	constexpr int NE = MY + 1;
+	constexpr int NI = NE + 1;
+	constexpr int RA = NI + 1;
+	constexpr int VI = RA + 1;
+}
 
 struct TileData
 {
@@ -57,6 +63,13 @@ public:
 private:
 	// ステージの生成
 	void CreateStage();
+
+	// ステージモデルの生成
+	void CreateObject(int x, int z, int handle);
+	void CreateFloar(int x, int z);
+	void CreateWall(int x, int z);
+	void CreateFence(int x, int z, bool);
+	void CreateGoal(int x, int z);
 
 private:
 	// キューブの情報
