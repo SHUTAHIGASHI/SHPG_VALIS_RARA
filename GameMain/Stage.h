@@ -10,8 +10,9 @@ namespace StageTile
 	constexpr int WL = 2;
 	constexpr int F1 = 3;
 	constexpr int F2 = 4;
-	constexpr int GL = 5;
-	constexpr int CH = 6;
+	constexpr int SW = 5;
+	constexpr int GL = 6;
+	constexpr int CH = 7;
 	constexpr int MY = CH + 1;
 	constexpr int NE = MY + 1;
 	constexpr int NI = NE + 1;

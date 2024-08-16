@@ -28,6 +28,7 @@ enum class InputType
 	crouch,			// しゃがみ
 	shot,			// 攻撃
 	sprShot,		// スペシャル攻撃
+	Interract,		// インタラクト
 };
 
 struct MouseInputState
