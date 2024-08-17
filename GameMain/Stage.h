@@ -70,6 +70,7 @@ private:
 	void CreateFloar(int x, int z);
 	void CreateWall(int x, int z);
 	void CreateFence(int x, int z, bool);
+	void CreateSwitch(int x, int z);
 	void CreateGoal(int x, int z);
 
 private:

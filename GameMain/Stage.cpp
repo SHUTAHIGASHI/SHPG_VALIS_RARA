@@ -30,7 +30,7 @@ namespace
 		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
 		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
 		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
-		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
+		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,SW,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
 		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
 		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
 		{ WL,MY,MY,MY,MY,MY,F2,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,FL,F2,RA,RA,RA,RA,RA,RA,WL } ,
@@ -139,6 +139,9 @@ void Stage::CreateStage()
 			case F2:
 				CreateFence(x, z, true);
 				break;
+			case SW:
+				CreateSwitch(x, z);
+				break;
 			case CH:
 				CreateObject(x, z, Load::GetInstance().GetModelHandle("cube_chino"));
 				break;
@@ -235,6 +238,20 @@ void Stage::CreateFence(int x, int z, bool isRota)
 	{
 		MV1SetRotationXYZ(m_cubes.back().handle, VGet(0.0f, DX_PI_F / 2, 0.0f));
 	}
+}
+
+void Stage::CreateSwitch(int x, int z)
+{
+// ブロックの生成
+	m_cubes.push_back(TileData(x, z, MV1DuplicateModel(Load::GetInstance().GetModelHandle("switch"))));
+	// ブロックの位置
+	VECTOR pos = VGet(
+		x * Game::k3DChipSize - ((m_currentStageData[z].size() / 2) * Game::k3DChipSize),
+		0.0f,
+		z * -Game::k3DChipSize + ((m_currentStageData.size() / 2) * Game::k3DChipSize)
+	);
+	// ブロックの座標指定
+	MV1SetPosition(m_cubes.back().handle, pos);
 }
 
 void Stage::CreateGoal(int x, int z)

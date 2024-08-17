@@ -11,6 +11,7 @@ void Load::AllLoadData()
 	m_modelData["skydome"] = MV1LoadModel("Data/ModelData/SKYDOME.mv1");
 	m_modelData["cube"] = MV1LoadModel("Data/ModelData/CUBE.mv1");
 	m_modelData["fence"] = MV1LoadModel("Data/ModelData/FENCE.mv1");
+	m_modelData["switch"] = MV1LoadModel("Data/ModelData/SWITCH.mv1");
 	m_modelData["cube_chino"] = MV1LoadModel("Data/ModelData/CUBE_CHINO.mv1");
 	m_modelData["cube_myu"] = MV1LoadModel("Data/ModelData/CUBE_MYU.mv1");
 	m_modelData["cube_neffy"] = MV1LoadModel("Data/ModelData/CUBE_NEFFY.mv1");
