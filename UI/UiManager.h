@@ -31,21 +31,24 @@ public:
 	// ステージクラスの設定
 	void SetStage(class StageManager* stage) { m_pStage = stage; }
 
+	// 初期化
+	void Init();
 	// 更新
 	void Update();
 	// 描画
 	void Draw();
+	// 終了
+	void End();
 
 	// UIの追加
-	void AddUI(class ObjectBase* obj);
+	void AddUIBar(class ObjectBase* obj);
 	// UIの削除
-	void DeleteUI(class ObjectBase* obj);
+	void DeleteUIBar(class ObjectBase* obj);
 	// 全UIの削除
 	void DeleteAllUI();
 
 	// プレイヤー座標を設定
 	void SetPlayerPos(const VECTOR pos) { m_playerPos = pos; }
-
 	// ステージのポインタ削除
 	void DeleteStage() { m_pStage = nullptr; }
 
@@ -56,10 +59,13 @@ private:
 private:
 	// プレイヤー座標
 	VECTOR m_playerPos = Game::kVecZero;
+	
+	// 残弾数UI画像ハンドル
+	int m_bulletUiHandle = -1;
 
 private:
 	// UIのリスト
-	std::list<class UiBar*> m_pUIList;
+	std::list<class UiBar*> m_pUiBarList;
 
 	// ステージクラス
 	class StageManager* m_pStage = nullptr;

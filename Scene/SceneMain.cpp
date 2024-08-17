@@ -48,6 +48,9 @@ void SceneMain::Init()
 	m_pCamera->Init();
 	// カーソル座標固定
 	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
+
+	// UI初期化
+	UiManager::GetInstance().Init();
 }
 
 void SceneMain::Update(const InputState& input)
@@ -78,7 +81,7 @@ void SceneMain::End()
 	// マウス表示
 	SetMouseDispFlag(true);
 	// 全UIの削除
-	UiManager::GetInstance().DeleteAllUI();
+	UiManager::GetInstance().End();
 }
 
 void SceneMain::OnGameOver()

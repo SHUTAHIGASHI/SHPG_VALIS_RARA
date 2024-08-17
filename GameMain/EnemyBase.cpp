@@ -27,7 +27,7 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	m_status.hp = kBaseHp;
 
 	// UI‚É“G‚Ì‘Ì—Í‚ğ“o˜^
-	UiManager::GetInstance().AddUI(this);
+	UiManager::GetInstance().AddUIBar(this);
 }
 
 EnemyBase::~EnemyBase()
@@ -80,7 +80,7 @@ void EnemyBase::OnHitPlayer()
 void EnemyBase::OnDelete()
 {
 	// UI‚©‚ç“G‚Ì‘Ì—Í‚ğíœ
-	UiManager::GetInstance().DeleteUI(this);
+	UiManager::GetInstance().DeleteUIBar(this);
 }
 
 void EnemyBase::OnDead()

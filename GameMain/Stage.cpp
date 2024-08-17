@@ -82,6 +82,11 @@ void Stage::Draw()
 	}
 }
 
+void Stage::SwitchOn(int x, int z)
+{
+	printfDx("SwitchOn\n");
+}
+
 void Stage::GetTile(VECTOR pos, int&_x, int&_z)
 {
 	// ステージの情報を取得
@@ -247,7 +252,7 @@ void Stage::CreateSwitch(int x, int z)
 	// ブロックの位置
 	VECTOR pos = VGet(
 		x * Game::k3DChipSize - ((m_currentStageData[z].size() / 2) * Game::k3DChipSize),
-		0.0f,
+		-(Game::kCharaHeight + (Game::k3DChipSize / 2)),
 		z * -Game::k3DChipSize + ((m_currentStageData.size() / 2) * Game::k3DChipSize)
 	);
 	// ブロックの座標指定

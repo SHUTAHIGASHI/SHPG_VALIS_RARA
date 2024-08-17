@@ -198,6 +198,13 @@ bool InputState::IsTriggered(InputType type)const
 			!(mouseState.lastKeyMouseState & MOUSE_INPUT_RIGHT) &&
 			(mouseState.keyMouseState & MOUSE_INPUT_RIGHT);
 	}
+	else if (type == InputType::Interract)
+	{
+		return !lastKeyState[KEY_INPUT_E] &&
+			keyState[KEY_INPUT_E] ||
+			!(lastPadState & PAD_INPUT_2) &&
+			(padState & PAD_INPUT_2);
+	}
 
 	return false;
 }
@@ -317,6 +324,11 @@ bool InputState::IsPressed(InputType type)const
 			(padState & PAD_INPUT_1) ||
 			(mouseState.keyMouseState & MOUSE_INPUT_RIGHT);
 	}
+	else if (type == InputType::Interract)
+	{
+		return keyState[KEY_INPUT_E] ||
+			(padState & PAD_INPUT_2);
+			}
 
 	return false;
 }

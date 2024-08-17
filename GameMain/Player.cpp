@@ -69,6 +69,9 @@ namespace
 
 	// ヒットマーク描画フレーム
 	constexpr int kHitMarkFrame = 10;
+
+	// 描画FPSハンド拡大率
+	constexpr double kFpsHandScale = 10.0;
 }
 
 Player::Player():
@@ -89,6 +92,8 @@ Player::Player():
 	m_invTime(0),
 	m_recoveryTime(0),
 	m_hitMarkFrame(0),
+	m_tileX(0),
+	m_tileZ(0),
 	m_isMove(false),
 	m_isDash(false),
 	m_isLockOn(false),
@@ -148,13 +153,18 @@ void Player::Update(const InputState& input)
 	// 体力回復時間減少
 	if (m_recoveryTime > 0) m_recoveryTime--;
 
+	// 現在のタイル番号
+	m_pStage->GetTile(m_status.pos, m_tileX, m_tileZ);
+
 	// 移動処理
 	ControllMove(input);
 	// 姿勢更新
 	UpdatePosture(input);
-
 	// ステージの範囲内にプレイヤーを制限
 	CheckStageRange();
+
+	// ギミック処理
+	ControllGimmick(input);
 
 	// 視点処理
 	ControllView(input);
@@ -325,6 +335,20 @@ void Player::UpdateView()
 	m_pCamera->SetPosAndTarget(m_status.pos, m_status.lookPos);
 }
 
+void Player::ControllGimmick(const InputState& input)
+{
+	// ギミック操作
+	if (m_currentStageData[m_tileZ][m_tileX] == StageTile::SW)
+	{
+		// インタラクトキー
+		if (input.IsTriggered(InputType::Interract))
+		{
+			// ギミック処理
+			m_pStage->SwitchOn(m_tileX, m_tileZ);
+		}
+	}
+}
+
 void Player::ControllMove(const InputState& input)
 {
 	// 移動中フラグ
@@ -474,15 +498,10 @@ void Player::ControllMove(const InputState& input)
 
 void Player::CheckGround()
 {
-	int tileX = NULL;
-	int tileZ = NULL;
-	// プレイヤーがいる現在のタイル番号を取得
-	m_pStage->GetTile(m_status.pos, tileX, tileZ);
-
 	// 現在のタイルが地面の場合
-	if (m_currentStageData[tileZ][tileX] != StageTile::EN)
+	if (m_currentStageData[m_tileZ][m_tileX] != StageTile::EN)
 	{
-		VECTOR tilePos = MV1GetPosition(m_pStage->GetTileHandle(tileX, tileZ));
+		VECTOR tilePos = MV1GetPosition(m_pStage->GetTileHandle(m_tileX, m_tileZ));
 		// 地面判定
 		if (m_status.pos.y <= 0.0f &&
 			tilePos.y + (Game::k3DChipSize / 2) < m_status.pos.y)
@@ -840,11 +859,11 @@ void Player::Draw2D()
 	}
 
 	// FPSハンド描画
-	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::k2DChipSize * 10.0f) + 60.0f),
-		static_cast<float>(Game::kScreenHeight - (Game::k2DChipSize * 10.0f) / 2),
+	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::k2DChipSize * kFpsHandScale) + 60.0f),
+		static_cast<float>(Game::kScreenHeight - (Game::k2DChipSize * kFpsHandScale) / 2),
 		static_cast<int>(Game::k2DChipSize * m_handFrame), static_cast<int>(m_handState) * Game::k2DChipSize,
 		static_cast<int>(Game::k2DChipSize), static_cast<int>(Game::k2DChipSize),
-		10.0f, 0.0f, 
+		kFpsHandScale, 0.0f,
 		m_hFpsHand,true);
 
 	// 体力描画

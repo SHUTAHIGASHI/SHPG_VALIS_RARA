@@ -52,6 +52,9 @@ public:
 	// 描画
 	void Draw();
 
+	// スイッチ作動
+	void SwitchOn(int x, int z);
+
 	// ステージ情報を返す
 	std::vector<std::vector<int>> GetStageData() { return m_currentStageData; }
 

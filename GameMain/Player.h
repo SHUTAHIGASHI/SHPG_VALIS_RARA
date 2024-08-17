@@ -56,6 +56,8 @@ private:
 	// 視点の更新
 	void UpdateView();
 
+	// ギミック操作処理
+	void ControllGimmick(const InputState& input);
 	// 移動処理
 	void ControllMove(const InputState& input);
 	// 地面の判定
@@ -120,6 +122,9 @@ private:
 	int m_recoveryTime;
 	// ヒットマーク描画フレーム
 	int m_hitMarkFrame;
+	// ステージタイル番号
+	int m_tileX;
+	int m_tileZ;
 
 	// 移動判定
 	bool m_isMove;
