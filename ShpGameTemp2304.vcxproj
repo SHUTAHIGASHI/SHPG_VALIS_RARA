@@ -28,8 +28,8 @@
     <ClCompile Include="GameMain\Shot.cpp" />
     <ClCompile Include="GameMain\Stage.cpp" />
     <ClCompile Include="GameMain\StageManager.cpp" />
-    <ClCompile Include="Scene2DGame.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\Scene2DGame.cpp" />
     <ClCompile Include="Scene\SceneResult.cpp" />
     <ClCompile Include="Scene\SceneDebug.cpp" />
     <ClCompile Include="Scene\SceneFade.cpp" />
@@ -43,6 +43,7 @@
     <ClCompile Include="UI\UiBar.cpp" />
     <ClCompile Include="UI\UiManager.cpp" />
     <ClCompile Include="Util\Camera.cpp" />
+    <ClCompile Include="Util\GameDataManager.cpp" />
     <ClCompile Include="Util\InputState.cpp" />
     <ClCompile Include="Util\Load.cpp" />
     <ClCompile Include="Util\main.cpp" />
@@ -63,8 +64,8 @@
     <ClInclude Include="GameMain\Stage.h" />
     <ClInclude Include="GameMain\StageManager.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Scene2DGame.h" />
     <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\Scene2DGame.h" />
     <ClInclude Include="Scene\SceneResult.h" />
     <ClInclude Include="Scene\SceneDebug.h" />
     <ClInclude Include="Scene\SceneFade.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="UI\UiManager.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\Game.h" />
+    <ClInclude Include="Util\GameDataManager.h" />
     <ClInclude Include="Util\InputState.h" />
     <ClInclude Include="Util\Load.h" />
     <ClInclude Include="Util\Model.h" />

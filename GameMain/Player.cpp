@@ -189,6 +189,8 @@ void Player::Update(const InputState& input)
 	// 手の状態更新
 	UpdateHandState();
 
+	// サウンドリスナー位置更新
+	SoundManager::GetInstance().Set3DSoundListener(m_status.pos, m_status.lookPos);
 	// UIにプレイヤー座標を送信
 	UiManager::GetInstance().SetPlayerPos(m_status.pos);
 }

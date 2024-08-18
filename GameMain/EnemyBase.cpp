@@ -68,7 +68,7 @@ void EnemyBase::OnHit(int damage)
 	else
 	{
 		// ƒ_ƒ[ƒW‰¹Ä¶
-		SoundManager::GetInstance().PlaySE(SoundType::enemyDamage);
+		SoundManager::GetInstance().Play3DSound(SoundType::enemyDamage, m_status.pos);
 	}
 }
 
@@ -88,7 +88,7 @@ void EnemyBase::OnDead()
 	// ‘Ì—Í‚ª0ˆÈ‰º‚É‚È‚Á‚½‚ç
 	m_status.isEnabled = false;
 	// Ž€–S‰¹Ä¶
-	SoundManager::GetInstance().PlaySE(SoundType::enemyDeath);
+	SoundManager::GetInstance().Play3DSound(SoundType::enemyDeath, m_status.pos);
 	// íœˆ—
 	this->OnDelete();
 }

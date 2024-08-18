@@ -11,8 +11,11 @@ enum class SoundType
 	shot,
 	sprShot,
 	shotHit,
+	enemyVoice,
 	enemyDamage,
 	enemyDeath,
+	enemyBirdVoice,
+	zakkirin
 };
 
 /// <summary>
@@ -37,11 +40,20 @@ public:
 	// BGMの更新
 	void UpdateBGM();
 
+	// 3Dサウンドリスナー設定
+	void Set3DSoundListener(VECTOR pos, VECTOR frontPos);
+
+	// 指定した3Dサウンドを再生する
+	void Play3DSound(SoundType sound, VECTOR pos);
+
 	/// <summary>
 	/// 指定のサウンドを鳴らす
 	/// </summary>
 	/// <param name="name">サウンド名</param>
 	void PlaySE(SoundType sound);
+
+	// サウンドが再生中かどうか
+	bool IsPlaying(SoundType sound);
 
 	/// <summary>
 	/// SEのボリュームを設定する

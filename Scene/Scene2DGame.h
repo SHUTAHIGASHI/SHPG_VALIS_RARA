@@ -90,7 +90,15 @@ private: // その他変数
 	int m_hBackImg;
 	// カーソル画像
 	int m_hCursorImg;
+	// ボード画像
+	int m_hBoardImg;
 	// カーソル座標
 	VECTOR m_cursorPos;
+	// ゲームカウント
+	int m_gameCount;
+	// 撃破数カウント
+	int m_killCount;
+	// ゲーム終了判定
+	bool m_isGameEnd;
 };
 

@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "SceneMain.h"
 #include "SceneHowTo.h"
+#include "Scene2DGame.h"
 #include "SceneOption.h"
 #include "SelectMenuBase.h"
 #include "SkyDome.h"
@@ -17,7 +18,14 @@ namespace
 	constexpr float kTextDrawPosY = Game::kScreenHeightHalf + 200.0f;
 	constexpr float kTextDrawSpace = Game::kFontSize;
 	// テキスト
-	const char* const kMenuTexts[] = { "ゲームスタート", "あそびかた", "設定", "終了" };
+	const char* const kMenuTexts[] = 
+	{ 
+		"ゲームスタート", 
+		"あそびかた", 
+		"ミニゲーム", 
+		"設定", 
+		"終了" 
+	};
 
 	// 背景キャラのサイズ
 	constexpr double kCharaSize = 5.0;
@@ -115,9 +123,13 @@ void SceneTitleMenu::OnSceneEnd()
 	}
 	else if (m_pSelectMenu->GetSelectedNum() == 2)
 	{
-		m_Manager.PushScene(new SceneOption(m_Manager));
+		m_Manager.ChangeScene(new Scene2DGame(m_Manager));
 	}
 	else if (m_pSelectMenu->GetSelectedNum() == 3)
+	{
+		m_Manager.PushScene(new SceneOption(m_Manager));
+	}
+	else if (m_pSelectMenu->GetSelectedNum() == 4)
 	{
 		m_Manager.GameEnd();
 	}

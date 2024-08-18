@@ -24,6 +24,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 	// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ
 	SetChangeScreenModeGraphicsSystemResetFlag(false);
+	// XAudio を有効化
+	SetEnableXAudioFlag(TRUE);
 
 	// ＤＸライブラリ初期化処理
 	if (DxLib_Init() == -1)

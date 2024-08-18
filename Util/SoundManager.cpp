@@ -71,11 +71,33 @@ void SoundManager::UpdateBGM()
 	}
 }
 
+void SoundManager::Set3DSoundListener(VECTOR pos, VECTOR frontPos)
+{
+	Set3DSoundListenerPosAndFrontPos_UpVecY(pos, frontPos);
+}
+
+void SoundManager::Play3DSound(SoundType sound, VECTOR pos)
+{
+	int volumePal = (255 / 100) * m_volumeSE;
+	ChangeVolumeSoundMem(m_volumeSE, m_soundData[sound]);
+	// 音が聞こえる距離を設定する
+	SetNextPlay3DRadiusSoundMem(k3DSoundDistance, m_soundData[sound]);
+	// 3Dサウンドを再生する位置を指定
+	SetNextPlay3DPositionSoundMem(pos, m_soundData[sound]);
+	// 指定したサウンドを再生
+	PlaySoundMem(m_soundData[sound], DX_PLAYTYPE_BACK);
+}
+
 void SoundManager::PlaySE(SoundType sound)
 {
 	int volumePal = (255 / 100) * m_volumeSE;
 	ChangeVolumeSoundMem(m_volumeSE, m_soundData[sound]);
 	PlaySoundMem(m_soundData[sound], DX_PLAYTYPE_BACK);
+}
+
+bool SoundManager::IsPlaying(SoundType sound)
+{
+	return CheckSoundMem(m_soundData[sound]);
 }
 
 void SoundManager::SetSEVolume(int volume)
@@ -114,18 +136,25 @@ SoundManager::SoundManager() :
 	LoadSoundConfig();
 	// データの読み込み
 	LoadData();
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre(kMetreDistance);
 }
 
 void SoundManager::LoadData()
 {
-	// サウンド
-	m_soundData[SoundType::select] = LoadSoundMem("Data/SoundData/Select.wav");
-	m_soundData[SoundType::shot] = LoadSoundMem("Data/SoundData/Ringo.wav");
-	m_soundData[SoundType::sprShot] = LoadSoundMem("Data/SoundData/SprRingo.wav");
-	m_soundData[SoundType::shotHit] = LoadSoundMem("Data/SoundData/ShotHit.mp3");
-	m_soundData[SoundType::enemyDamage] = LoadSoundMem("Data/SoundData/neffyuwaaa.wav");
-	m_soundData[SoundType::enemyDeath] = LoadSoundMem("Data/SoundData/neffyuwaaaa.wav");
-
 	// ミュージック
 	m_hMusic = LoadSoundMem("Data/MusicData/Getsurin_Meikyuu.mp3");
+	// 2Dサウンド
+	m_soundData[SoundType::select] = LoadSoundMem("Data/SoundData/SELECT.wav");
+	m_soundData[SoundType::shot] = LoadSoundMem("Data/SoundData/RINGO.wav");
+	m_soundData[SoundType::sprShot] = LoadSoundMem("Data/SoundData/RINGO2.wav");
+	m_soundData[SoundType::shotHit] = LoadSoundMem("Data/SoundData/SHOTHIT.mp3");
+	m_soundData[SoundType::zakkirin] = LoadSoundMem("Data/SoundData/ZAKKIRIN.wav");
+	// 3Dサウンド
+	SetCreate3DSoundFlag(true);
+	m_soundData[SoundType::enemyVoice] = LoadSoundMem("Data/SoundData/NEFFY_NORMAL.wav");
+	m_soundData[SoundType::enemyDamage] = LoadSoundMem("Data/SoundData/NEFFY_DAMAGE01.wav");
+	m_soundData[SoundType::enemyDeath] = LoadSoundMem("Data/SoundData/NEFFY_DAMAGE02.wav");
+	m_soundData[SoundType::enemyBirdVoice] = LoadSoundMem("Data/SoundData/NEFFY_KARASU.wav");
+	SetCreate3DSoundFlag(false);
 }

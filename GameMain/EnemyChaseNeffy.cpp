@@ -1,5 +1,6 @@
 #include "EnemyChaseNeffy.h"
 #include "ObjectBase.h"
+#include "SoundManager.h"
 
 EnemyChaseNeffy::EnemyChaseNeffy(ObjectBase* target, VECTOR pos):
 	EnemyBase("neffy", pos)
@@ -25,4 +26,11 @@ void EnemyChaseNeffy::Update()
 	m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
 	// 移動
 	m_status.pos = VAdd(m_status.pos, m_status.dir);
+
+	// エネミーサウンド再生
+	if (!SoundManager::GetInstance().IsPlaying(SoundType::enemyBirdVoice))
+	{
+		//SoundManager::GetInstance().PlaySE(SoundType::enemyBirdVoice);
+		SoundManager::GetInstance().Play3DSound(SoundType::enemyBirdVoice, m_status.pos);
+	}
 }
