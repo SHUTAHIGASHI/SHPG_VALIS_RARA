@@ -6,17 +6,19 @@
 #include "ScenePauseMenu.h"
 #include "SceneGameOver.h"
 #include "SceneResult.h"
+#include "Scene2DGame.h"
 
 namespace
 {
 	// 選択可能項目の数
-	constexpr int kSelectItemNum = 4;
+	constexpr int kSelectItemNum = 5;
 	// テキスト
 	const char* const kTextGameMain = "メイン";
 	const char* const kTextGameTitleMenu = "タイトル";
 	const char* const kTextGamePause = "ポーズ";
 	const char* const kTextScene = "ゲームオーバー";
 	const char* const kTextGameEnd = "リザルト";
+	const char* const kText2D = "レガシーモード";
 }
 
 SceneDebug::SceneDebug(SceneManager& manager) :
@@ -59,9 +61,13 @@ void SceneDebug::Update(const InputState& input)
 		{
 			m_Manager.ChangeScene(new SceneGameOver(m_Manager));
 		}
-		else
+		else if (m_selectedPos == 4)
 		{
 			m_Manager.ChangeScene(new SceneResult(m_Manager));
+		}
+		else
+		{
+			m_Manager.ChangeScene(new Scene2DGame(m_Manager));
 		}
 		return;
 	}
@@ -108,8 +114,12 @@ void SceneDebug::UpdateText()
 	{
 		m_selectedItemName = kTextScene;
 	}
-	else
+	else if (m_selectedPos == 4)
 	{
 		m_selectedItemName = kTextGameEnd;
+	}
+	else
+	{
+		m_selectedItemName = kText2D;
 	}
 }

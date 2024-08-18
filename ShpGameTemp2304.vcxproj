@@ -28,6 +28,7 @@
     <ClCompile Include="GameMain\Shot.cpp" />
     <ClCompile Include="GameMain\Stage.cpp" />
     <ClCompile Include="GameMain\StageManager.cpp" />
+    <ClCompile Include="Scene2DGame.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneResult.cpp" />
     <ClCompile Include="Scene\SceneDebug.cpp" />
@@ -62,6 +63,7 @@
     <ClInclude Include="GameMain\Stage.h" />
     <ClInclude Include="GameMain\StageManager.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Scene2DGame.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneResult.h" />
     <ClInclude Include="Scene\SceneDebug.h" />
