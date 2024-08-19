@@ -52,6 +52,9 @@ namespace Game
 	// カラーモード
 	constexpr int kColorDepth = 32;
 	
+	// ゲームデータファイル
+	const char* const kGameDataFileName = "Data/RaraGame_Setting.csv";
+
 	// ゲームの基本設定 //
 	// キャラクターの高さ
 	constexpr float kCharaHeight = 156.0f;

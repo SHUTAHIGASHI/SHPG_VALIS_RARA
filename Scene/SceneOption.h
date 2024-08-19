@@ -26,6 +26,13 @@ public:
     void End() override {}
 
 private: // プライベート関数
+	// 感度の設定
+	void ChangeSensitivity(const InputState& input);
+	// 変更した感度情報を反映させる
+	void SetSensitivityInfo();
+	// 変更前の感度情報を反映させる
+	void ResetSensitivityInfo();
+
     // 音量の設定
     void ChangeVolume(const InputState& input);
     // 音量の操作
@@ -34,6 +41,7 @@ private: // プライベート関数
     void SetVolumeInfo();
     // 変更前の音量情報を反映させる
     void ResetVolumeInfo();
+
     // テキスト描画位置
     void DrawSoundBar(float drawX, float drawY, int volume);
     // テキスト情報の描画
@@ -48,6 +56,10 @@ private: // プライベート関数
 private:
     // 毎フレームカウント
     int m_countFrame;
+    // 前のマウス感度
+	float m_exMouseSensitivity;
+    // マウス感度
+    float m_mouseSensitivity;
     // 前の音量
     int m_exVolumeBGM;
     int m_exVolumeSE;
@@ -63,6 +75,8 @@ private:
     int m_hMusicVolImg;
     // カーソルが枠内にあるかどうか
     bool m_isCursorRanged;
+	// 感度調整モード
+	bool m_isSensitivityChangeMode;
     // 音量調整モード
     bool m_isVolumeChangeMode;
 	// 保存したウィンドウモード

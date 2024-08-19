@@ -7,6 +7,7 @@
 #include "Load.h"
 #include "CameraManager.h"
 #include "SoundManager.h"
+#include "GameDataManager.h"
 #include "UiManager.h"
 
 namespace
@@ -42,10 +43,8 @@ namespace
 	// スライディングクールダウン
 	constexpr int kSlideCoolTime = 60;
 
-	// マウス感度
-	constexpr float kMouseSensitivity = 0.09f;
 	// プレイヤー視点移動速度
-	constexpr float kPovMoveSpeed = 4.0f;
+	constexpr float kPovMoveRate = 10.0f;
 	// プレイヤーからカメラまでの距離
 	constexpr float kLookPosDistance = 120.0f;
 
@@ -98,6 +97,7 @@ Player::Player():
 	m_isDash(false),
 	m_isLockOn(false),
 	m_isShot(false),
+	m_mouseSensitivity(0.0f),
 	m_eyeHeight(kStandHeight),
 	m_playerAngleY(0.0f),
 	m_playerAngleX(0.0f),
@@ -130,7 +130,7 @@ void Player::Init()
 	m_hHitCursorImg = Load::GetInstance().GetImageHandle("hitCursor");
 	// 画像サイズ取得
 	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
-	m_handFrameMax = (m_HandSizeX / Game::k2DChipSize) - 1;
+	m_handFrameMax = static_cast<int>(m_HandSizeX / Game::k2DChipSize) - 1;
 	// 画像拡大率設定
 	m_status.scale = kScale;
 	// 移動速度設定
@@ -146,6 +146,13 @@ void Player::Update(const InputState& input)
 	// 毎フレームカウント
 	m_frameCount++;
 	if (m_frameCount >= 60) m_frameCount = 0;
+
+	// マウス感度調整
+	if (m_mouseSensitivity != GameDataManager::GetInstance().GetMouseSensitivity())
+	{
+		// マウス感度変更
+		m_mouseSensitivity = GameDataManager::GetInstance().GetMouseSensitivity();
+	}
 
 	// 無敵時間減少
 	if (m_invTime > 0) m_invTime--;
@@ -259,28 +266,28 @@ void Player::CheckStageRange()
 void Player::ControllView(const InputState& input)
 {
 	// マウス感度による視点移動
-	m_playerAngleX += input.GetMouseMoveX() * kMouseSensitivity;
-	m_playerAngleY -= input.GetMouseMoveY() * kMouseSensitivity;
+	m_playerAngleX += input.GetMouseMoveX() * m_mouseSensitivity;
+	m_playerAngleY -= input.GetMouseMoveY() * m_mouseSensitivity;
 
 	// 右視点移動
 	if (input.IsPressed(InputType::lookRight))
 	{
-		m_playerAngleX += kPovMoveSpeed;
+		m_playerAngleX += m_mouseSensitivity * kPovMoveRate;
 	}
 	// 左視点移動
 	else if (input.IsPressed(InputType::lookLeft))
 	{
-		m_playerAngleX += -kPovMoveSpeed;
+		m_playerAngleX += -m_mouseSensitivity * kPovMoveRate;
 	}
 	// 上視点移動
 	if (input.IsPressed(InputType::lookUp))
 	{
-		m_playerAngleY += kPovMoveSpeed;
+		m_playerAngleY += m_mouseSensitivity * kPovMoveRate;
 	}
 	// 下視点移動
 	else if (input.IsPressed(InputType::lookDown))
 	{
-		m_playerAngleY += -kPovMoveSpeed;
+		m_playerAngleY += -m_mouseSensitivity * kPovMoveRate;
 	}
 }
 
@@ -863,7 +870,7 @@ void Player::Draw2D()
 	// FPSハンド描画
 	DrawRectRotaGraphF(static_cast<float>(Game::kScreenWidth - (Game::k2DChipSize * kFpsHandScale) + 60.0f),
 		static_cast<float>(Game::kScreenHeight - (Game::k2DChipSize * kFpsHandScale) / 2),
-		static_cast<int>(Game::k2DChipSize * m_handFrame), static_cast<int>(m_handState) * Game::k2DChipSize,
+		static_cast<int>(Game::k2DChipSize * m_handFrame), static_cast<int>(static_cast<int>(m_handState) * Game::k2DChipSize),
 		static_cast<int>(Game::k2DChipSize), static_cast<int>(Game::k2DChipSize),
 		kFpsHandScale, 0.0f,
 		m_hFpsHand,true);

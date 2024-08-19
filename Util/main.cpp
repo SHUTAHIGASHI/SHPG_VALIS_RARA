@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameDataManager.h"
 #include "SoundManager.h"
 #include "UiManager.h"
 #include "SceneManager.h"
@@ -66,6 +67,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeFont(Game::kFontName);
 	SetFontSize(Game::kFontSize);
 
+	// ゲームデータマネージャー宣言
+	auto& gameDataManager = GameDataManager::GetInstance();
 	// サウンドマネージャー宣言
 	auto& soundManager = SoundManager::GetInstance();
 	// エフェクシアマネージャー宣言

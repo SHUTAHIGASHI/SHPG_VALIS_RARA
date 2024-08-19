@@ -135,6 +135,9 @@ private:
 	// 射撃中判定
 	bool m_isShot;
 
+	// マウス感度
+	float m_mouseSensitivity;
+
 	// 視線の高さ
 	float m_eyeHeight;
 

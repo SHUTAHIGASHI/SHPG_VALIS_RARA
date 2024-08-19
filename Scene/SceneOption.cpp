@@ -1,5 +1,6 @@
 #include "SceneOption.h"
 #include "SceneManager.h"
+#include "GameDataManager.h"
 #include "SoundManager.h"
 #include "Load.h"
 
@@ -17,6 +18,9 @@ namespace
 
 	// テキスト描画色
 	constexpr int kTextColor = Game::kColorBlue;
+
+	// 感度変化量
+	constexpr float kSensitivityChangeNum = 0.01f;
 
 	// 音量変化量
 	constexpr int kVolumeChangeNum = 10;
@@ -38,6 +42,8 @@ namespace
 SceneOption::SceneOption(SceneManager& manager) :
 	Scene(manager),
 	m_countFrame(0),
+	m_mouseSensitivity(0.0f),
+	m_exMouseSensitivity(0.0f),
 	m_exVolumeBGM(0),
 	m_exVolumeSE(0),
 	m_volumeBGM(0),
@@ -47,6 +53,7 @@ SceneOption::SceneOption(SceneManager& manager) :
 	m_hBgImg(-1),
 	m_hMusicVolImg(-1),
 	m_isCursorRanged(false),
+	m_isSensitivityChangeMode(false),
 	m_isVolumeChangeMode(false),
 	m_isSavedWindowMode(false)
 {
@@ -64,6 +71,10 @@ SceneOption::~SceneOption()
 
 void SceneOption::Init()
 {
+	// 感度情報を取得
+	m_mouseSensitivity = GameDataManager::GetInstance().GetMouseSensitivity();
+	// 感度情報をセット
+	m_exMouseSensitivity = m_mouseSensitivity;
 	// 音量情報を取得
 	m_volumeSE = SoundManager::GetInstance().GetSEVolume();
 	m_volumeBGM = SoundManager::GetInstance().GetBGMVolume();
@@ -94,8 +105,14 @@ void SceneOption::Update(const InputState& input)
 		m_Manager.PopScene();
 	}
 
+	// 感度変更モード
+	if (m_isSensitivityChangeMode)
+	{
+		// 感度変更
+		ChangeSensitivity(input);
+	}
 	// 音量変更モード
-	if (m_isVolumeChangeMode)
+	else if (m_isVolumeChangeMode)
 	{
 		// 音量変更
 		ChangeVolume(input);
@@ -129,6 +146,37 @@ void SceneOption::Draw()
 	SetFontSize(Game::kFontSize);
 	// 項目描画
 	DrawMenuText();
+}
+
+void SceneOption::ChangeSensitivity(const InputState& input)
+{
+	// 音量変更
+	if (input.IsTriggered(InputType::right))
+	{
+		// 音量上
+		m_mouseSensitivity += kSensitivityChangeNum;
+		if (m_mouseSensitivity > 100) m_mouseSensitivity = 100;
+		SetSensitivityInfo();
+	}
+	if (input.IsTriggered(InputType::left))
+	{
+		// 音量下
+		m_mouseSensitivity -= kSensitivityChangeNum;
+		if (m_mouseSensitivity < 0) m_mouseSensitivity = 0;
+		SetSensitivityInfo();
+	}
+}
+
+void SceneOption::SetSensitivityInfo()
+{
+	// 感度情報をセット
+	GameDataManager::GetInstance().SetMouseSensitivity(m_mouseSensitivity);
+}
+
+void SceneOption::ResetSensitivityInfo()
+{
+	// 感度情報をリセット
+	GameDataManager::GetInstance().SetMouseSensitivity(m_exMouseSensitivity);
 }
 
 void SceneOption::ChangeVolume(const InputState& input)
@@ -208,6 +256,11 @@ void SceneOption::DrawMenuText()
 	// メニューテキスト描画
 	for (int i = 0; i < kMenuTextSize; i++)
 	{
+		if (m_isSensitivityChangeMode)
+		{
+			if (i == m_selectedPos) continue;
+		}
+
 		if (m_isVolumeChangeMode)
 		{
 			if (i == m_selectedPos) continue;
@@ -225,8 +278,13 @@ void SceneOption::DrawMenuText()
 	int textLength = GetDrawFormatStringWidth(drawText.c_str());
 	drawX = static_cast<float>(Game::kScreenWidthHalf - (textLength / 2));
 	drawY = static_cast<float>(kTextDrawPosY) + (m_selectedPos * kTextDistance);
-	// 音量変更モード
-	if (m_isVolumeChangeMode)
+	// 各種変更モード
+	if (m_isSensitivityChangeMode)
+	{
+		// 感度の数値描画
+		DrawFormatStringF(Game::kScreenWidthHalf - Game::kFontSize, drawY - 2, kTextColor, "%.2f", m_mouseSensitivity);
+	}
+	else if (m_isVolumeChangeMode)
 	{
 		int* volume = 0;
 		if (m_selectedItemName == "音楽") volume = &m_volumeBGM;
@@ -288,7 +346,8 @@ void SceneOption::OnSelect()
 	}
 	else if (m_selectedItemName == "感度")
 	{
-		// 未実装
+		// 感度変更モード
+		m_isSensitivityChangeMode = !m_isSensitivityChangeMode;
 	}
 	else if (m_selectedItemName == "音楽" || m_selectedItemName == "効果音")
 	{
