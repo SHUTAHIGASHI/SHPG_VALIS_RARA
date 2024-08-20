@@ -114,7 +114,7 @@
     <ClCompile Include="GameMain\Player.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="GameMain\EnemyChaseNeffy.cpp">
+    <ClCompile Include="GameMain\EnemyNeffyKarasu.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
     <ClCompile Include="GameMain\EnemyNeffy.cpp">
@@ -137,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="Scene\Scene2DGame.cpp">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeAttack.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,7 +221,7 @@
     <ClInclude Include="GameMain\Player.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="GameMain\EnemyChaseNeffy.h">
+    <ClInclude Include="GameMain\EnemyNeffyKarasu.h">
       <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
     <ClInclude Include="GameMain\EnemyNeffy.h">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="Util\GameDataManager.h">
       <Filter>ヘッダー ファイル\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeAttack.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

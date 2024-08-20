@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "SoundManager.h"
 #include "UiManager.h"
+#include "MeleeAttack.h"
 
 namespace
 {
@@ -11,7 +12,8 @@ namespace
 }
 
 EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
-	ObjectBase()
+	ObjectBase(),
+	m_attackFrame(0)
 {
 	// ”¼Œaİ’è
 	m_status.radius = kRadius;
@@ -34,25 +36,10 @@ EnemyBase::~EnemyBase()
 {
 }
 
-void EnemyBase::Update()
-{
-	// ˆÚ“®
-	m_status.dir = VGet(0.0f, 0.0f, -1.0f);
-	m_status.pos = VAdd(m_status.pos, VScale(m_status.dir, m_status.moveSpeed));
-
-	// ‰æ–ÊŠO‚Éo‚½‚ç
-	if (m_status.pos.z < kStageLimitZ)
-	{
-		m_status.isEnabled = false;
-	}
-}
-
 void EnemyBase::Draw()
 {
 	// ‰æ‘œ•`‰æ
 	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
-	// ‹…•`‰æ
-	DrawSphere3D(m_status.pos, m_status.radius, 32, 0xffffff, 0xffffff, false);
 }
 
 void EnemyBase::OnHit(int damage)
@@ -75,6 +62,19 @@ void EnemyBase::OnHit(int damage)
 void EnemyBase::OnHitPlayer()
 {
 	// todo ƒvƒŒƒCƒ„[‚É“–‚½‚Á‚½‚Ìˆ—
+}
+
+bool EnemyBase::CheckAttackCollision(ObjectBase* obj)
+{
+	if (m_pAttack != nullptr)
+	{
+		// UŒ‚”»’è
+		return m_pAttack->CheckCollision(obj);
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void EnemyBase::OnDelete()

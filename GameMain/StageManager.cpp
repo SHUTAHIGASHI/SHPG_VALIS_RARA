@@ -21,14 +21,10 @@ StageManager::StageManager():
 	m_pEnemyManager(std::make_shared<EnemyManager>()),
 	m_pPlayer(nullptr)
 {
-	// UIマネージャにステージを設定
-	UiManager::GetInstance().SetStage(this);
 }
 
 StageManager::~StageManager()
 {
-	// UIマネージャにステージを解除
-	UiManager::GetInstance().DeleteStage();
 }
 
 void StageManager::Init()
@@ -48,6 +44,10 @@ void StageManager::Update()
 {
 	// ラウンド管理更新
 	(this->*m_updateFunc)();
+
+	// UI更新
+	UiManager::GetInstance().SetRoundState(m_roundState);
+	UiManager::GetInstance().SetRoundCount(m_roundCount);
 }
 
 void StageManager::Draw()

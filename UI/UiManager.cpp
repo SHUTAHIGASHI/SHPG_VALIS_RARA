@@ -2,7 +2,6 @@
 #include "SceneMain.h"
 #include "UiBar.h"
 #include "ObjectBase.h"
-#include "StageManager.h"
 #include "string"
 
 namespace
@@ -24,7 +23,7 @@ UiManager::~UiManager()
 void UiManager::Init()
 {
 	// 残弾数UIの読み込み
-	m_bulletUiHandle = LoadGraph("Data/ImageData/RARA_GAME_AMMO.png");
+	m_weaponUiHandle = LoadGraph("Data/ImageData/RARA_GAME_AMMO.png");
 }
 
 void UiManager::Update()
@@ -34,6 +33,8 @@ void UiManager::Update()
 	{
 		ui->Update();
 	}
+
+//	if()
 }
 
 void UiManager::Draw()
@@ -49,14 +50,11 @@ void UiManager::Draw()
 	}
 
 	// ステージ状態の描画
-	if(m_pStage != nullptr)
-	{
-		DrawRoundState();
-	}
+	DrawRoundState();
 	
-	// 残弾数UIの描画
+	// 武器UIの描画
 	DrawRotaGraphF(Game::kScreenWidth - (kUiPosX * kUiScale),
-		Game::kScreenHeight - (kUiPosY * kUiScale), kUiScale, 0.0, m_bulletUiHandle, true);
+		Game::kScreenHeight - (kUiPosY * kUiScale), kUiScale, 0.0, m_weaponUiHandle, true);
 }
 
 void UiManager::End()
@@ -65,7 +63,7 @@ void UiManager::End()
 	DeleteAllUI();
 
 	// 残弾数UIの削除
-	DeleteGraph(m_bulletUiHandle);
+	DeleteGraph(m_weaponUiHandle);
 }
 
 void UiManager::AddUIBar(ObjectBase* obj)
@@ -116,14 +114,11 @@ void UiManager::DeleteAllUI()
 
 void UiManager::DrawRoundState()
 {
-	// ラウンド状態の描画
-	auto roundState = m_pStage->GetRoundState();
-
 	// ラウンド状態によって描画
-	if(roundState == RoundState::ROUND_START)
+	if(m_roundState == RoundState::ROUND_START)
 	{
 		// ラウンド開始
-		std::string drawText = "ラウンド" + std::to_string(m_pStage->GetRoundCount());
+		std::string drawText = "ラウンド" + std::to_string(m_roundCount);
 		// 文字列サイズ取得
 		int textLength = GetDrawFormatStringWidth(drawText.c_str());
 		// 背景描画
@@ -132,11 +127,11 @@ void UiManager::DrawRoundState()
 		// 文字列描画
 		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - (Game::kFontSize / 2), 0xffffff, "%s", drawText.c_str());
 	}
-	else if (roundState == RoundState::ROUND_ON)
+	else if (m_roundState == RoundState::ROUND_ON)
 	{
 		return;
 	}
-	else if (roundState == RoundState::ROUND_END)
+	else if (m_roundState == RoundState::ROUND_END)
 	{
 		// ラウンド終了
 		std::string drawText = "ラウンドクリア";

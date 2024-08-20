@@ -21,7 +21,7 @@ public:
 	virtual ~EnemyBase();
 
 	// 更新
-	virtual void Update() override;
+	virtual void Update() = 0;
 	// 描画
 	virtual void Draw() override;
 
@@ -29,11 +29,20 @@ public:
 	virtual void OnHit(int damage);
 	// プレイヤーとのヒット処理
 	virtual void OnHitPlayer();
+
+	// 攻撃の判定
+	bool CheckAttackCollision(ObjectBase* obj);
 protected:
 	// 削除処理
 	virtual void OnDelete();
-
 	// 死亡時の処理
 	virtual void OnDead();
+
+protected:
+	// 攻撃フレーム
+	int m_attackFrame;
+
+	// 攻撃クラス
+	class MeleeAttack* m_pAttack;
 };
 

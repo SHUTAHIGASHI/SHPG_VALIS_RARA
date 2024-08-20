@@ -21,13 +21,14 @@
   <ItemGroup>
     <ClCompile Include="GameMain\CameraManager.cpp" />
     <ClCompile Include="GameMain\EnemyBase.cpp" />
-    <ClCompile Include="GameMain\EnemyChaseNeffy.cpp" />
+    <ClCompile Include="GameMain\EnemyNeffyKarasu.cpp" />
     <ClCompile Include="GameMain\EnemyManager.cpp" />
     <ClCompile Include="GameMain\EnemyNeffy.cpp" />
     <ClCompile Include="GameMain\Player.cpp" />
     <ClCompile Include="GameMain\Shot.cpp" />
     <ClCompile Include="GameMain\Stage.cpp" />
     <ClCompile Include="GameMain\StageManager.cpp" />
+    <ClCompile Include="MeleeAttack.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\Scene2DGame.cpp" />
     <ClCompile Include="Scene\SceneResult.cpp" />
@@ -56,13 +57,14 @@
   <ItemGroup>
     <ClInclude Include="GameMain\CameraManager.h" />
     <ClInclude Include="GameMain\EnemyBase.h" />
-    <ClInclude Include="GameMain\EnemyChaseNeffy.h" />
+    <ClInclude Include="GameMain\EnemyNeffyKarasu.h" />
     <ClInclude Include="GameMain\EnemyManager.h" />
     <ClInclude Include="GameMain\EnemyNeffy.h" />
     <ClInclude Include="GameMain\Player.h" />
     <ClInclude Include="GameMain\Shot.h" />
     <ClInclude Include="GameMain\Stage.h" />
     <ClInclude Include="GameMain\StageManager.h" />
+    <ClInclude Include="MeleeAttack.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\Scene2DGame.h" />

@@ -15,7 +15,7 @@ namespace
 	constexpr float kLogoDrawPosX = Game::kScreenWidthHalf;
 	constexpr float kLogoDrawPosY = 300.0f;
 	// テキスト描画位置
-	constexpr float kTextDrawPosY = Game::kScreenHeightHalf + 200.0f;
+	constexpr float kTextDrawPosY = Game::kScreenHeightHalf + 150.0f;
 	constexpr float kTextDrawSpace = Game::kFontSize;
 	// テキスト
 	const char* const kMenuTexts[] = 

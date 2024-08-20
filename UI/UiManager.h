@@ -1,6 +1,7 @@
 #pragma once
 #include "Game.h"
 #include <list>
+#include "StageManager.h"
 
 class UiManager
 {
@@ -28,9 +29,6 @@ private:
 	void operator = (const UiManager&) = delete;	// 代入も禁止
 
 public:
-	// ステージクラスの設定
-	void SetStage(class StageManager* stage) { m_pStage = stage; }
-
 	// 初期化
 	void Init();
 	// 更新
@@ -47,10 +45,13 @@ public:
 	// 全UIの削除
 	void DeleteAllUI();
 
+	// ラウンド状態のポインタ設定
+	void SetRoundState(RoundState state) { m_roundState = state; }
+	// ラウンドカウントの設定
+	void SetRoundCount(int count) { m_roundCount = count; }
+
 	// プレイヤー座標を設定
 	void SetPlayerPos(const VECTOR pos) { m_playerPos = pos; }
-	// ステージのポインタ削除
-	void DeleteStage() { m_pStage = nullptr; }
 
 private:
 	// ラウンド状態の描画
@@ -60,13 +61,16 @@ private:
 	// プレイヤー座標
 	VECTOR m_playerPos = Game::kVecZero;
 	
-	// 残弾数UI画像ハンドル
-	int m_bulletUiHandle = -1;
+	// 武器UI画像ハンドル
+	int m_weaponUiHandle = -1;
 
 private:
-	// UIのリスト
+	// UIバーのリスト
 	std::list<class UiBar*> m_pUiBarList;
 
-	// ステージクラス
-	class StageManager* m_pStage = nullptr;
+	// プレイヤーのHPバー
+	class UiBar* m_pPlayerHPBar = nullptr;
+	// ラウンド状態管理
+	RoundState m_roundState;
+	int m_roundCount;
 };

@@ -2,7 +2,7 @@
 #include "ObjectBase.h"
 #include "EnemyBase.h"
 #include "EnemyNeffy.h"
-#include "EnemyChaseNeffy.h"
+#include "EnemyNeffyKarasu.h"
 #include "Game.h"
 #include "Player.h"
 
@@ -63,7 +63,7 @@ void EnemyManager::Update()
 		// 更新
 		enemy->Update();
 		// 当たり判定
-		if (enemy->CheckCollision(m_pPlayer))
+		if (enemy->CheckAttackCollision(m_pPlayer))
 		{
 			// 敵のダメージ処理
 			enemy->OnHitPlayer();
@@ -116,16 +116,14 @@ EnemyBase* EnemyManager::GetRandomEnemy()
 {
 	int index = GetRand(static_cast<int>(2));
 
-	return new EnemyChaseNeffy(m_pPlayer, GetRandomPos());
-
 	//todo 生成する敵の種類を変更する
 	if(index == 0)
 	{
-		return new EnemyChaseNeffy(m_pPlayer, GetRandomPos());
+		return new EnemyNeffyKarasu(m_pPlayer, GetRandomPos());
 	}
 	else
 	{
-		return new EnemyNeffy(GetRandomPos());
+		return new EnemyNeffy(m_pPlayer, GetRandomPos());
 	}
 
 	return nullptr;

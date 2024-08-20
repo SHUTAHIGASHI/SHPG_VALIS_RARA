@@ -1,4 +1,4 @@
-#include "EnemyNeffy.h"
+#include "EnemyNeffyKarasu.h"
 #include "ObjectBase.h"
 #include "SoundManager.h"
 #include "MeleeAttack.h"
@@ -6,25 +6,26 @@
 namespace
 {
 	// 攻撃判定の半径
-	constexpr float kAttackRadius = 64.0f;
+	constexpr float kAttackRadius = 120.0f;
 	// 攻撃フレーム数
 	constexpr int kAttackFrame = 60;
 }
 
-EnemyNeffy::EnemyNeffy(ObjectBase* target, VECTOR pos) :
+EnemyNeffyKarasu::EnemyNeffyKarasu(ObjectBase* target, VECTOR pos):
 	EnemyBase("neffy", pos),
-	m_updateFunc(&EnemyNeffy::NormalUpdate)
+	m_updateFunc(&EnemyNeffyKarasu::NormalUpdate)
 {
 	m_pTarget = target;
+	m_status.pos.y = 120.0f;
 }
 
-EnemyNeffy::~EnemyNeffy()
+EnemyNeffyKarasu::~EnemyNeffyKarasu()
 {
 	// ターゲットの解放
 	m_pTarget = nullptr;
 }
 
-void EnemyNeffy::Update()
+void EnemyNeffyKarasu::Update()
 {
 	// 更新処理のメンバ関数ポインタ
 	(this->*m_updateFunc)();
@@ -37,7 +38,7 @@ void EnemyNeffy::Update()
 	}
 }
 
-void EnemyNeffy::NormalUpdate()
+void EnemyNeffyKarasu::NormalUpdate()
 {
 	// ターゲットの座標取得
 	auto targetPos = VGet(m_pTarget->GetPos().x, m_status.pos.y, m_pTarget->GetPos().z);
@@ -49,7 +50,7 @@ void EnemyNeffy::NormalUpdate()
 		// 攻撃フレーム数を設定
 		m_attackFrame = kAttackFrame;
 		// 攻撃状態に遷移
-		m_updateFunc = &EnemyNeffy::AttackUpdate;
+		m_updateFunc = &EnemyNeffyKarasu::AttackUpdate;
 	}
 
 	// 正規化
@@ -60,7 +61,7 @@ void EnemyNeffy::NormalUpdate()
 	m_status.pos = VAdd(m_status.pos, m_status.dir);
 }
 
-void EnemyNeffy::AttackUpdate()
+void EnemyNeffyKarasu::AttackUpdate()
 {
 	// ターゲットの座標取得
 	auto targetPos = VGet(m_pTarget->GetPos().x, m_status.pos.y, m_pTarget->GetPos().z);
@@ -82,7 +83,7 @@ void EnemyNeffy::AttackUpdate()
 		delete m_pAttack;
 		m_pAttack = nullptr;
 		// 通常状態に遷移
-		m_updateFunc = &EnemyNeffy::NormalUpdate;
+		m_updateFunc = &EnemyNeffyKarasu::NormalUpdate;
 	}
 	else
 	{
