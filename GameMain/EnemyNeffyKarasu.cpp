@@ -12,7 +12,7 @@ namespace
 }
 
 EnemyNeffyKarasu::EnemyNeffyKarasu(ObjectBase* target, VECTOR pos):
-	EnemyBase("neffy", pos),
+	EnemyBase("neffyKarasu", pos),
 	m_updateFunc(&EnemyNeffyKarasu::NormalUpdate)
 {
 	m_pTarget = target;

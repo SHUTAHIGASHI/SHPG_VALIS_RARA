@@ -29,6 +29,7 @@ void Load::AllLoadData()
 	m_imageData["chino"] = LoadGraph("Data/ImageData/chinoDot.png");
 	m_imageData["myu"] = LoadGraph("Data/ImageData/myuDot.png");
 	m_imageData["neffy"] = LoadGraph("Data/ImageData/NeffyTest.png");
+	m_imageData["neffyKarasu"] = LoadGraph("Data/ImageData/NeffyKarasu.png");
 	m_imageData["nina"] = LoadGraph("Data/ImageData/ninaDot.png");
 	m_imageData["vitte"] = LoadGraph("Data/ImageData/vitteDot.png");
 	m_imageData["fpsHand"] = LoadGraph("Data/ImageData/RaraGame_Hands.png");

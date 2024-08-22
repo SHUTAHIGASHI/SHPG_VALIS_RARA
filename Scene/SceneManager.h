@@ -79,5 +79,8 @@ private:
 
 	// 更新処理を全て行うかどうか
 	bool m_isAllUpdate = false;
+
+	float m_updateTime;	//更新にかかる時間
+	float m_drawTime;	//描画にかかる時間
 };
 
