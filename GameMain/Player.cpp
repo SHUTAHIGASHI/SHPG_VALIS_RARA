@@ -57,7 +57,7 @@ namespace
 	constexpr int kShotDamage = 10;
 
 	// 体力
-	constexpr int kMaxHp = 50;
+	constexpr int kMaxHp = 100;
 	// 無敵時間
 	constexpr int kDamageInvTime = 60;
 	// 体力回復までの時間
@@ -79,7 +79,6 @@ Player::Player():
 	m_handState(HandState::Normal),
 	m_hFpsHand(-1),
 	m_hCursorImg(-1),
-	m_hLockCursorImg(-1),
 	m_hHitCursorImg(-1),
 	m_HandSizeX(0),
 	m_HandSizeY(0),
@@ -102,7 +101,6 @@ Player::Player():
 	m_playerAngleY(0.0f),
 	m_playerAngleX(0.0f),
 	m_slideVec(Game::kVecZero),
-	m_lockObjPos(Game::kVecZero),
 	m_targetPos(Game::kVecZero),
 	m_pShots(),
 	m_pTargetObj(nullptr),
@@ -117,7 +115,6 @@ Player::~Player()
 	// 画像削除
 	m_status.hImg = -1;
 	m_hCursorImg = -1;
-	m_hLockCursorImg = -1;
 	m_hHitCursorImg = -1;
 }
 
@@ -126,7 +123,6 @@ void Player::Init()
 	// 画像読み込み
 	m_hFpsHand = Load::GetInstance().GetImageHandle("fpsHand");
 	m_hCursorImg = Load::GetInstance().GetImageHandle("cursor");
-	m_hLockCursorImg = Load::GetInstance().GetImageHandle("lockCursor");
 	m_hHitCursorImg = Load::GetInstance().GetImageHandle("hitCursor");
 	// 画像サイズ取得
 	GetGraphSize(m_hFpsHand, &m_HandSizeX, &m_HandSizeY);
@@ -139,6 +135,9 @@ void Player::Init()
 	m_status.hp = kMaxHp;
 	// 視点更新
 	UpdateView();
+
+	// UI初期化
+	UiManager::GetInstance().SetPlayerHPBar(this);
 }
 
 void Player::Update(const InputState& input)
@@ -259,7 +258,8 @@ void Player::CheckStageRange()
 	// ステージの上下の範囲外に出た場合ダメージ
 	if (m_status.pos.y < -Game::kStageSizeY)
 	{
-		OnDamage(kStageOutDamage);
+		// ステージ内に戻る
+		m_status.pos.y = 0.0f;
 	}
 }
 
@@ -347,7 +347,7 @@ void Player::UpdateView()
 void Player::ControllGimmick(const InputState& input)
 {
 	// ギミック操作
-	if (m_currentStageData[m_tileZ][m_tileX] == StageTile::SW)
+	if (m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::SW)
 	{
 		// インタラクトキー
 		if (input.IsTriggered(InputType::Interract))
@@ -508,7 +508,7 @@ void Player::ControllMove(const InputState& input)
 void Player::CheckGround()
 {
 	// 現在のタイルが地面の場合
-	if (m_currentStageData[m_tileZ][m_tileX] != StageTile::EN)
+	if (m_pStage->GetStageData()[m_tileZ][m_tileX] != StageTile::EN)
 	{
 		VECTOR tilePos = MV1GetPosition(m_pStage->GetTileHandle(m_tileX, m_tileZ));
 		// 地面判定
@@ -539,17 +539,17 @@ bool Player::CheckCanMove(VECTOR nextPos)
 	m_pStage->GetTile(nextPos, tileX, tileZ);
 
 	// 移動先のタイルが壁じゃない場合
-	if (m_currentStageData[tileZ][tileX] == StageTile::WL)
+	if (m_pStage->GetStageData()[tileZ][tileX] == StageTile::WL)
 	{
 		// 移動不可能
 		return false;
 	}
-	else if (m_currentStageData[tileZ][tileX] == StageTile::F1)
+	else if (m_pStage->GetStageData()[tileZ][tileX] == StageTile::F1)
 	{
 		// 移動不可能
 		return false;
 	}
-	else if (m_currentStageData[tileZ][tileX] == StageTile::F2)
+	else if (m_pStage->GetStageData()[tileZ][tileX] == StageTile::F2)
 	{
 		// 移動不可能
 		return false;
@@ -630,8 +630,13 @@ void Player::UpdateSlide()
 	{
 		// スライディング時間減少
 		m_slideTime--;
-		// スライディング座標加算
-		m_status.pos = VAdd(m_status.pos, m_slideVec);
+		auto nextPos = VAdd(m_status.pos, m_slideVec);
+		// 移動が可能かの判定
+		if (CheckCanMove(nextPos))
+		{
+			// 移動処理
+			m_status.pos = nextPos;
+		}
 	}
 	else
 	{
@@ -774,7 +779,6 @@ void Player::OnHitShot(Shot* pShot)
 void Player::UpdateCursor(const InputState& input)
 {
 	// 座標と判定リセット
-	m_lockObjPos = Game::kVecZero;
 	m_isLockOn = false;
 	// ロックオンカーソル座標取得
 	for (auto& obj : m_pEnemyManager->GetEnemies())
@@ -790,8 +794,6 @@ void Player::UpdateCursor(const InputState& input)
 			// カーソルとオブジェクトの距離が一定範囲内なら
 			if (distance < kLockRange)
 			{
-				// ロックオンカーソル座標設定
-				m_lockObjPos = objPos;
 				// ロックオンフラグON
 				m_isLockOn = true;
 				// ロックオンオブジェクト設定
@@ -852,12 +854,6 @@ void Player::Draw2D()
 {
 	// クロスヘア描画
 	DrawRotaGraphF(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 1.0f, 0.0f, m_hCursorImg, true);
-	// ロックオンカーソル描画
-	if (m_isLockOn)
-	{
-		VECTOR lockCursorPos = ConvWorldPosToScreenPos(m_lockObjPos);
-		DrawRotaGraphF(lockCursorPos.x, lockCursorPos.y, 1.0f, 0.0f, m_hLockCursorImg, true);
-	}
 	// ヒットマーク描画
 	if (m_hitMarkFrame > 0)
 	{
@@ -874,7 +870,4 @@ void Player::Draw2D()
 		static_cast<int>(Game::k2DChipSize), static_cast<int>(Game::k2DChipSize),
 		kFpsHandScale, 0.0f,
 		m_hFpsHand,true);
-
-	// 体力描画
-	DrawFormatString(Game::kScreenWidth - 200, 10, 0xffffff, "HP:%d", m_status.hp);
 }

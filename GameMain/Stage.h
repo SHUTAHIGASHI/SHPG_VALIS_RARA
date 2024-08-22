@@ -12,7 +12,8 @@ namespace StageTile
 	constexpr int F2 = 4;
 	constexpr int SW = 5;
 	constexpr int GL = 6;
-	constexpr int CH = 7;
+	constexpr int SP = 7;
+	constexpr int CH = 8;
 	constexpr int MY = CH + 1;
 	constexpr int NE = MY + 1;
 	constexpr int NI = NE + 1;
@@ -57,6 +58,11 @@ public:
 
 	// ステージ情報を返す
 	std::vector<std::vector<int>> GetStageData() { return m_currentStageData; }
+
+	// スポーンポイントの数を返す
+	int GetSpawnPointNum();
+	// 指定された順番のスポーンポイントの座標を返す
+	VECTOR GetSpawnPoint(int num);
 
 	// 指定した座標のステージ情報を返す
 	void GetTile(VECTOR pos, int &x, int &z);

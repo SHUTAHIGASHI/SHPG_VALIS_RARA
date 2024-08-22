@@ -36,6 +36,8 @@ void SceneMain::Init()
 {
 	// マウス非表示
 	SetMouseDispFlag(false);
+	// UI初期化
+	UiManager::GetInstance().Init();
 	// プレイヤー初期化
 	m_pPlayer->SetCamera(m_pCamera.get());
 	m_pPlayer->Init();
@@ -48,9 +50,6 @@ void SceneMain::Init()
 	m_pCamera->Init();
 	// カーソル座標固定
 	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
-
-	// UI初期化
-	UiManager::GetInstance().Init();
 }
 
 void SceneMain::Update(const InputState& input)

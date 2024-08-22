@@ -8,12 +8,22 @@ namespace
 {
 	// UIを描画する範囲
 	constexpr float kDrawRange = 600.0f;
+	// 敵HPバーのサイズ
+	constexpr float kEnemyHPBarW = 50.0f;
+	constexpr float kEnemyHPBarH = 10.0f;
 
 	// 残弾数UIの描画位置
 	constexpr int kUiPosX = 100;
 	constexpr int kUiPosY = 50;
 	// 残弾数UIの拡大率
 	constexpr double kUiScale = 3.0;
+
+	// プレイヤーHPバーの描画位置
+	constexpr float kPlayerHPBarPosX = Game::kScreenWidthHalf;
+	constexpr float kPlayerHPBarPosY = 100.0f;
+	// プレイヤーHPバーのサイズ
+	constexpr double kPlayerHPBarW = 1000.0f;
+	constexpr double kPlayerHPBarH = 60.0f;
 }
 
 UiManager::~UiManager()
@@ -24,29 +34,39 @@ void UiManager::Init()
 {
 	// 残弾数UIの読み込み
 	m_weaponUiHandle = LoadGraph("Data/ImageData/RARA_GAME_AMMO.png");
+	// プレイヤーHPバーの画像読み込み
+	m_playerHPBarHandle = LoadGraph("Data/ImageData/RARA_GAME_HPBAR.png");
 }
 
 void UiManager::Update()
 {
 	// UIの更新
-	for (auto& ui : m_pUiBarList)
+	for (auto& ui : m_pEnemyHpBar)
 	{
 		ui->Update();
 	}
 
-//	if()
+	if (m_pPlayerHpBar != nullptr)
+	{
+		m_pPlayerHpBar->Update();
+	}
 }
 
 void UiManager::Draw()
 {
 	// UIの描画
-	for (auto& ui : m_pUiBarList)
+	for (auto& ui : m_pEnemyHpBar)
 	{
 		// プレイヤーから一定範囲内のUIのみ描画
 		if (VSize(VSub(m_playerPos, ui->GetObj()->GetPos())) < kDrawRange)
 		{
 			ui->Draw();
 		}
+	}
+
+	if (m_pPlayerHpBar != nullptr)
+	{
+		m_pPlayerHpBar->Draw();
 	}
 
 	// ステージ状態の描画
@@ -66,17 +86,19 @@ void UiManager::End()
 	DeleteGraph(m_weaponUiHandle);
 }
 
-void UiManager::AddUIBar(ObjectBase* obj)
+void UiManager::AddEnemyHpBar(ObjectBase* obj)
 {
 	// UIの追加
-	m_pUiBarList.push_back(new UiBar(obj));
-	m_pUiBarList.back()->Init();
+	m_pEnemyHpBar.push_back(new UiBar(obj, false));
+	m_pEnemyHpBar.back()->Init();
+	// バーのサイズ設定
+	m_pEnemyHpBar.back()->SetGaugeSize(kEnemyHPBarW, kEnemyHPBarH);
 }
 
-void UiManager::DeleteUIBar(ObjectBase* obj)
+void UiManager::DeleteEnemyHpBar(ObjectBase* obj)
 {
 	// UIの削除
-	for(auto& ui : m_pUiBarList)
+	for(auto& ui : m_pEnemyHpBar)
 	{
 		if (ui->GetObj() == obj)
 		{
@@ -85,31 +107,44 @@ void UiManager::DeleteUIBar(ObjectBase* obj)
 	}
 
 	// 無効になったオブジェクトは排除
-	auto rmIt = std::remove_if(m_pUiBarList.begin(), m_pUiBarList.end(),
+	auto rmIt = std::remove_if(m_pEnemyHpBar.begin(), m_pEnemyHpBar.end(),
 		[](UiBar* ui)
 		{
 			return ui->IsDelete();
 		});
 	// 実際に範囲を指定して削除
-	m_pUiBarList.erase(rmIt, m_pUiBarList.end());
+	m_pEnemyHpBar.erase(rmIt, m_pEnemyHpBar.end());
 }
 
 void UiManager::DeleteAllUI()
 {
 	// 全UIの削除
-	for (auto& ui : m_pUiBarList)
+	for (auto& ui : m_pEnemyHpBar)
 	{
 		ui->SetDelete(true);
 	}
 
 	// 無効になったオブジェクトは排除
-	auto rmIt = std::remove_if(m_pUiBarList.begin(), m_pUiBarList.end(),
+	auto rmIt = std::remove_if(m_pEnemyHpBar.begin(), m_pEnemyHpBar.end(),
 		[](UiBar* ui)
 		{
 			return ui->IsDelete();
 		});
 	// 実際に範囲を指定して削除
-	m_pUiBarList.erase(rmIt, m_pUiBarList.end());
+	m_pEnemyHpBar.erase(rmIt, m_pEnemyHpBar.end());
+}
+
+void UiManager::SetPlayerHPBar(ObjectBase* obj)
+{
+	// プレイヤーHPバーの設定
+	m_pPlayerHpBar = new UiBar(obj, true);
+	m_pPlayerHpBar->Init();
+	// 描画位置設定
+	m_pPlayerHpBar->SetDrawPos(kPlayerHPBarPosX, kPlayerHPBarPosY);
+	// バーのサイズ設定
+	m_pPlayerHpBar->SetGaugeSize(kPlayerHPBarW, kPlayerHPBarH);
+	// 画像ハンドルの設定
+	m_pPlayerHpBar->SetGaugeHandle(m_playerHPBarHandle);
 }
 
 void UiManager::DrawRoundState()
@@ -117,6 +152,8 @@ void UiManager::DrawRoundState()
 	// ラウンド状態によって描画
 	if(m_roundState == RoundState::ROUND_START)
 	{
+		if (m_roundCount == 0) return;
+
 		// ラウンド開始
 		std::string drawText = "ラウンド" + std::to_string(m_roundCount);
 		// 文字列サイズ取得
@@ -129,7 +166,19 @@ void UiManager::DrawRoundState()
 	}
 	else if (m_roundState == RoundState::ROUND_ON)
 	{
-		return;
+		int drawX = 90;
+		int drawY = Game::kScreenHeight - (Game::kFontSize * 3);
+		// 文字列描画
+		SetFontSize(80);
+		std::string drawText = std::to_string(m_roundCount);
+		int textLength = GetDrawFormatStringWidth(drawText.c_str());
+		DrawFormatString(drawX - (textLength / 2), drawY, 0xffffff, "%d", m_roundCount);
+		SetFontSize(20);
+		drawText = "ラウンド";
+		// 文字列サイズ取得
+		textLength = GetDrawFormatStringWidth(drawText.c_str());
+		DrawFormatString(drawX - (textLength / 2), drawY - 10, 0xffffff, "%s", drawText.c_str());
+		SetFontSize(Game::kFontSize);
 	}
 	else if (m_roundState == RoundState::ROUND_END)
 	{

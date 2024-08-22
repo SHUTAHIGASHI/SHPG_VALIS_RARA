@@ -38,10 +38,11 @@ public:
 	// 終了
 	void End();
 
-	// UIの追加
-	void AddUIBar(class ObjectBase* obj);
-	// UIの削除
-	void DeleteUIBar(class ObjectBase* obj);
+	// 敵のHPバー追加
+	void AddEnemyHpBar(class ObjectBase* obj);
+	// 敵のHPバー削除
+	void DeleteEnemyHpBar(class ObjectBase* obj);
+
 	// 全UIの削除
 	void DeleteAllUI();
 
@@ -49,6 +50,9 @@ public:
 	void SetRoundState(RoundState state) { m_roundState = state; }
 	// ラウンドカウントの設定
 	void SetRoundCount(int count) { m_roundCount = count; }
+
+	// プレイヤーHPバーの設定
+	void SetPlayerHPBar(class ObjectBase* obj);
 
 	// プレイヤー座標を設定
 	void SetPlayerPos(const VECTOR pos) { m_playerPos = pos; }
@@ -63,14 +67,16 @@ private:
 	
 	// 武器UI画像ハンドル
 	int m_weaponUiHandle = -1;
+	// プレイヤーHPバーの画像ハンドル
+	int m_playerHPBarHandle = -1;
 
 private:
 	// UIバーのリスト
-	std::list<class UiBar*> m_pUiBarList;
+	std::list<class UiBar*> m_pEnemyHpBar;
 
 	// プレイヤーのHPバー
-	class UiBar* m_pPlayerHPBar = nullptr;
+	class UiBar* m_pPlayerHpBar = nullptr;
 	// ラウンド状態管理
 	RoundState m_roundState;
-	int m_roundCount;
+	int m_roundCount = 0;
 };

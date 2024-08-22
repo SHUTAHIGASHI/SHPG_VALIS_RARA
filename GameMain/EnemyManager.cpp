@@ -5,13 +5,12 @@
 #include "EnemyNeffyKarasu.h"
 #include "Game.h"
 #include "Player.h"
+#include "Stage.h"
 
 namespace
 {
 	// 敵の生成数
 	constexpr int kEnemyNum = 5;
-	// 敵の生成範囲
-	constexpr float kEnemySpawnRange = 1000.0f;
 }
 
 EnemyManager::EnemyManager():
@@ -65,8 +64,6 @@ void EnemyManager::Update()
 		// 当たり判定
 		if (enemy->CheckAttackCollision(m_pPlayer))
 		{
-			// 敵のダメージ処理
-			enemy->OnHitPlayer();
 			// プレイヤーのダメージ処理
 			m_pPlayer->OnDamage(10);
 		}
@@ -100,16 +97,11 @@ void EnemyManager::CreateEnemy()
 	m_pEnemies.back()->Init();
 }
 
-VECTOR EnemyManager::GetRandomPos()
+VECTOR EnemyManager::GetSpawnPos()
 {
-	VECTOR result;
+	int spawnPoint = GetRand(m_pStage->GetSpawnPointNum() - 1);
 
-	// 指定した位置を中心に指定した範囲でランダムな位置を返す
-	result.x = static_cast<float>(m_spawnCenterPos.x + GetRand(static_cast<int>(Game::kStageSizeX)) + kEnemySpawnRange);
-	result.y = 0.0f;
-	result.z = static_cast<float>(m_spawnCenterPos.z + GetRand(static_cast<int>(Game::kStageSizeZ)) - (kEnemySpawnRange / 2));
-
-	return result;
+	return m_pStage->GetSpawnPoint(spawnPoint);
 }
 
 EnemyBase* EnemyManager::GetRandomEnemy()
@@ -119,11 +111,11 @@ EnemyBase* EnemyManager::GetRandomEnemy()
 	//todo 生成する敵の種類を変更する
 	if(index == 0)
 	{
-		return new EnemyNeffyKarasu(m_pPlayer, GetRandomPos());
+		return new EnemyNeffyKarasu(m_pPlayer, GetSpawnPos());
 	}
 	else
 	{
-		return new EnemyNeffy(m_pPlayer, GetRandomPos());
+		return new EnemyNeffy(m_pPlayer, GetSpawnPos(), m_pStage);
 	}
 
 	return nullptr;

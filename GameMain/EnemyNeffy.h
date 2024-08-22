@@ -6,7 +6,7 @@ class EnemyNeffy :
 {
 public:
     // コンストラクタ
-    EnemyNeffy(class ObjectBase*, VECTOR);
+    EnemyNeffy(class ObjectBase*, VECTOR, class Stage*);
     // デストラクタ
     ~EnemyNeffy();
 
@@ -20,8 +20,13 @@ private:
     void NormalUpdate();     // 通常の更新処理
     void AttackUpdate();     // 攻撃時の更新処理
 
+    // 移動可能かの判定
+    bool CheckCanMove(VECTOR nextPos);
+
 private:
     // プレイヤー
     class ObjectBase* m_pTarget;
+    // ステージクラス
+	class Stage* m_pStage;
 };
 

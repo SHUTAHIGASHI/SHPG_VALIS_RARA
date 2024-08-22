@@ -29,7 +29,7 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	m_status.hp = kBaseHp;
 
 	// UI‚É“G‚Ì‘Ì—Í‚ğ“o˜^
-	UiManager::GetInstance().AddUIBar(this);
+	UiManager::GetInstance().AddEnemyHpBar(this);
 }
 
 EnemyBase::~EnemyBase()
@@ -59,11 +59,6 @@ void EnemyBase::OnHit(int damage)
 	}
 }
 
-void EnemyBase::OnHitPlayer()
-{
-	// todo ƒvƒŒƒCƒ„[‚É“–‚½‚Á‚½‚Ìˆ—
-}
-
 bool EnemyBase::CheckAttackCollision(ObjectBase* obj)
 {
 	if (m_pAttack != nullptr)
@@ -80,7 +75,7 @@ bool EnemyBase::CheckAttackCollision(ObjectBase* obj)
 void EnemyBase::OnDelete()
 {
 	// UI‚©‚ç“G‚Ì‘Ì—Í‚ğíœ
-	UiManager::GetInstance().DeleteUIBar(this);
+	UiManager::GetInstance().DeleteEnemyHpBar(this);
 }
 
 void EnemyBase::OnDead()

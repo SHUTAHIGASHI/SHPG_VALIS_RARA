@@ -27,8 +27,6 @@ public:
 
 	// ヒット処理
 	virtual void OnHit(int damage);
-	// プレイヤーとのヒット処理
-	virtual void OnHitPlayer();
 
 	// 攻撃の判定
 	bool CheckAttackCollision(ObjectBase* obj);

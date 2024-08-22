@@ -2,6 +2,7 @@
 #include "ObjectBase.h"
 #include "SoundManager.h"
 #include "MeleeAttack.h"
+#include "Stage.h"
 
 namespace
 {
@@ -11,9 +12,10 @@ namespace
 	constexpr int kAttackFrame = 60;
 }
 
-EnemyNeffy::EnemyNeffy(ObjectBase* target, VECTOR pos) :
+EnemyNeffy::EnemyNeffy(ObjectBase* target, VECTOR pos, class Stage* stage) :
 	EnemyBase("neffy", pos),
-	m_updateFunc(&EnemyNeffy::NormalUpdate)
+	m_updateFunc(&EnemyNeffy::NormalUpdate),
+	m_pStage(stage)
 {
 	m_pTarget = target;
 }
@@ -30,10 +32,10 @@ void EnemyNeffy::Update()
 	(this->*m_updateFunc)();
 
 	// エネミーサウンド再生
-	if (!SoundManager::GetInstance().IsPlaying(SoundType::enemyBirdVoice))
+	if (!SoundManager::GetInstance().IsPlaying(SoundType::enemyVoice))
 	{
 		//SoundManager::GetInstance().PlaySE(SoundType::enemyBirdVoice);
-		SoundManager::GetInstance().Play3DSound(SoundType::enemyBirdVoice, m_status.pos);
+		SoundManager::GetInstance().Play3DSound(SoundType::enemyVoice, m_status.pos);
 	}
 }
 
@@ -57,7 +59,19 @@ void EnemyNeffy::NormalUpdate()
 	// 移動速度指定
 	m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
 	// 移動
-	m_status.pos = VAdd(m_status.pos, m_status.dir);
+	VECTOR nextPos = VAdd(m_status.pos, m_status.dir);
+	// 移動可能かの判定
+	if (CheckCanMove(nextPos))
+	{
+		m_status.pos = nextPos;
+	}
+	else
+	{
+		// 移動不可能な場合はランダムで移動方向を変更
+		m_status.dir = VGet(GetRand(100) - 50, 0, GetRand(100) - 50);
+		if (VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
+		m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
+	}
 }
 
 void EnemyNeffy::AttackUpdate()
@@ -89,4 +103,31 @@ void EnemyNeffy::AttackUpdate()
 		// 攻撃フレーム数を減らす
 		m_attackFrame--;
 	}
+}
+
+bool EnemyNeffy::CheckCanMove(VECTOR nextPos)
+{
+	// 移動先のタイル番号を取得
+	int tileX = NULL;
+	int tileZ = NULL;
+	m_pStage->GetTile(nextPos, tileX, tileZ);
+
+	// 移動先のタイルが壁じゃない場合
+	if (m_pStage->GetStageData()[tileZ][tileX] == StageTile::WL)
+	{
+		// 移動不可能
+		return false;
+	}
+	else if (m_pStage->GetStageData()[tileZ][tileX] == StageTile::F1)
+	{
+		// 移動不可能
+		return false;
+	}
+	else if (m_pStage->GetStageData()[tileZ][tileX] == StageTile::F2)
+	{
+		// 移動不可能
+		return false;
+	}
+
+	return true;
 }

@@ -5,20 +5,22 @@
 namespace
 {
 	// ÉQÅ[ÉWÇÃç¿ïW
-	constexpr int kGaugeW = 50;
-	constexpr int kGaugeH = 10;
 	constexpr int kDrawPosDiff = 30;
 }
 
-UiBar::UiBar(class ObjectBase* obj) :
+UiBar::UiBar(class ObjectBase* obj, bool is2D) :
 	m_isDelete(false),
+	m_is2D(is2D),
 	m_drawX(0),
 	m_drawY(0),
+	m_gaugeW(0),
+	m_gaugeH(0),
 	m_num(0),
 	m_maxNum(0),
 	m_currentNumRate(0.0f),
 	m_maxNumRate(0.0f),
 	m_color(0),
+	m_gaugeHandle(-1),
 	m_targetObj(obj)
 {
 }
@@ -37,14 +39,19 @@ void UiBar::Init()
 	// ï`âÊç¿ïW
 	m_drawX = 0;
 	m_drawY = 0;
+	// ÉoÅ[ÇÃÉTÉCÉY
+	m_gaugeW = 0;
+	m_gaugeH = 0;
 	// HPó¶ÇÃåvéZ
-	m_maxNumRate = (static_cast<float>(m_maxNum) / m_maxNum) * kGaugeW;
+	m_currentNumRate = (static_cast<float>(*m_num) / m_maxNum) * m_gaugeW;
+	m_maxNumRate = (static_cast<float>(m_maxNum) / m_maxNum) * m_gaugeW;
 }
 
 void UiBar::Update()
 {
 	// HPó¶ÇÃåvéZ
-	m_currentNumRate = (static_cast<float>(*m_num) / m_maxNum) * kGaugeW;
+	m_currentNumRate = (static_cast<float>(*m_num) / m_maxNum) * m_gaugeW;
+	m_maxNumRate = (static_cast<float>(m_maxNum) / m_maxNum) * m_gaugeW;
 
 	if (m_currentNumRate < 30)
 	{
@@ -56,8 +63,15 @@ void UiBar::Update()
 	}
 
 	// ï`âÊà íuê›íË
-	VECTOR screenPos = ConvWorldPosToScreenPos(m_targetObj->GetPos());
-	SetDrawPos(static_cast<int>(screenPos.x), static_cast<int>(screenPos.y));
+	if (!m_is2D)
+	{
+		VECTOR screenPos = ConvWorldPosToScreenPos(m_targetObj->GetPos());
+		SetDrawPos(static_cast<int>(screenPos.x), static_cast<int>(screenPos.y));
+	}
+	else
+	{
+		SetDrawPos(m_drawX, m_drawY);
+	}
 }
 
 void UiBar::Draw()
@@ -66,15 +80,29 @@ void UiBar::Draw()
 	int drawX = m_drawX - static_cast<int>(m_maxNumRate / 2);
 	int drawY = m_drawY - kDrawPosDiff;
 	int drawW = drawX + static_cast<int>(m_currentNumRate);
-	int drawH = drawY + kGaugeH;
+	int drawH = drawY + m_gaugeH;
 	DrawBox(drawX, drawY, drawW, drawH, m_color, true);
 	// ògÇÃï`âÊ
 	drawW = drawX + static_cast<int>(m_maxNumRate);
-	DrawBox(drawX, drawY, drawW, drawH, 0xffffff, false);
+	// âÊëúÇÃï`âÊ
+	if (m_gaugeHandle != -1)
+	{
+		DrawExtendGraph(drawX, drawY, drawW, drawH, m_gaugeHandle, true);
+	}
+	else
+	{
+		DrawBox(drawX, drawY, drawW, drawH, 0xffffff, false);
+	}
 }
 
 void UiBar::SetDrawPos(int x, int y)
 {
 	m_drawX = x;
 	m_drawY = y;
+}
+
+void UiBar::SetGaugeSize(int w, int h)
+{
+	m_gaugeW = w;
+	m_gaugeH = h;
 }

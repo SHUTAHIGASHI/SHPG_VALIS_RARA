@@ -33,11 +33,11 @@ void StageManager::Init()
 	m_pStage->Init();
 	// 敵管理初期化
 	m_pEnemyManager->SetPlayer(m_pPlayer);
+	m_pEnemyManager->SetStage(m_pStage.get());
 	m_pEnemyManager->Init();
 	// プレイヤーにステージ情報を設定
 	m_pPlayer->SetStage(m_pStage.get());
 	m_pPlayer->SetEnemyManager(m_pEnemyManager.get());
-	m_pPlayer->SetStageData(m_pStage->GetStageData());
 }
 
 void StageManager::Update()
@@ -56,9 +56,6 @@ void StageManager::Draw()
 	m_pStage->Draw();
 	// 敵管理描画
 	m_pEnemyManager->Draw();
-
-	// ステージ状態描画
-	DrawFormatString(0, 40, GetColor(255, 255, 255), "Round:%d", m_roundCount);
 }
 
 void StageManager::OnRoundEnd()

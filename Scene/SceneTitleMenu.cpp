@@ -13,7 +13,7 @@ namespace
 {
 	// タイトルロゴ描画位置
 	constexpr float kLogoDrawPosX = Game::kScreenWidthHalf;
-	constexpr float kLogoDrawPosY = 300.0f;
+	constexpr float kLogoDrawPosY = 340.0f;
 	// テキスト描画位置
 	constexpr float kTextDrawPosY = Game::kScreenHeightHalf + 150.0f;
 	constexpr float kTextDrawSpace = Game::kFontSize;

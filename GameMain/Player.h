@@ -44,9 +44,6 @@ public:
 	// 被ダメージ処理
 	void OnDamage(int damage);
 
-	// ステージ情報の設定
-	void SetStageData(const std::vector<std::vector<int>> stageData) { m_currentStageData = stageData; }
-
 private:
 	// ステージ範囲判定
 	void CheckStageRange();
@@ -102,7 +99,6 @@ private:
 	// 画像ハンドル
 	int m_hFpsHand;
 	int m_hCursorImg;
-	int m_hLockCursorImg;
 	int m_hHitCursorImg;
 	// 画像サイズ
 	int m_HandSizeX;
@@ -147,16 +143,11 @@ private:
 
 	// スライディングベクトル
 	VECTOR m_slideVec;
-	// ロックオンカーソル座標
-	VECTOR m_lockObjPos;
 	// 着弾地点
 	VECTOR m_targetPos;
 
 	// ショット配列
 	std::list<class Shot*> m_pShots;	
-
-	// 現在のステージの情報
-	std::vector<std::vector<int>> m_currentStageData;
 private:// 各種ポインタ
 	// ショットターゲットポインタ
 	ObjectBase* m_pTargetObj;

@@ -15,6 +15,8 @@ public:
 
 	// プレイヤーポインタ設定
 	void SetPlayer(class Player* Player) { m_pPlayer = Player; }
+	// ステージポインタ設定
+	void SetStage(class Stage* Stage) { m_pStage = Stage; }
 
 	// 初期化
 	void Init();
@@ -38,8 +40,8 @@ public:
 private:
 	// 敵生成
 	void CreateEnemy();
-	// 生成座標ランダム取得
-	VECTOR GetRandomPos();
+	// 生成座標を取得
+	VECTOR GetSpawnPos();
 	// ランダムで敵種取得
 	class EnemyBase* GetRandomEnemy();
 
@@ -60,5 +62,7 @@ private:
 	std::list<class EnemyBase*> m_pEnemies;
 	// プレイヤーポインタ
 	class Player* m_pPlayer;
+	// ステージのポインタ
+	class Stage* m_pStage;
 };
 
