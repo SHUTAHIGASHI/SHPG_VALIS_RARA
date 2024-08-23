@@ -45,10 +45,6 @@ void GameDataManager::LoadCharacterData()
 		fclose(fp);
 		m_mouseSensitivity = conf.mouseSensitivity;
 	}
-	else
-	{
-		printfDx("İ’èƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½\n");
-	}
 }
 
 GameDataManager::GameDataManager() :
