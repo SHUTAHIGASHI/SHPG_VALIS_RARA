@@ -31,17 +31,23 @@ namespace
 	constexpr double kCharaSize = 5.0;
 	// キャラクター移動速度
 	constexpr float kCharaSpeed = 2.0f;
+
+	// 曲名移動速度
+	constexpr float kMusicNameMoveSpeed = 2.0f;
+	// 曲名
+	const char* const kTextMusicName = "♪.「 月輪迷宮 」- VALIS";
 }
 
 SceneTitleMenu::SceneTitleMenu(SceneManager& manager) : Scene(manager),
 m_updateFunc(&SceneTitleMenu::NormalUpdate),
 m_countFrame(0),
 m_hTitleLogoImg(-1),
+m_hBackGroundImg(-1),
 m_hCharaImg(-1),
 m_charaPos(VGet(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 0.0f)),
 m_charaDir(VGet(kCharaSpeed, kCharaSpeed, 0.0f)),
-m_pSelectMenu(std::make_shared<SelectMenuBase>()),
-m_pSkyDome(std::make_shared<SkyDome>())
+m_musicNameDrawPos(VGet(Game::kScreenWidth, Game::kScreenHeight - 50.0f, 0.0f)),
+m_pSelectMenu(std::make_shared<SelectMenuBase>())
 {
 	// データ読み込み
 	LoadData();
@@ -51,6 +57,8 @@ SceneTitleMenu::~SceneTitleMenu()
 {
 	// 画像ハンドル解放
 	DeleteGraph(m_hTitleLogoImg);
+	// 背景画像解放	
+	DeleteGraph(m_hBackGroundImg);
 	// キャラ画像解放
 	m_hCharaImg = -1;
 }
@@ -67,11 +75,8 @@ void SceneTitleMenu::Init()
 	// 選択項目描画位置設定
 	m_pSelectMenu->SetDrawPos(Game::kScreenWidthHalf, kTextDrawPosY);
 
-	// スカイドーム初期化
-	m_pSkyDome->Init(Game::kVecZero);
-
-	// カメラ初期化
-	SetCameraPositionAndAngle(Game::kVecZero, 0.0f,0.0f,0.0f);
+	// マウスカーソル表示
+	SetMouseDispFlag(true);
 }
 
 void SceneTitleMenu::Update(const InputState& input)
@@ -82,12 +87,14 @@ void SceneTitleMenu::Update(const InputState& input)
 	(this->*m_updateFunc)(input);
 	// キャラクター更新
 	UpdateChara();
+	// 曲名ループ処理
+	MusicNameLoop();
 }
 
 void SceneTitleMenu::Draw()
 {
-	// スカイドーム描画
-	m_pSkyDome->Draw();
+	// 背景画像描画
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_hBackGroundImg, true);
 	// キャラクター描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DrawRotaGraphF(m_charaPos.x, m_charaPos.y, kCharaSize, 0, m_hCharaImg, true);
@@ -96,6 +103,10 @@ void SceneTitleMenu::Draw()
 	DrawRotaGraphF(kLogoDrawPosX, kLogoDrawPosY, 1.0, 0, m_hTitleLogoImg, true);
 	// 選択項目描画
 	m_pSelectMenu->Draw();
+	// 曲名描画
+	SetFontSize(32);
+	DrawFormatStringF(m_musicNameDrawPos.x, m_musicNameDrawPos.y, Game::kColorWhite, "%s", kTextMusicName);
+	SetFontSize(Game::kFontSize);
 }
 
 void SceneTitleMenu::End()
@@ -106,6 +117,8 @@ void SceneTitleMenu::LoadData()
 {
 	// 画像読み込み
 	m_hTitleLogoImg = LoadGraph("Data/ImageData/RARA_GAME_TITLE.png");
+	// 背景画像読み込み
+	m_hBackGroundImg = LoadGraph("Data/ImageData/RARA_GAME_TITLE_BG.png");
 	// キャラ画像読み込み
 	m_hCharaImg = Load::GetInstance().GetImageHandle("shot");
 }
@@ -149,6 +162,17 @@ void SceneTitleMenu::UpdateChara()
 	}
 	// キャラクター座標更新
 	m_charaPos = VAdd(m_charaPos, m_charaDir);
+}
+
+void SceneTitleMenu::MusicNameLoop()
+{
+	m_musicNameDrawPos.x -= kMusicNameMoveSpeed;
+
+	int textLength = GetDrawFormatStringWidth(kTextMusicName);
+	if (m_musicNameDrawPos.x + textLength < 0)
+	{
+		m_musicNameDrawPos.x = Game::kScreenWidth;
+	}
 }
 
 void SceneTitleMenu::NormalUpdate(const InputState& input)

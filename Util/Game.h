@@ -27,7 +27,7 @@ namespace Game
 	constexpr int kColorRed = 0xdc143c;
 	constexpr int kColorGreen = 0x6cc569;
 	constexpr int kColorBlue = 0x5c6398;
-	constexpr int kColorBlack = 0x0a192c;
+	constexpr int kColorBlack = 0x140e0c;
 	constexpr int kColorBlown = 0x231815;
 	constexpr int kColorWhite = 0xffffff;
 	constexpr int kColorGray = 0xa9a9a9;

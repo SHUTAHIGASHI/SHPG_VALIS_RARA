@@ -1,5 +1,6 @@
 #include "SoundManager.h"
 #include "Game.h"
+#include "ObjectBase.h"
 #include <cassert>
 
 namespace
@@ -61,13 +62,29 @@ SoundManager::~SoundManager()
 	DeleteSoundMem(m_hMusic);
 }
 
-void SoundManager::UpdateBGM()
+void SoundManager::Update()
 {
+	// ミュージックが再生されていない場合再生
 	if (CheckSoundMem(m_hMusic) == 0)
 	{
 		int volumePal = (255 / 100) * m_volumeBGM;
 		ChangeVolumeSoundMem(volumePal, m_hMusic);
 		PlaySoundMem(m_hMusic, DX_PLAYTYPE_BACK);
+	}
+
+	// 再生中のサウンドを更新
+	for (auto& sound : m_playingSoundData)
+	{
+		// 3Dサウンドを再生する位置を指定
+		SetNextPlay3DPositionSoundMem(sound.first->GetPos(), sound.second);
+
+		// 再生が終わったら削除
+		if (CheckSoundMem(sound.second) == 0)
+		{
+			DeleteSoundMem(sound.second);
+			m_playingSoundData.erase(sound.first);
+			break;
+		}
 	}
 }
 
@@ -76,16 +93,32 @@ void SoundManager::Set3DSoundListener(VECTOR pos, VECTOR frontPos)
 	Set3DSoundListenerPosAndFrontPos_UpVecY(pos, frontPos);
 }
 
-void SoundManager::Play3DSound(SoundType sound, VECTOR pos)
+void SoundManager::Play3DSound(SoundType sound, class ObjectBase* obj)
 {
+	// ハンドルの複製
+	m_playingSoundData[obj] = DuplicateSoundMem(m_soundData[sound]);
+	// 音量の調整
 	int volumePal = (255 / 100) * m_volumeSE;
-	ChangeVolumeSoundMem(m_volumeSE, m_soundData[sound]);
+	ChangeVolumeSoundMem(m_volumeSE, m_playingSoundData[obj]);
 	// 音が聞こえる距離を設定する
-	SetNextPlay3DRadiusSoundMem(k3DSoundDistance, m_soundData[sound]);
+	SetNextPlay3DRadiusSoundMem(k3DSoundDistance, m_playingSoundData[obj]);
 	// 3Dサウンドを再生する位置を指定
-	SetNextPlay3DPositionSoundMem(pos, m_soundData[sound]);
+	SetNextPlay3DPositionSoundMem(obj->GetPos(), m_playingSoundData[obj]);
 	// 指定したサウンドを再生
-	PlaySoundMem(m_soundData[sound], DX_PLAYTYPE_BACK);
+	PlaySoundMem(m_playingSoundData[obj], DX_PLAYTYPE_BACK);
+}
+
+bool SoundManager::IsPlaying3DSound(ObjectBase* obj)
+{
+	for (auto& sound : m_playingSoundData)
+	{
+		if (sound.first == obj)
+		{
+			return CheckSoundMem(sound.second);
+		}
+	}
+
+	return false;
 }
 
 void SoundManager::PlaySE(SoundType sound)

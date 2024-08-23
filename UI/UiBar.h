@@ -19,6 +19,8 @@ public:
 
     // 描画位置設定
     void SetDrawPos(int x, int y);
+	// 描画位置のローカル座標設定
+	void SetDrawLocalPos(int x, int y);
     // バーのサイズ設定
 	void SetGaugeSize(int w, int h);
 
@@ -34,6 +36,8 @@ public:
 private:
     // 描画座標
     int m_drawX, m_drawY;
+	// ローカル座標
+	int m_localX, m_localY;
 	// バーのサイズ
 	int m_gaugeW, m_gaugeH;
 

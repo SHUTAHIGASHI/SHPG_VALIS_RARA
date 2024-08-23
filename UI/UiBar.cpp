@@ -2,17 +2,13 @@
 #include "Game.h"
 #include "Player.h"
 
-namespace
-{
-	// ゲージの座標
-	constexpr int kDrawPosDiff = 30;
-}
-
 UiBar::UiBar(class ObjectBase* obj, bool is2D) :
 	m_isDelete(false),
 	m_is2D(is2D),
 	m_drawX(0),
 	m_drawY(0),
+	m_localX(0),
+	m_localY(0),
 	m_gaugeW(0),
 	m_gaugeH(0),
 	m_num(0),
@@ -77,8 +73,8 @@ void UiBar::Update()
 void UiBar::Draw()
 {
 	// HPバーの描画
-	int drawX = m_drawX - static_cast<int>(m_maxNumRate / 2);
-	int drawY = m_drawY - kDrawPosDiff;
+	int drawX = (m_drawX - static_cast<int>(m_maxNumRate / 2)) + m_localX;
+	int drawY = m_drawY + m_localY;
 	int drawW = drawX + static_cast<int>(m_currentNumRate);
 	int drawH = drawY + m_gaugeH;
 	DrawBox(drawX, drawY, drawW, drawH, m_color, true);
@@ -99,6 +95,12 @@ void UiBar::SetDrawPos(int x, int y)
 {
 	m_drawX = x;
 	m_drawY = y;
+}
+
+void UiBar::SetDrawLocalPos(int x, int y)
+{
+	m_localX = x;
+	m_localY = y;
 }
 
 void UiBar::SetGaugeSize(int w, int h)

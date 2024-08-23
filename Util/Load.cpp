@@ -26,12 +26,10 @@ void Load::AllLoadData()
 	m_imageData["lockCursor"] = LoadGraph("Data/ImageData/LockCursor.png");
 	m_imageData["hitCursor"] = LoadGraph("Data/ImageData/HitCursor.png");
 	m_imageData["shot"] = LoadGraph("Data/ImageData/Ringo.png");
-	m_imageData["chino"] = LoadGraph("Data/ImageData/chinoDot.png");
-	m_imageData["myu"] = LoadGraph("Data/ImageData/myuDot.png");
-	m_imageData["neffy"] = LoadGraph("Data/ImageData/NeffyTest.png");
-	m_imageData["neffyKarasu"] = LoadGraph("Data/ImageData/NeffyKarasu.png");
-	m_imageData["nina"] = LoadGraph("Data/ImageData/ninaDot.png");
-	m_imageData["vitte"] = LoadGraph("Data/ImageData/vitteDot.png");
+	m_imageData["neffy"] = LoadGraph("Data/ImageData/RaraGame_Chara1.png");
+	m_imageData["neffy2"] = LoadGraph("Data/ImageData/RaraGame_Chara2.png");
+	m_imageData["neffyKarasu"] = LoadGraph("Data/ImageData/RaraGame_NeffyKarasu1.png");
+	m_imageData["neffyKarasu2"] = LoadGraph("Data/ImageData/RaraGame_NeffyKarasu2.png");
 	m_imageData["fpsHand"] = LoadGraph("Data/ImageData/RaraGame_Hands.png");
 }
 

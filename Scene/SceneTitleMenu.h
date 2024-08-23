@@ -28,6 +28,8 @@ private: // プライベート関数
     void OnSceneEnd();
     // キャラクター更新
     void UpdateChara();
+    // 曲名ループ処理
+    void MusicNameLoop();
 
     using m_tUpdateFunc = void (SceneTitleMenu::*) (const InputState& input);
     m_tUpdateFunc m_updateFunc = nullptr;
@@ -41,16 +43,18 @@ private: // シーン全体の管理変数
 private: // シーン装飾の管理変数
     // 画像ハンドル
     int m_hTitleLogoImg;
+    // 背景画像ハンドル
+	int m_hBackGroundImg;
     // キャラハンドル
     int m_hCharaImg;
     // キャラクター座標
     VECTOR m_charaPos;
     VECTOR m_charaDir;
+    // 曲名表示位置
+    VECTOR m_musicNameDrawPos;
 
 private:
     // セレクトメニューの管理変数
     std::shared_ptr<class SelectMenuBase> m_pSelectMenu;
-    // スカイドーム
-    std::shared_ptr<class SkyDome> m_pSkyDome;
 };
 

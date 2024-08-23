@@ -1,32 +1,40 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include <DxLib.h>
+#include <vector>
+#include <list>
+#include <memory>
+#include <string>
 
 namespace StageTile
 {
 	constexpr int EN = 0;
-	constexpr int FL = 1;
-	constexpr int WL = 2;
-	constexpr int F1 = 3;
-	constexpr int F2 = 4;
-	constexpr int SW = 5;
-	constexpr int GL = 6;
-	constexpr int SP = 7;
-	constexpr int CH = 8;
+	constexpr int CH = 1;
 	constexpr int MY = CH + 1;
 	constexpr int NE = MY + 1;
 	constexpr int NI = NE + 1;
 	constexpr int RA = NI + 1;
 	constexpr int VI = RA + 1;
+	constexpr int FL = VI + 1;
+	constexpr int WL = FL + 1;
+	constexpr int F1 = WL + 1;
+	constexpr int F2 = F1 + 1;
+	constexpr int GL = F2 + 1;
+	constexpr int SP = GL + 1;
+	constexpr int S1 = SP + 1;
+	constexpr int S2 = S1 + 1;
+	constexpr int S3 = S2 + 1;
+	constexpr int S4 = S3 + 1;
+	constexpr int S5 = S4 + 1;
+	constexpr int S6 = S5 + 1;
 }
 
 struct TileData
 {
-	TileData(int x, int z, int handle) :
+	TileData(int x, int z, int handle, std::string name) :
 		x(x),
 		z(z),
-		handle(handle)
+		handle(handle),
+		name(name)
 	{}
 	~TileData()
 	{
@@ -36,6 +44,7 @@ struct TileData
 	int x;
 	int z;
 	int handle;
+	std::string name;
 };
 
 class Stage
@@ -82,6 +91,14 @@ private:
 	void CreateSwitch(int x, int z);
 	void CreateGoal(int x, int z);
 
+	// スイッチの状態を確認
+	void CheckSwitch();
+
+	// サプライズメッセージ生成
+	void CreateSurpriseMessage();
+	// サプライズメッセージ描画
+	void DrawSurpriseMessage();
+
 private:
 	// キューブの情報
 	std::vector<TileData> m_cubes;
@@ -89,9 +106,17 @@ private:
 	// 現在のステージの情報
 	std::vector<std::vector<int>> m_currentStageData;
 
+	// サプライズメッセージ用の画像ハンドル
+	std::list<int> m_hSurpriseMsg;
+
+	// サプライズメッセージの描画判定
+	bool m_isDrawSurpriseMsg;
+
+	// スイッチ判定
+	std::vector<bool> m_isSwitches;
+
 	// ステージのサイズ
 	int m_stageWidth;
 	int m_stageHeight;
-
 };
 

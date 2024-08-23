@@ -12,6 +12,8 @@ public:
 
     // 更新
     void Update() override;
+	// 描画
+	void Draw() override;
 
 private:
     // メンバ関数ポインタ(更新)

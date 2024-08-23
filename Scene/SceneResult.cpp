@@ -5,18 +5,19 @@
 #include "SceneMain.h"
 #include "SceneTitleMenu.h"
 #include "SoundManager.h"
+#include "GameDataManager.h"
 
 namespace
 {
 	// テキスト
 	const char* const kTextScene = "リザルト";
 	const char* const kScoreTexts[] = {
-		"スコア : ",
-		"ランク : "
+		"生き残ったラウンド",
+		"ラウンド : "
 	};
 	// 選択項目
 	const char* const kMenuTexts[] = {
-		"次のステージへ",
+		"もういちど遊ぶ",
 		"タイトルへ"
 	};
 
@@ -41,8 +42,6 @@ SceneResult::SceneResult(SceneManager& manager) :
 	Scene(manager),
 	m_updateFunc(&SceneResult::StartUpdate),
 	m_hBgImg(-1),
-	m_highScore(0),
-	m_rank(""),
 	m_scorePosY(-kScorePosY),
 	m_pSelectMenu(std::make_shared<SelectMenuBase>())
 {
@@ -93,8 +92,8 @@ void SceneResult::Draw()
 	for (auto& text : kScoreTexts)
 	{
 		std::string scoreText;
-		if (i == 0) scoreText = text + std::to_string(m_highScore);
-		else scoreText = text + m_rank;
+		if (i == 0) scoreText = text;
+		else scoreText = text + std::to_string(GameDataManager::GetInstance().GetSurvivedRound());
 		// 文字列の長さ取得
 		int textLength = GetDrawFormatStringWidth(scoreText.c_str());
 		// 描画位置設定

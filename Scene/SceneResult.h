@@ -32,12 +32,8 @@ private:
 private: // 変数
     // 背景画像
     int m_hBgImg;
-    // ハイスコア
-    int m_highScore;
     // スコア描画用座標
     float m_scorePosY;
-    // ランク
-    std::string m_rank;
     // 選択メニュー
     std::shared_ptr<class SelectMenuBase> m_pSelectMenu;
 };

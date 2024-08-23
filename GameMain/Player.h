@@ -130,6 +130,8 @@ private:
 	bool m_isLockOn;
 	// 射撃中判定
 	bool m_isShot;
+	// インタラクト可能か
+	bool m_isInteract;
 
 	// マウス感度
 	float m_mouseSensitivity;

@@ -1,9 +1,8 @@
 #pragma once
-#include <unordered_map>
+#include <DxLib.h>
 #include <map>
 #include <string>
-#include <vector>
-#include <DxLib.h>
+#include <list>
 
 enum class SoundType
 {
@@ -37,14 +36,17 @@ public:
 		// それの参照を返す
 		return instance;
 	}
-	// BGMの更新
-	void UpdateBGM();
+	// 更新
+	void Update();
 
 	// 3Dサウンドリスナー設定
 	void Set3DSoundListener(VECTOR pos, VECTOR frontPos);
 
 	// 指定した3Dサウンドを再生する
-	void Play3DSound(SoundType sound, VECTOR pos);
+	void Play3DSound(SoundType sound, class ObjectBase* obj);
+
+	// 指定した3Dサウンドが再生中かどうか
+	bool IsPlaying3DSound(class ObjectBase* obj);
 
 	/// <summary>
 	/// 指定のサウンドを鳴らす
@@ -105,6 +107,8 @@ private:
 private:
 	// 音データ
 	std::map<SoundType, int> m_soundData;
+	// 再生中の音データ
+	std::map<class ObjectBase*, int> m_playingSoundData;
 
 	// ミュージックデータハンドル
 	int m_hMusic;

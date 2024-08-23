@@ -57,7 +57,7 @@ namespace
 	constexpr int kShotDamage = 10;
 
 	// 体力
-	constexpr int kMaxHp = 100;
+	constexpr int kMaxHp = 50;
 	// 無敵時間
 	constexpr int kDamageInvTime = 60;
 	// 体力回復までの時間
@@ -96,6 +96,7 @@ Player::Player():
 	m_isDash(false),
 	m_isLockOn(false),
 	m_isShot(false),
+	m_isInteract(false),
 	m_mouseSensitivity(0.0f),
 	m_eyeHeight(kStandHeight),
 	m_playerAngleY(0.0f),
@@ -347,14 +348,29 @@ void Player::UpdateView()
 void Player::ControllGimmick(const InputState& input)
 {
 	// ギミック操作
-	if (m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::SW)
+	if (m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::S1
+		|| m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::S2
+		|| m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::S3
+		|| m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::S4
+		|| m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::S5
+		|| m_pStage->GetStageData()[m_tileZ][m_tileX] == StageTile::S6)
 	{
 		// インタラクトキー
 		if (input.IsTriggered(InputType::Interract))
 		{
 			// ギミック処理
 			m_pStage->SwitchOn(m_tileX, m_tileZ);
+			// サウンド再生
+			SoundManager::GetInstance().PlaySE(SoundType::zakkirin);
 		}
+
+		// インタラクトキーのヒントを描画
+		m_isInteract = true;
+	}
+	else
+	{
+		// インタラクトキーのヒントを描画しない
+		m_isInteract = false;
 	}
 }
 
@@ -870,4 +886,12 @@ void Player::Draw2D()
 		static_cast<int>(Game::k2DChipSize), static_cast<int>(Game::k2DChipSize),
 		kFpsHandScale, 0.0f,
 		m_hFpsHand,true);
+
+	// インタラクトキーのヒント描画
+	if (m_isInteract)
+	{
+		std::string hint = "Eキーで操作";
+		auto textLength = GetDrawFormatStringWidth(hint.c_str());
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf + 100, Game::kColorWhite, "%s", hint.c_str());
+	}
 }

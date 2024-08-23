@@ -13,7 +13,10 @@ namespace
 
 EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	ObjectBase(),
-	m_attackFrame(0)
+	m_frameCount(0),
+	m_drawFrame(0),
+	m_attackFrame(0),
+	m_pAttack(nullptr)
 {
 	// ”¼ŒaÝ’è
 	m_status.radius = kRadius;
@@ -23,10 +26,12 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 	m_status.scale = Game::kBaseScale;
 	// À•WÝ’è
 	m_status.pos = pos;
-	// ‰æ‘œÝ’è
-	m_status.hImg = Load::GetInstance().GetImageHandle(typeName);
 	// ‘Ì—ÍÝ’è
 	m_status.hp = kBaseHp;
+
+	// ‰æ‘œ“Ç‚Ýž‚Ý
+	m_hImgs.push_back(Load::GetInstance().GetImageHandle(typeName));
+	m_hImgs.push_back(Load::GetInstance().GetImageHandle(typeName += "2"));
 
 	// UI‚É“G‚Ì‘Ì—Í‚ð“o˜^
 	UiManager::GetInstance().AddEnemyHpBar(this);
@@ -34,12 +39,36 @@ EnemyBase::EnemyBase(std::string typeName, VECTOR pos):
 
 EnemyBase::~EnemyBase()
 {
+	// ‰æ‘œƒnƒ“ƒhƒ‹‚Ì‰ð•ú
+	for (auto& hImg : m_hImgs)
+	{
+		DeleteGraph(hImg);
+	}
+	// UŒ‚ƒNƒ‰ƒX‚Ì‰ð•ú
+	if (m_pAttack != nullptr)
+	{
+		delete m_pAttack;
+		m_pAttack = nullptr;
+	}
 }
 
 void EnemyBase::Draw()
 {
 	// ‰æ‘œ•`‰æ
-	DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_status.hImg, true);
+	if (m_drawFrame % 2 == 0)
+	{
+		DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_hImgs.front(), true);
+	}
+	else
+	{
+		DrawBillboard3D(m_status.pos, 0.5f, 0.5f, m_status.scale, 0.0f, m_hImgs.back(), true);
+	}
+
+	// •`‰æƒtƒŒ[ƒ€‚ði‚ß‚é
+	if (m_frameCount % 10 == 0)
+	{
+		m_drawFrame++;
+	}
 }
 
 void EnemyBase::OnHit(int damage)
@@ -55,7 +84,7 @@ void EnemyBase::OnHit(int damage)
 	else
 	{
 		// ƒ_ƒ[ƒW‰¹Ä¶
-		SoundManager::GetInstance().Play3DSound(SoundType::enemyDamage, m_status.pos);
+		SoundManager::GetInstance().Play3DSound(SoundType::enemyDamage, this);
 	}
 }
 
@@ -83,7 +112,7 @@ void EnemyBase::OnDead()
 	// ‘Ì—Í‚ª0ˆÈ‰º‚É‚È‚Á‚½‚ç
 	m_status.isEnabled = false;
 	// Ž€–S‰¹Ä¶
-	SoundManager::GetInstance().Play3DSound(SoundType::enemyDeath, m_status.pos);
+	SoundManager::GetInstance().Play3DSound(SoundType::enemyDeath, this);
 	// íœˆ—
 	this->OnDelete();
 }

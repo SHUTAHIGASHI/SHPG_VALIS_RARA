@@ -60,6 +60,8 @@ SceneOption::SceneOption(SceneManager& manager) :
 	// 画像読み込み
 	m_hBgImg = LoadGraph("Data/ImageData/RARA_GAME_BG.png");
 	m_hMusicVolImg = Load::GetInstance().GetImageHandle("shot");
+	// カーソル描画
+	SetMouseDispFlag(true);
 }
 
 SceneOption::~SceneOption()
@@ -359,6 +361,8 @@ void SceneOption::OnSelect()
 		// ウィンドウモード変更
 		auto result = ChangeWindowMode(!static_cast<bool>(GetWindowModeFlag()));
 		assert(result == DX_CHANGESCREEN_OK);
+		// カーソル描画
+		SetMouseDispFlag(true);
 	}
 	else if (m_selectedItemName == "保存して閉じる")
 	{

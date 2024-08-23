@@ -24,6 +24,11 @@ public:
 	// マウス感度の設定
 	void SetMouseSensitivity(float sensitivity) { m_mouseSensitivity = sensitivity; }
 
+	// 生き残ったラウンド数の取得
+	int GetSurvivedRound() const { return m_survivedRound; }
+	// 生き残ったラウンド数の設定
+	void SetSurvivedRound(int round) { m_survivedRound = round; }
+
 private:
 	// 変更したサウンド情報をファイルに書き込む
 	struct GameConfigInfo
@@ -47,4 +52,7 @@ private:
 private:
 	// マウス感度
 	float m_mouseSensitivity;
+
+	// 生き残ったラウンド数
+	int m_survivedRound;
 };

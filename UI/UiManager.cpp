@@ -9,8 +9,8 @@ namespace
 	// UIを描画する範囲
 	constexpr float kDrawRange = 600.0f;
 	// 敵HPバーのサイズ
-	constexpr float kEnemyHPBarW = 50.0f;
-	constexpr float kEnemyHPBarH = 10.0f;
+	constexpr int kEnemyHPBarW = 50;
+	constexpr int kEnemyHPBarH = 10;
 
 	// 残弾数UIの描画位置
 	constexpr int kUiPosX = 100;
@@ -19,11 +19,11 @@ namespace
 	constexpr double kUiScale = 3.0;
 
 	// プレイヤーHPバーの描画位置
-	constexpr float kPlayerHPBarPosX = Game::kScreenWidthHalf;
-	constexpr float kPlayerHPBarPosY = 100.0f;
+	constexpr int kPlayerHPBarPosX = Game::kScreenWidthHalf;
+	constexpr int kPlayerHPBarPosY = 100;
 	// プレイヤーHPバーのサイズ
-	constexpr double kPlayerHPBarW = 1000.0f;
-	constexpr double kPlayerHPBarH = 60.0f;
+	constexpr int kPlayerHPBarW = 1000;
+	constexpr int kPlayerHPBarH = 60;
 }
 
 UiManager::~UiManager()
@@ -91,6 +91,8 @@ void UiManager::AddEnemyHpBar(ObjectBase* obj)
 	// UIの追加
 	m_pEnemyHpBar.push_back(new UiBar(obj, false));
 	m_pEnemyHpBar.back()->Init();
+	// 描画位置設定
+	m_pEnemyHpBar.back()->SetDrawLocalPos(0, -60);
 	// バーのサイズ設定
 	m_pEnemyHpBar.back()->SetGaugeSize(kEnemyHPBarW, kEnemyHPBarH);
 }

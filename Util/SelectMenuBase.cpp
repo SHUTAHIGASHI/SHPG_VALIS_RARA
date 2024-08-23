@@ -7,6 +7,8 @@ namespace
 	constexpr int kTextDistance = static_cast<int>(Game::kFontSize * 1.5);
 	// ƒV[ƒ“•¶š—ñŠg‘å—¦
 	constexpr float kSceneTextScale = 1.5f;
+	// ”wŒiƒTƒCƒY
+	constexpr int kTextBackSize = 4;
 }
 
 SelectMenuBase::SelectMenuBase() :
@@ -62,8 +64,8 @@ void SelectMenuBase::AddSelectItem(std::string itemName)
 void SelectMenuBase::DrawMenuText()
 {
 	int drawX = 0, drawY = 0;
-
 	int itemCount = 0;
+	// ƒƒjƒ…[•¶š—ñ•`‰æ
 	for (auto& items : m_selectItems)
 	{
 		int textLength = GetDrawFormatStringWidth(items.itemName.c_str());
@@ -71,16 +73,20 @@ void SelectMenuBase::DrawMenuText()
 		drawY = static_cast<int>(m_drawPos.y + (kTextDistance * itemCount));
 		if (items.isDraw)
 		{
+			// ”wŒi•`‰æ
+			DrawBox(drawX - kTextBackSize, drawY - kTextBackSize, drawX + textLength + kTextBackSize, drawY + Game::kFontSize + kTextBackSize, Game::kColorBlown, true);
+			DrawBox(drawX - kTextBackSize, drawY - kTextBackSize, drawX + textLength + kTextBackSize, drawY + Game::kFontSize + kTextBackSize, 0x30221e, false);
+			// •¶š•`‰æ
 			DrawFormatString(drawX, drawY, m_itemColor, "%s", items.itemName.c_str());
 		}
 		itemCount++;
 	}
 
+	// ‘I‘ğ’†•¶š—ñ•`‰æ
 	std::string drawText = "> " + m_selectItems[m_selectedPos].itemName + " <";
 	int textLength = GetDrawFormatStringWidth(drawText.c_str());
 	drawX = static_cast<int>(m_drawPos.x - (textLength / 2));
 	drawY = static_cast<int>(m_drawPos.y + (kTextDistance * m_selectedPos));
-
 	if (m_selectItems[m_selectedPos].isDraw)
 	{
 		if ((m_countFrame / 10) % 6 != 0)

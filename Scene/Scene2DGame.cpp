@@ -13,7 +13,7 @@ namespace
 	// 当たり判定半径
 	constexpr float kHitRadius = 32.0f;
 	// ステージ限界
-	constexpr float kStageLimit = Game::kScreenHeight - 150.0f;
+	constexpr float kStageLimit = 150.0f;
 	// ゲームカウント
 	constexpr int kGameCount = 60 * 30;
 }
@@ -21,7 +21,7 @@ namespace
 namespace PlayerState
 {
 	// 移動速度
-	constexpr float kMoveSpeed = 6.0f;
+	constexpr float kMoveSpeed = 12.0f;
 	// ショット遅延
 	constexpr int kShotDelay = 16;
 	// 拡大率
@@ -35,12 +35,13 @@ namespace EnemyState
 	// 出現間隔
 	constexpr int kAppearInterval = 120;
 	// 出現数
-	constexpr int kAppearCount = 10;
+	constexpr int kAppearCount = 15;
 }
 
 Scene2DGame::Scene2DGame(SceneManager& manager) : Scene(manager),
 m_hPlayerImg(-1),
 m_playerPos(VGet(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 0.0f)),
+m_playerDir(VGet(0.0f, 1.0f, 0.0f)),
 m_shots(),
 m_hShotImg(-1),
 m_shotDelay(0),
@@ -80,7 +81,7 @@ Scene2DGame::~Scene2DGame()
 void Scene2DGame::Init()
 {
 	// プレイヤー座標初期化
-	m_playerPos = VGet(Game::kScreenWidthHalf, kStageLimit, 0.0f);
+	m_playerPos = VGet(Game::kScreenWidthHalf, Game::kScreenHeightHalf, 0.0f);
 	// ショット初期化
 	m_shots.clear();
 	// エネミー初期化
@@ -114,8 +115,8 @@ void Scene2DGame::Update(const InputState& input)
 	}
 
 	// カーソル座標
-	m_cursorPos.x = input.GetMousePosX();
-	m_cursorPos.y = input.GetMousePosY();
+	m_cursorPos.x = static_cast<float>(input.GetMousePosX());
+	m_cursorPos.y = static_cast<float>(input.GetMousePosY());
 
 	if (!m_isGameEnd)
 	{
@@ -149,7 +150,8 @@ void Scene2DGame::Draw()
 	DrawEnemy();
 
 	// ステージ限界描画
-	DrawLine(0, kStageLimit, Game::kScreenWidth, kStageLimit, 0xffffff);
+	DrawLine(0, static_cast<int>(kStageLimit), Game::kScreenWidth, static_cast<int>(kStageLimit), 0xffffff);
+	DrawLine(0, static_cast<int>(Game::kScreenHeight - kStageLimit), Game::kScreenWidth, static_cast<int>(Game::kScreenHeight - kStageLimit), 0xffffff);
 
 	if (m_isGameEnd)
 	{
@@ -157,10 +159,10 @@ void Scene2DGame::Draw()
 		// ゲームカウント描画
 		std::string drawText = "倒したネフィさん:" + std::to_string(m_killCount);
 		auto textLength = GetDrawFormatStringWidth(drawText.c_str());
-		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - 60.0f, 0xffffff, "%s", drawText.c_str());
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf - 60, 0xffffff, "%s", drawText.c_str());
 		drawText = "タイトルへ戻ります";
 		textLength = GetDrawFormatStringWidth(drawText.c_str());
-		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf + 30.0f, 0xffffff, "%s", drawText.c_str());
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), Game::kScreenHeightHalf + 30, 0xffffff, "%s", drawText.c_str());
 		return;
 	}
 	else
@@ -169,7 +171,7 @@ void Scene2DGame::Draw()
 		std::string drawText = std::to_string(m_gameCount / 60);
 		SetFontSize(60);
 		auto textLength = GetDrawFormatStringWidth(drawText.c_str());
-		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), kStageLimit + 40, 0xffffff, "%s", drawText.c_str());
+		DrawFormatString(Game::kScreenWidthHalf - (textLength / 2), static_cast<int>(Game::kScreenHeight - kStageLimit)+40, 0xffffff, "%s", drawText.c_str());
 		SetFontSize(Game::kFontSize);
 	}
 
@@ -195,11 +197,11 @@ void Scene2DGame::UpdatePlayer(const InputState& input)
 		m_playerPos.x += PlayerState::kMoveSpeed;
 	}
 
+	// プレイヤー方向
+	m_playerPos = VAdd(m_playerPos, VScale(m_playerDir, PlayerState::kMoveSpeed));
+
 	// 画面外処理
-	if (m_playerPos.x < 0) m_playerPos.x = 0;
-	if (m_playerPos.x > Game::kScreenWidth) m_playerPos.x = Game::kScreenWidth;
-	if (m_playerPos.y < 0) m_playerPos.y = 0;
-	if (m_playerPos.y > Game::kScreenHeight) m_playerPos.y = Game::kScreenHeight;
+	if (m_playerPos.y < kStageLimit || m_playerPos.y > Game::kScreenHeight - kStageLimit) m_playerDir.y *= -1;
 
 	// ショット発射
 	if (input.IsPressed(InputType::shot))
@@ -281,7 +283,7 @@ void Scene2DGame::UpdateEnemy()
 			m_enemyCount = GetRand(EnemyState::kAppearInterval);
 			m_enemies.push_back(Enemy());
 			// ランダムな生成座標
-			float posX = GetRand(Game::kScreenWidth);
+			float posX = static_cast<float>(GetRand(Game::kScreenWidth));
 			m_enemies.back().enemyPos = VGet(posX, 0.0f, 0.0f);
 			m_enemies.back().enemyDir = VGet(0.0f, 1.0f, 0.0f);
 			// 正規化
@@ -298,7 +300,7 @@ void Scene2DGame::UpdateEnemy()
 	// エネミー削除
 	m_enemies.remove_if([](const Enemy& enemy)
 		{
-			if (enemy.enemyPos.y > kStageLimit || enemy.isDelete)
+			if (enemy.enemyPos.y > Game::kScreenHeight - kStageLimit || enemy.isDelete)
 			{
 				return true;
 			}

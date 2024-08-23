@@ -6,7 +6,7 @@
 namespace
 {
 	// 攻撃判定の半径
-	constexpr float kAttackRadius = 120.0f;
+	constexpr float kAttackRadius = 150.0f;
 	// 攻撃フレーム数
 	constexpr int kAttackFrame = 60;
 }
@@ -27,14 +27,17 @@ EnemyNeffyKarasu::~EnemyNeffyKarasu()
 
 void EnemyNeffyKarasu::Update()
 {
+	// 毎フレームカウント
+	m_frameCount++;
+
 	// 更新処理のメンバ関数ポインタ
 	(this->*m_updateFunc)();
 
 	// エネミーサウンド再生
-	if (!SoundManager::GetInstance().IsPlaying(SoundType::enemyBirdVoice))
+	if (!SoundManager::GetInstance().IsPlaying3DSound(this))
 	{
 		//SoundManager::GetInstance().PlaySE(SoundType::enemyBirdVoice);
-		SoundManager::GetInstance().Play3DSound(SoundType::enemyBirdVoice, m_status.pos);
+		SoundManager::GetInstance().Play3DSound(SoundType::enemyBirdVoice, this);
 	}
 }
 

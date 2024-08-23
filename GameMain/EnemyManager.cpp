@@ -11,6 +11,8 @@ namespace
 {
 	// 敵の生成数
 	constexpr int kEnemyNum = 5;
+	// 生成する座標の範囲
+	constexpr int kSpawnRange = 100;
 }
 
 EnemyManager::EnemyManager():
@@ -18,7 +20,6 @@ EnemyManager::EnemyManager():
 	m_enemyMaxOnRound(15),
 	m_enemyMaxOnScreen(kEnemyNum),
 	m_isEnemyCreateEnd(false),
-	m_spawnCenterPos(Game::kVecZero),
 	m_pEnemies(),
 	m_pPlayer(nullptr)
 {
@@ -99,9 +100,17 @@ void EnemyManager::CreateEnemy()
 
 VECTOR EnemyManager::GetSpawnPos()
 {
-	int spawnPoint = GetRand(m_pStage->GetSpawnPointNum() - 1);
+	VECTOR spawnPos = Game::kVecZero;
+	// 生成する座標の順番をランダムで取得
+	int spawnPointNum = GetRand(m_pStage->GetSpawnPointNum() - 1);
+	// 生成する中心座標を取得
+	VECTOR centerPos = m_pStage->GetSpawnPoint(spawnPointNum);
+	// 生成する座標をランダムで取得
+	spawnPos = VAdd(centerPos, VGet(static_cast<float>(GetRand(kSpawnRange)), 
+		0.0f,
+		static_cast<float>(GetRand(kSpawnRange))));
 
-	return m_pStage->GetSpawnPoint(spawnPoint);
+	return spawnPos;
 }
 
 EnemyBase* EnemyManager::GetRandomEnemy()

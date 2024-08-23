@@ -97,7 +97,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ClearDrawScreen();
 
 		// サウンドマネージャーの更新
-		soundManager.GetInstance().UpdateBGM();
+		soundManager.GetInstance().Update();
 
 		// 入力状態の更新
 		input.Update();

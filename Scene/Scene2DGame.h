@@ -68,6 +68,7 @@ private: // プレイヤー変数
 	int m_hPlayerImg;
 	// プレイヤー座標
 	VECTOR m_playerPos;
+	VECTOR m_playerDir;
 
 private: // ショット変数
 	// ショット構造体配列

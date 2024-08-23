@@ -28,14 +28,35 @@ EnemyNeffy::~EnemyNeffy()
 
 void EnemyNeffy::Update()
 {
+	// 毎フレームカウント
+	m_frameCount++;
+
 	// 更新処理のメンバ関数ポインタ
 	(this->*m_updateFunc)();
 
 	// エネミーサウンド再生
-	if (!SoundManager::GetInstance().IsPlaying(SoundType::enemyVoice))
+	if (!SoundManager::GetInstance().IsPlaying3DSound(this))
 	{
-		//SoundManager::GetInstance().PlaySE(SoundType::enemyBirdVoice);
-		SoundManager::GetInstance().Play3DSound(SoundType::enemyVoice, m_status.pos);
+		SoundManager::GetInstance().Play3DSound(SoundType::enemyVoice, this);
+	}
+}
+
+void EnemyNeffy::Draw()
+{
+	// 画像描画
+	if (m_drawFrame % 2 == 0)
+	{
+		DrawBillboard3D(m_status.pos, 0.5f, 0.8f, m_status.scale, 0.0f, m_hImgs.front(), true);
+	}
+	else
+	{
+		DrawBillboard3D(m_status.pos, 0.5f, 0.8f, m_status.scale, 0.0f, m_hImgs.back(), true);
+	}
+
+	// 描画フレームを進める
+	if (m_frameCount % 20 == 0)
+	{
+		m_drawFrame++;
 	}
 }
 
@@ -68,7 +89,7 @@ void EnemyNeffy::NormalUpdate()
 	else
 	{
 		// 移動不可能な場合はランダムで移動方向を変更
-		m_status.dir = VGet(GetRand(100) - 50, 0, GetRand(100) - 50);
+		m_status.dir = VGet(static_cast<float>(GetRand(100) - 50), 0.0f, static_cast<float>(GetRand(100) - 50));
 		if (VSize(m_status.dir) > 0) m_status.dir = VNorm(m_status.dir);
 		m_status.dir = VScale(m_status.dir, m_status.moveSpeed);
 	}

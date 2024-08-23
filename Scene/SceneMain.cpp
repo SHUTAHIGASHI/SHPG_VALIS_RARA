@@ -16,6 +16,7 @@
 #include "CameraManager.h"
 #include "SoundManager.h"
 #include "UiManager.h"
+#include "GameDataManager.h"
 #include "SkyDome.h"
 
 SceneMain::SceneMain(SceneManager& manager) :
@@ -87,6 +88,9 @@ void SceneMain::OnGameOver()
 {
 	// 実行する更新処理変更
 	m_updateFunc = &SceneMain::EndUpdate;
+
+	// 生き残ったラウンド数を保存
+	GameDataManager::GetInstance().SetSurvivedRound(m_pStage->GetRoundCount());
 
 	// シーン変更
 	m_Manager.PushSceneAllUpdate(new SceneResult(m_Manager));
