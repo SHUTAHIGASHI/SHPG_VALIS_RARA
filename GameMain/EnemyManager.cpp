@@ -21,7 +21,8 @@ EnemyManager::EnemyManager():
 	m_enemyMaxOnScreen(kEnemyNum),
 	m_isEnemyCreateEnd(false),
 	m_pEnemies(),
-	m_pPlayer(nullptr)
+	m_pPlayer(nullptr),
+	m_pStage(nullptr)
 {
 }
 
@@ -86,7 +87,7 @@ void EnemyManager::DiffcultyUp()
 	// “G‚ÌÅ‘å¶¬”‚ğ‘‰Á
 	m_enemyMaxOnRound += 5;
 	// “G‚ÌÅ‘å“¯¶¬”‚ğ‘‰Á
-	m_enemyMaxOnScreen += 1;
+	m_enemyMaxOnScreen += 2;
 }
 
 void EnemyManager::CreateEnemy()
