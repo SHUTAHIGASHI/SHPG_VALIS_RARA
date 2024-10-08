@@ -92,6 +92,7 @@
     <ClInclude Include="Util\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="exeIcon.rc" />
     <ResourceCompile Include="ShpGame.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

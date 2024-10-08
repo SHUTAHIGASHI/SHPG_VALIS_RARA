@@ -1,4 +1,4 @@
-#include "Game.h"
+ï»¿#include "Game.h"
 #include "GameDataManager.h"
 #include "SoundManager.h"
 #include "UiManager.h"
@@ -9,44 +9,46 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	// ƒƒO–³Œø‰»
+	// ãƒ­ã‚°ç„¡åŠ¹åŒ–
 	SetOutApplicationLogValidFlag(false);
-	// ‘¼ƒEƒBƒ“ƒhƒE‚ğ‘I‘ğ‚µ‚Ä‚¢‚Ä‚à“®ì
+	// ä»–ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é¸æŠã—ã¦ã„ã¦ã‚‚å‹•ä½œ
 	SetAlwaysRunFlag(false);
-	// ƒEƒBƒ“ƒhƒEƒ‚[ƒhİ’è
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰è¨­å®š
 	ChangeWindowMode(Game::kWindowMode);
-	// ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚ÌƒTƒCƒY•ÏX
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã®ã‚µã‚¤ã‚ºå¤‰æ›´
 	SetWindowSizeChangeEnableFlag(true);
-	// ƒEƒBƒ“ƒhƒE–¼İ’è
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦åè¨­å®š
 	SetMainWindowText(Game::kTitleText);
-	// ‰æ–ÊƒTƒCƒY‚Ìİ’è
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¢ã‚¤ã‚³ãƒ³è¨­å®š
+	SetWindowIconID(5);
+	// ç”»é¢ã‚µã‚¤ã‚ºã®è¨­å®š
 	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kColorDepth);
-	// ƒ_ƒuƒ‹ƒoƒbƒtƒ@ƒ‚[ƒh
+	// ãƒ€ãƒ–ãƒ«ãƒãƒƒãƒ•ã‚¡ãƒ¢ãƒ¼ãƒ‰
 	SetDrawScreen(DX_SCREEN_BACK);
-	// ƒtƒ‹ƒXƒNƒŠ[ƒ“ƒEƒCƒ“ƒhƒE‚ÌØ‚è‘Ö‚¦‚ÅƒŠƒ\[ƒX‚ªÁ‚¦‚é‚Ì‚ğ–h‚®
+	// ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®åˆ‡ã‚Šæ›¿ãˆã§ãƒªã‚½ãƒ¼ã‚¹ãŒæ¶ˆãˆã‚‹ã®ã‚’é˜²ã
 	SetChangeScreenModeGraphicsSystemResetFlag(false);
-	// XAudio ‚ğ—LŒø‰»
+	// XAudio ã‚’æœ‰åŠ¹åŒ–
 	SetEnableXAudioFlag(TRUE);
 
-	// ‚c‚wƒ‰ƒCƒuƒ‰ƒŠ‰Šú‰»ˆ—
+	// ï¼¤ï¼¸ãƒ©ã‚¤ãƒ–ãƒ©ãƒªåˆæœŸåŒ–å‡¦ç†
 	if (DxLib_Init() == -1)
 	{
-		return -1;			// ƒGƒ‰[‚ª‹N‚«‚½‚ç’¼‚¿‚ÉI—¹
+		return -1;			// ã‚¨ãƒ©ãƒ¼ãŒèµ·ããŸã‚‰ç›´ã¡ã«çµ‚äº†
 	}
-	//Effekseer‚Ì‰Šú‰»
-	// ˆø”‚É‚Í‰æ–Ê‚É•\¦‚·‚éÅ‘åƒp[ƒeƒBƒNƒ‹”‚ğİ’è‚·‚éB
+	//Effekseerã®åˆæœŸåŒ–
+	// å¼•æ•°ã«ã¯ç”»é¢ã«è¡¨ç¤ºã™ã‚‹æœ€å¤§ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«æ•°ã‚’è¨­å®šã™ã‚‹ã€‚
 	if (Effekseer_Init(Game::kParticleNum) == -1)
 	{
 		return -1;
 	}
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 
-	// ƒQ[ƒ€’†‚Ìƒ}ƒEƒXƒ|ƒCƒ“ƒ^•`‰æİ’è
+	// ã‚²ãƒ¼ãƒ ä¸­ã®ãƒã‚¦ã‚¹ãƒã‚¤ãƒ³ã‚¿æç”»è¨­å®š
 	//SetMouseDispFlag(false);
-	// ƒ}ƒEƒXƒJ[ƒ\ƒ‹ˆÊ’uİ’è
+	// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®è¨­å®š
 	SetMousePoint(Game::kScreenWidthHalf, Game::kScreenHeightHalf);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	MATERIALPARAM Material;
 	Material.Diffuse = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
 	Material.Specular = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
@@ -55,32 +57,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Material.Power = 20.0f;
 	SetMaterialParam(Material);
 
-	// ƒŠƒ\[ƒX‚Ì“Ç‚İ‚İ
-	LPCSTR font = Game::kFontFileName;	// “Ç‚İ‚ŞƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	// ãƒªã‚½ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿
+	LPCSTR font = Game::kFontFileName;	// èª­ã¿è¾¼ã‚€ãƒ•ã‚©ãƒ³ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 	if (AddFontResourceEx(font, FR_PRIVATE, NULL) > 0) {
 	}
 	else {
-		// ƒtƒHƒ“ƒg“Ç‚İ‚İƒGƒ‰[ˆ—
-		MessageBox(NULL, "ƒtƒHƒ“ƒg“Ç‚İ‚İ¸”s", "", MB_OK);
+		// ãƒ•ã‚©ãƒ³ãƒˆèª­ã¿è¾¼ã¿ã‚¨ãƒ©ãƒ¼å‡¦ç†
+		MessageBox(NULL, "ãƒ•ã‚©ãƒ³ãƒˆèª­ã¿è¾¼ã¿å¤±æ•—", "", MB_OK);
 	}
-	// •W€ƒtƒHƒ“ƒgİ’è
+	// æ¨™æº–ãƒ•ã‚©ãƒ³ãƒˆè¨­å®š
 	ChangeFont(Game::kFontName);
 	SetFontSize(Game::kFontSize);
 
-	// ƒQ[ƒ€ƒf[ƒ^ƒ}ƒl[ƒWƒƒ[éŒ¾
+	// ã‚²ãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼å®£è¨€
 	auto& gameDataManager = GameDataManager::GetInstance();
-	// ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[éŒ¾
+	// ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼å®£è¨€
 	auto& soundManager = SoundManager::GetInstance();
-	// ƒGƒtƒFƒNƒVƒAƒ}ƒl[ƒWƒƒ[éŒ¾
+	// ã‚¨ãƒ•ã‚§ã‚¯ã‚·ã‚¢ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼å®£è¨€
 	auto& uiManager = UiManager::GetInstance();
-	// ƒL[“ü—Íó‘ÔƒNƒ‰ƒXéŒ¾
+	// ã‚­ãƒ¼å…¥åŠ›çŠ¶æ…‹ã‚¯ãƒ©ã‚¹å®£è¨€
 	InputState input;
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[éŒ¾
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼å®£è¨€
 	SceneManager scene;
 
-	//ƒ[ƒh
+	//ãƒ­ãƒ¼ãƒ‰
 	Load::GetInstance().AllLoadData();
-	// ƒJ[ƒ\ƒ‹‰æ‘œ“Ç‚İ‚İ
+	// ã‚«ãƒ¼ã‚½ãƒ«ç”»åƒèª­ã¿è¾¼ã¿
 	int hCursorImg = Load::GetInstance().GetImageHandle("cursor");
 
 #ifdef _DEBUG
@@ -93,31 +95,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		LONGLONG time = GetNowHiPerformanceCount();
 
-		// ‰æ–Ê‚ÌƒNƒŠƒA
+		// ç”»é¢ã®ã‚¯ãƒªã‚¢
 		ClearDrawScreen();
 
-		// ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[‚ÌXV
+		// ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®æ›´æ–°
 		soundManager.GetInstance().Update();
 
-		// “ü—Íó‘Ô‚ÌXV
+		// å…¥åŠ›çŠ¶æ…‹ã®æ›´æ–°
 		input.Update();
 
-		// Œ»İ‚ÌƒV[ƒ“‚ÌXV
+		// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã®æ›´æ–°
 		scene.Update(input);
 
-		// Œ»İ‚ÌƒV[ƒ“‚Ì•`‰æ
+		// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã®æç”»
 		scene.Draw();
 
-		// ƒ}ƒEƒXƒJ[ƒ\ƒ‹•`‰æ
+		// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«æç”»
 		//DrawRotaGraph(input.GetMousePosX(), input.GetMousePosY(), 1.0, 0.0, hCursorImg, true, false, true);
 
-		// — ‰æ–Ê‚ğ•\‰æ–Ê‚Æ“ü‚ê‘Ö‚¦‚é
+		// è£ç”»é¢ã‚’è¡¨ç”»é¢ã¨å…¥ã‚Œæ›¿ãˆã‚‹
 		ScreenFlip();
 
 		if (scene.IsGameEnd()) break;
 
 #ifdef _DEBUG
-		// escƒL[‚ğ‰Ÿ‚µ‚½‚çI—¹‚·‚é
+		// escã‚­ãƒ¼ã‚’æŠ¼ã—ãŸã‚‰çµ‚äº†ã™ã‚‹
 		if (CheckHitKey(KEY_INPUT_L)) scene.ChangeScene(new SceneDebug(scene));
 #endif
 		while (GetNowHiPerformanceCount() - time < 16667)
@@ -125,18 +127,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		}
 	}
-	// ƒ}ƒEƒXƒJ[ƒ\ƒ‹•`‰æ
+	// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«æç”»
 	SetMouseDispFlag(true);
 
-	// ƒJ[ƒ\ƒ‹‰æ‘œíœ
+	// ã‚«ãƒ¼ã‚½ãƒ«ç”»åƒå‰Šé™¤
 	hCursorImg = -1;
-	//ƒf[ƒ^íœ
+	//ãƒ‡ãƒ¼ã‚¿å‰Šé™¤
 	Load::GetInstance().DeleteAllData();
-	// Effekseer‚ÌI—¹ˆ—
+	// Effekseerã®çµ‚äº†å‡¦ç†
 	Effkseer_End();
-	// DXƒ‰ƒCƒuƒ‰ƒŠg—p‚ÌI—¹ˆ—
+	// DXãƒ©ã‚¤ãƒ–ãƒ©ãƒªä½¿ç”¨ã®çµ‚äº†å‡¦ç†
 	DxLib_End();
 
-	// ˆ—‚ÌI—¹
+	// å‡¦ç†ã®çµ‚äº†
 	return 0; 
 }
